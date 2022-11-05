@@ -231,9 +231,9 @@ public class LevBlueDuck extends LinearOpMode{
                     drive.robotCorrect(0.5, 0, 0.6);
                     drive.robotCorrect(0.25, 0, 0.25);
                     // Drop off block
-                    robot.servoWrist.setPosition(1);
+                    robot.servoRwheel.setPosition(1);
                     drive.robotCorrect(0.01, 0, 0.9);
-                    robot.servoWrist.setPosition(0.5);
+                    robot.servoLwheel.setPosition(0);
                     //lower arm
                     mArm=0;
                     mBase=0;

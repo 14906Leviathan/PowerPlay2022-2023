@@ -107,10 +107,10 @@ public class TeloOpRuntoP extends LinearOpMode {
             robot.motorLR.setPower(v3 * modePower);
             robot.motorRR.setPower(v4 * modePower);
 
-            if (gamepad1.dpad_left) {
+            if (gamepad1.dpad_up) {
                 mBase = mBase + 40;
             }
-            if (gamepad1.dpad_right) {
+            if (gamepad1.dpad_down) {
                 mBase = mBase - 40;
             }
             if (mBase > 0 ){
@@ -121,10 +121,10 @@ public class TeloOpRuntoP extends LinearOpMode {
             robot.motorBase.setTargetPosition(mBase);
 
 
-        if (gamepad1.dpad_down) {
+        if (gamepad1.dpad_left) {
             mArm = mArm - 20;
         }
-        if (gamepad1.dpad_up) {
+        if (gamepad1.dpad_right) {
             mArm = mArm + 20;
         }
         robot.motorArm.setPower(0.7);
@@ -137,8 +137,8 @@ public class TeloOpRuntoP extends LinearOpMode {
             wristPosition = 1;
             if (wristPosition < 0) wristPosition = 0;
         } else wristPosition = 0.5;
-        robot.servoWrist.setPosition(wristPosition);
-
+        robot.servoLwheel.setPosition(wristPosition);
+        robot.servoRwheel.setPosition(1-wristPosition);
 
         if (!gamepad1.x ^ gamepad1.b) {
             spintoggle = true;
@@ -161,11 +161,14 @@ public class TeloOpRuntoP extends LinearOpMode {
         }
         ;
         if (gamepad1.a) {
-            spinpower = 0;
+            mBase = 0;
         }
+        if (gamepad1.b) {
+            mBase = 500;
+            }
         if (gamepad1.y) {
-            mArm = 700;
-            mBase = -950;
+
+            mBase = 950;
         }
             if (gamepad1.right_bumper) {
                 mArm = 650;

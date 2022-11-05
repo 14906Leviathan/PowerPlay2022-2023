@@ -69,8 +69,8 @@ public class HardwareProfile {
     public BNO055IMU imu;       // Internal accelerometer / Gyro sensor
 
     public Servo servoGrab;   // Servo that grabs the wobble goal
-    public Servo servoWrist;
-    public Servo servoRingStopper;
+    public Servo servoLwheel;
+    public Servo servoRwheel;
     public Servo servoLinear;
 /*
     public Servo servoWobbleArm1;   // First servo that controls the Wobble Goal Arm
@@ -215,7 +215,8 @@ public class HardwareProfile {
 
 
        // servoGrab = hwMap.servo.get("servoGrab");
-        servoWrist = hwMap.servo.get("servoWrist");
+        servoRwheel = hwMap.servo.get("servoRwheel");
+        servoLwheel = hwMap.servo.get("servoLwheel");
      //   servoRingStopper = hwMap.servo.get("servoRingStopper");
        // servoLinear = hwMap.servo.get("servoLinear");
         /*
