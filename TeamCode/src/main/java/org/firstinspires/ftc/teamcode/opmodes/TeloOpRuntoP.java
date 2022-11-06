@@ -113,7 +113,7 @@ public class TeloOpRuntoP extends LinearOpMode {
             if (gamepad1.dpad_down) {
                 mBase = mBase - 40;
             }
-            if (mBase > 0 ){
+            if (mBase < 0 ){
                 mBase = 0;
             }
 
