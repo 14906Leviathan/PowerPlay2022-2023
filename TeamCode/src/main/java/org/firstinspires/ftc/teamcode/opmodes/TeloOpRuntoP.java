@@ -57,10 +57,9 @@ public class TeloOpRuntoP extends LinearOpMode {
          * Setup the initial state of the robot
          */
         robot.init(hardwareMap);
-        robot.motorBase.setTargetPosition(0);
-        robot.motorArm.setTargetPosition(0);
-        robot.motorBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.motorBase.setPower(0.8);
+        //robot.motorArm.setTargetPosition(0);
+        //robot.motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         /*
          * Initialize the drive class
          */
@@ -108,17 +107,16 @@ public class TeloOpRuntoP extends LinearOpMode {
             robot.motorRR.setPower(v4 * modePower);
 
             if (gamepad1.dpad_up) {
-                mBase = mBase + 40;
+                mBase+=15;
+            }else if (gamepad1.dpad_down) {
+                mBase-=15;
             }
-            if (gamepad1.dpad_down) {
-                mBase = mBase - 40;
-            }
-            if (mBase > 0 ){
+
+            if (mBase < 0 ){
                 mBase = 0;
             }
 
-            robot.motorBase.setPower(.80);
-            robot.motorBase.setTargetPosition(mBase);
+
 
 
         if (gamepad1.dpad_left) {
@@ -127,8 +125,8 @@ public class TeloOpRuntoP extends LinearOpMode {
         if (gamepad1.dpad_right) {
             mArm = mArm + 20;
         }
-        robot.motorArm.setPower(0.7);
-        robot.motorArm.setTargetPosition(mArm);
+        //robot.motorArm.setPower(0.7);
+        //robot.motorArm.setTargetPosition(mArm);
 
         if (gamepad1.right_trigger > 0) {
             wristPosition = 0;
@@ -164,21 +162,21 @@ public class TeloOpRuntoP extends LinearOpMode {
             mBase = 0;
         }
         if (gamepad1.b) {
-            mBase = 500;
+            mBase = 700;
             }
         if (gamepad1.y) {
 
-            mBase = 950;
+            mBase = 12440;
         }
             if (gamepad1.right_bumper) {
                 mArm = 650;
-                mBase = 0;
+                //mBase = 0;
             }
             if (gamepad1.left_bumper) {
                 mArm = 280;
-                mBase = 0;
+                //mBase = 0;
             }
-        robot.motorTurnTable.setPower(spinpower);
+        //robot.motorTurnTable.setPower(spinpower);
 /*
             if(gamepad1.dpad_up || gamepad2.dpad_up){   // open the claw
                 robot.servoGrab.setPosition(0);
@@ -186,14 +184,16 @@ public class TeloOpRuntoP extends LinearOpMode {
                 robot.servoGrab.setPosition(0.4);
             }
 */
+            robot.motorBase.setTargetPosition(mBase);
 
         //    telemetry.addData("Servo Position = ", robot.servoLinear.getPosition());
         telemetry.addData("motorLF = ", robot.motorLF.getCurrentPosition());
         telemetry.addData("motorLR = ", robot.motorLR.getCurrentPosition());
         telemetry.addData("motorRF = ", robot.motorRF.getCurrentPosition());
         telemetry.addData("motorRR = ", robot.motorRR.getCurrentPosition());
-        telemetry.addData("motorArm = ", robot.motorArm.getCurrentPosition());
+        //telemetry.addData("motorArm = ", robot.motorArm.getCurrentPosition());
         telemetry.addData("motorBase = ", robot.motorBase.getCurrentPosition());
+        telemetry.addData("motorBase power = ",robot.motorBase.getPower());
         telemetry.addData("spinpower = ", spinpower);
         telemetry.addData("Arm Setpoint = ", mArm);
         telemetry.addData("Base Setpoint = ", mBase);

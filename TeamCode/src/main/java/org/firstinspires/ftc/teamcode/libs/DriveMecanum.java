@@ -807,7 +807,7 @@ public class DriveMecanum {
         // Decide the next state based on the number of rings on the floor
 
 
-        robot.motorIntake.setPower(0);
+        //robot.motorIntake.setPower(0);
     }
     /*
      * Method motorsHalt

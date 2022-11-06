@@ -94,9 +94,9 @@ public class LevBlueDuck extends LinearOpMode{
          */
         robot.init(hardwareMap);
         robot.motorBase.setTargetPosition(0);
-        robot.motorArm.setTargetPosition(0);
+        //robot.motorArm.setTargetPosition(0);
         robot.motorBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //robot.motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
@@ -197,11 +197,11 @@ public class LevBlueDuck extends LinearOpMode{
 
 
                     // Run turn table motor, drop duck
-                    robot.motorTurnTable.setPower(0.2);
+                    //robot.motorTurnTable.setPower(0.2);
 
                     sleep(4000);
 
-                    robot.motorTurnTable.setPower(0);
+                    //robot.motorTurnTable.setPower(0);
 
                     drive.robotCorrect(0.3,180,0.1);
 
@@ -217,8 +217,8 @@ public class LevBlueDuck extends LinearOpMode{
 
 
 
-                    robot.motorArm.setPower(0.40);
-                    robot.motorArm.setTargetPosition(mArm);
+                    //robot.motorArm.setPower(0.40);
+                    //robot.motorArm.setTargetPosition(mArm);
                     robot.motorBase.setPower(0.40);
                     robot.motorBase.setTargetPosition(mBase);
                     drive.robotCorrect(0.5, 180, 0.5);
@@ -237,8 +237,8 @@ public class LevBlueDuck extends LinearOpMode{
                     //lower arm
                     mArm=0;
                     mBase=0;
-                    robot.motorArm.setPower(0.40);
-                    robot.motorArm.setTargetPosition(mArm);
+                    //robot.motorArm.setPower(0.40);
+                    //robot.motorArm.setTargetPosition(mArm);
                     robot.motorBase.setPower(0.40);
                     robot.motorBase.setTargetPosition(mBase);
                     sleep(2000);

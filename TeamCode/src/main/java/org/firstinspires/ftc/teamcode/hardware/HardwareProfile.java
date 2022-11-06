@@ -5,6 +5,7 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -53,9 +54,6 @@ public class HardwareProfile {
     public DcMotor motorLR = null;  // Left Rear  Drive Motor
     public DcMotor motorRF = null;  // Right Front Drive Motor
     public DcMotor motorRR = null;  // Right Rear Drive Motor
-    public DcMotor motorTurnTable = null;  // Right Rear Drive Motor
-    public DcMotor motorIntake = null;
-    public DcMotorEx motorArm = null;
     public DcMotorEx motorBase = null;
 
     public DistanceSensor sensorWall = null;
@@ -72,6 +70,7 @@ public class HardwareProfile {
     public Servo servoLwheel;
     public Servo servoRwheel;
     public Servo servoLinear;
+
 /*
     public Servo servoWobbleArm1;   // First servo that controls the Wobble Goal Arm
     public Servo servoWobbleArm2;   // second servo that controls the Wobble Goal arm
@@ -140,28 +139,29 @@ public class HardwareProfile {
         motorRR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorRR.setPower(0);
 
-        motorTurnTable = hwMap.dcMotor.get("motorTurnTable");
+     /*   motorTurnTable = hwMap.dcMotor.get("motorTurnTable");
         motorTurnTable.setDirection(DcMotor.Direction.FORWARD);
         motorTurnTable.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorTurnTable.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorTurnTable.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorTurnTable.setPower(0);
 
-        motorArm = hwMap.get(DcMotorEx.class, "motorArm");
-        motorArm.setDirection(DcMotor.Direction.REVERSE);
-        motorArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //motorArm = hwMap.get(DcMotorEx.class, "motorArm");
+        //motorArm.setDirection(DcMotor.Direction.REVERSE);
+       // motorArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+       // motorArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
       //  motorArm.setTargetPosition(0);
       //  motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorArm.setPower(0);
-
+      //  motorArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+      //  motorArm.setPower(0);
+*/
         motorBase = hwMap.get(DcMotorEx.class,"motorBase");
-        motorBase.setDirection(DcMotor.Direction.FORWARD);
-        motorBase.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorBase.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorBase.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorBase.setDirection(DcMotor.Direction.REVERSE);
+        motorBase.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        motorBase.setTargetPosition(0);
         motorBase.setPower(0);
+        motorBase.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        motorBase.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         /***
