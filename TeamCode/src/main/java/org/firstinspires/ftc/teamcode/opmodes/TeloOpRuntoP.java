@@ -57,7 +57,7 @@ public class TeloOpRuntoP extends LinearOpMode {
          * Setup the initial state of the robot
          */
         robot.init(hardwareMap);
-        robot.motorBase.setPower(0.8);
+        robot.motorBase.setPower(1.0);
         //robot.motorArm.setTargetPosition(0);
         //robot.motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         /*
@@ -167,11 +167,15 @@ public class TeloOpRuntoP extends LinearOpMode {
             mBase = 0;
         }
         if (gamepad1.b) {
-            mBase = 700;
+            mBase = 7900;
             }
-        if (gamepad1.y) {
+            if (gamepad1.x) {
 
-            mBase = 12440;
+                mBase = 4580;
+            }
+            if (gamepad1.y) {
+
+            mBase = 10580;
         }
             if (gamepad1.right_bumper) {
                 mArm = 650;
