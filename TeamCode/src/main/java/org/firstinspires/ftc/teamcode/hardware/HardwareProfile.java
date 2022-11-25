@@ -167,7 +167,7 @@ public class HardwareProfile {
         /***
          * initialize sensors
          */
-        sensorWall = hwMap.get(DistanceSensor.class, "Wall");
+//        sensorWall = hwMap.get(DistanceSensor.class, "Wall");
 
 /***
         motorIntake = hwMap.dcMotor.get("motorIntake");

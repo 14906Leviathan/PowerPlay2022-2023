@@ -19,20 +19,24 @@ import java.util.List;
 
 public class LevRedFar extends LinearOpMode{
 
-    public static final String TFOD_MODEL_ASSET = "PP_FF_TSEv3-Green.tflite";
-    public static final String[] LABELS = {
-            "TSEv3"
+    private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
+    // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
+
+    private static final String[] LABELS = {
+            "1 Bolt",
+            "2 Bulb",
+            "3 Panel"
     };
 
-// private static final String VUFORIA_KEY =
+ private static final String VUFORIA_KEY =
 
-//        "ARLYRsf/////AAABmWpsWSsfQU1zkK0B5+iOOr0tULkAWVuhNuM3EbMfgb1+zbcOEG8fRRe3G+iLqL1/iAlTYqqoLetWeulG8hkCOOtkMyHwjS/Ir8/2vUVgC36M/wb9a7Ni2zuSrlEanb9jPVsNqq+71/uzTpS3TNvJI8WeICQNPAq3qMwmfqnCphVlC6h2ZSLsAR3wcdzknFmtpApdOp1jHJvITPeD/CMdAXjZDN0XJwJNQJ6qtaYSLGC23vJdQ2b1aeqnJauOvswapsG7BlmR7m891VN92rNEcOX7WmMT4L0JOM0yKKhPfF/aSROwIdNtSOpQW4qEKVjw3aMU1QDZ0jj5SnRV8RPO0hGiHtXy6QJcZsSj/Y6q5nyf";
+        "ARLYRsf/////AAABmWpsWSsfQU1zkK0B5+iOOr0tULkAWVuhNuM3EbMfgb1+zbcOEG8fRRe3G+iLqL1/iAlTYqqoLetWeulG8hkCOOtkMyHwjS/Ir8/2vUVgC36M/wb9a7Ni2zuSrlEanb9jPVsNqq+71/uzTpS3TNvJI8WeICQNPAq3qMwmfqnCphVlC6h2ZSLsAR3wcdzknFmtpApdOp1jHJvITPeD/CMdAXjZDN0XJwJNQJ6qtaYSLGC23vJdQ2b1aeqnJauOvswapsG7BlmR7m891VN92rNEcOX7WmMT4L0JOM0yKKhPfF/aSROwIdNtSOpQW4qEKVjw3aMU1QDZ0jj5SnRV8RPO0hGiHtXy6QJcZsSj/Y6q5nyf";
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
      * localization engine.
      */
-  //  private VuforiaLocalizer vuforia;
+    private VuforiaLocalizer vuforia;
 
     /**
      * {@link #tfod} is the variable we will use to store our instance of the TensorFlow Object
@@ -50,6 +54,7 @@ public class LevRedFar extends LinearOpMode{
     private State runState = State.SET_DISTANCES;
     private DriveMecanum drive = new DriveMecanum(robot, opMode);
     boolean debugMode = false;
+    double wristPosition = 0.5;
     int mArm = 0;
     int mBase = 0;
     /* Declare DataLogger variables */
@@ -70,11 +75,13 @@ public class LevRedFar extends LinearOpMode{
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
         initVuforia();
-     //   initTfod();
+        initTfod();
 
         /*
          * Activate TensorFlow Object Detection before we wait for the start command.
          * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
+
+         */
 
         if (tfod != null) {
             tfod.activate();
@@ -188,39 +195,53 @@ public class LevRedFar extends LinearOpMode{
                     // Rotate 90
                     //drive.PIDRotate(90,0.3);
                     // Drive to wall, fast and then slow
-                    drive.robotCorrect(0.5, 90, 1.0);
-                    drive.robotCorrect(0.25, 90, 0.8);
+                    //drive.robotCorrect(0.5, 90, 1.0);
+                    //drive.robotCorrect(0.25, 90, 0.8);
                     // Strafe into Turn table
                     //drive.driveSensorDistance(0.25, 90, 6.8);
                     // Drive forward to the stack
-                    mBase=10850;
-                    robot.motorBase.setTargetPosition(mBase);
 
-                    drive.robotCorrect(0.6,0,1.4);
+                    //drive to push marker
+                    drive.robotCorrect(0.6,0,2.2);
+                    //Revers to turn
+                    drive.robotCorrect(0.6,180,0.45);
                     //turn to tall stick
                     drive.PIDRotate(-60,0.3);
                     //Raise Arm
+                    mBase=10850;
+                    robot.motorBase.setPower(0.99);
+                    robot.motorBase.setTargetPosition(mBase);
+                   //Wait for raise
+                    sleep(6000);
 
                     // Drive forward to the stick
-                    drive.robotCorrect(0.6,0,1.2);
+                    drive.robotCorrect(0.6,0,0.3);
                     // Run turn table motor, drop duck
                     //robot.motorTurnTable.setPower(0.2);
+                    mBase=1870;
+                    robot.motorBase.setPower(0.99);
+                    robot.motorBase.setTargetPosition(mBase);
 
-                    sleep(4000);
+                    sleep(2000);
 
                     //robot.motorTurnTable.setPower(0);
 
-                    drive.robotCorrect(0.3,180,0.1);
-
+                    drive.robotCorrect(0.6,180,0.5);
+                    //turn to cone stack
+                    drive.PIDRotate(120,0.3);
                     // Strafe into parking spot
-                    drive.driveSensorDistanceOut(0.25, -90, 26);
+                    //drive.driveSensorDistanceOut(0.25, -90, 26);
                    //line up for TAH
-                    drive.driveSensorDistanceOut(0.25, -90, 42);
+                    //drive.driveSensorDistanceOut(0.25, -90, 42);
                     // Drive off wall
+
+
+
+
                     drive.robotCorrect(0.5, 0, 0.5);
 
-                    drive.PIDRotate(-90,0.3);
-                    drive.PIDRotate(-90,0.3);
+                    //drive.PIDRotate(-90,0.3);
+                    //drive.PIDRotate(-90,0.3);
 
 
 
@@ -238,9 +259,14 @@ public class LevRedFar extends LinearOpMode{
                     drive.robotCorrect(0.5, 0, 0.6);
                     drive.robotCorrect(0.25, 0, 0.25);
                     // Drop off block
-                    robot.servoRwheel.setPosition(1);
+                    robot.servoLwheel.setPosition(1);
+                    robot.servoRwheel.setPosition(0);
+                    sleep(2000);
+                    robot.servoLwheel.setPosition(0.5);
+                    robot.servoRwheel.setPosition(0.5);
+
                     drive.robotCorrect(0.01, 0, 0.9);
-                    robot.servoLwheel.setPosition(0);
+
                     //lower arm
                     mArm=0;
                     mBase=0;
@@ -300,17 +326,18 @@ public class LevRedFar extends LinearOpMode{
          */
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
- //       parameters.vuforiaLicenseKey = VUFORIA_KEY;
- //       parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+       parameters.vuforiaLicenseKey = VUFORIA_KEY;
+       parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         //  Instantiate the Vuforia engine
- //       vuforia = ClassFactory.getInstance().createVuforia(parameters);
+       vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
         // Loading trackables is not necessary for the TensorFlow Object Detection engine.
     }
 
     /**
      * Initialize the TensorFlow Object Detection engine.
+     */
 
     private void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
@@ -322,7 +349,6 @@ public class LevRedFar extends LinearOpMode{
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
     }
-*/
 
 }       //End Linear Op Mode
 
