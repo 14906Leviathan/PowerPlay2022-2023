@@ -216,9 +216,8 @@ public class LevRedFar extends LinearOpMode{
 
                     // Drive forward to the stick
                     drive.robotCorrect(0.6,0,0.3);
-                    // Run turn table motor, drop duck
                     //robot.motorTurnTable.setPower(0.2);
-                    mBase=1870;
+                    mBase=1600;
                     robot.motorBase.setPower(0.99);
                     robot.motorBase.setTargetPosition(mBase);
 
@@ -228,7 +227,7 @@ public class LevRedFar extends LinearOpMode{
 
                     drive.robotCorrect(0.6,180,0.5);
                     //turn to cone stack
-                    drive.PIDRotate(160,0.3);
+                    drive.PIDRotate(80,0.3);
                     // Strafe into parking spot
                     //drive.driveSensorDistanceOut(0.25, -90, 26);
                    //line up for TAH
@@ -267,9 +266,10 @@ public class LevRedFar extends LinearOpMode{
 
                     drive.robotCorrect(0.01, 0, 0.9);
 
-                    //lower arm
-                    mArm=0;
-                    mBase=0;
+                    mBase=4000;
+
+                    drive.PIDRotate(90,0.3);
+
                     //robot.motorArm.setPower(0.40);
                     //robot.motorArm.setTargetPosition(mArm);
                     robot.motorBase.setPower(0.40);
