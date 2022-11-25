@@ -228,7 +228,7 @@ public class LevRedFar extends LinearOpMode{
 
                     drive.robotCorrect(0.6,180,0.5);
                     //turn to cone stack
-                    drive.PIDRotate(120,0.3);
+                    drive.PIDRotate(160,0.3);
                     // Strafe into parking spot
                     //drive.driveSensorDistanceOut(0.25, -90, 26);
                    //line up for TAH
