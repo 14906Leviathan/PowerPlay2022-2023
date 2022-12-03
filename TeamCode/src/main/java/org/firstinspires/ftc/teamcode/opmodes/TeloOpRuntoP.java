@@ -133,15 +133,11 @@ public class TeloOpRuntoP extends LinearOpMode {
         //robot.motorArm.setPower(0.7);
         //robot.motorArm.setTargetPosition(mArm);
 
-        if (gamepad1.right_trigger > 0) {
-            wristPosition = 0;
-            if (wristPosition > 1) wristPosition = 1;
-        } else if (gamepad1.left_trigger > 0) {
-            wristPosition = 1;
-            if (wristPosition < 0) wristPosition = 0;
-        } else wristPosition = 0.5;
-        robot.servoLwheel.setPosition(wristPosition);
-        robot.servoRwheel.setPosition(1-wristPosition);
+        if (gamepad1.right_trigger > 0.1) {
+            robot.servoGrabber.setPosition(robot.SERVO_GRAB_OPEN);
+        } else if (gamepad1.left_trigger > 0.1) {
+            robot.servoGrabber.setPosition(robot.SERVO_GRAB_CLOSE);
+        }
 
         if (!gamepad1.x ^ gamepad1.b) {
             spintoggle = true;

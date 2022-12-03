@@ -34,8 +34,8 @@ public class HardwareProfile {
     public final double AUTO_SHOOTER_RPM = 5200;
     public final double AUTO_SHOOTER_PS_RPM = 5000;
 
-    public final double SERVO_SHOOTER_UP = 0.3;
-    public final double SERVO_SHOOTER_DOWN = 0.6;
+    public final double SERVO_GRAB_OPEN = 0.3;
+    public final double SERVO_GRAB_CLOSE = 0.6;
     public final double SERVO_LINEAR_INITIALIZED = 0.75;
     public final double SERVO_LINEAR_HG_SHOOT = 0.46;
     public final double SERVO_LINEAR_TELEOP_SHOOT = 0.40;
@@ -66,10 +66,10 @@ public class HardwareProfile {
 
     public BNO055IMU imu;       // Internal accelerometer / Gyro sensor
 
-    public Servo servoGrab;   // Servo that grabs the wobble goal
-    public Servo servoLwheel;
-    public Servo servoRwheel;
-    public Servo servoLinear;
+//    public Servo servoGrab;   // Servo that grabs the wobble goal
+    public Servo servoGrabber;
+//    public Servo servoRwheel;
+//    public Servo servoLinear;
 
 /*
     public Servo servoWobbleArm1;   // First servo that controls the Wobble Goal Arm
@@ -214,11 +214,7 @@ public class HardwareProfile {
          */
 
 
-       // servoGrab = hwMap.servo.get("servoGrab");
-        servoRwheel = hwMap.servo.get("servoRwheel");
-        servoLwheel = hwMap.servo.get("servoLwheel");
-     //   servoRingStopper = hwMap.servo.get("servoRingStopper");
-       // servoLinear = hwMap.servo.get("servoLinear");
+        servoGrabber = hwMap.servo.get("servoGrabber");
         /*
 //        servoWobbleGrab.setPosition(0.05);
         servoWobbleArm1 = hwMap.servo.get("servoWobbleArm1");

@@ -258,11 +258,8 @@ public class LevRedFar extends LinearOpMode{
                     drive.robotCorrect(0.5, 0, 0.6);
                     drive.robotCorrect(0.25, 0, 0.25);
                     // Drop off block
-                    robot.servoLwheel.setPosition(1);
-                    robot.servoRwheel.setPosition(0);
+                    robot.servoGrabber.setPosition(robot.SERVO_GRAB_OPEN);
                     sleep(2000);
-                    robot.servoLwheel.setPosition(0.5);
-                    robot.servoRwheel.setPosition(0.5);
 
                     drive.robotCorrect(0.01, 0, 0.9);
 
