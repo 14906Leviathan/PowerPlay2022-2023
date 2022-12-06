@@ -22,6 +22,192 @@ public class DriveMecanum {
 
     }   // close DriveMecanum constructor Method
 
+
+    public void driveDistance(double power, double heading, double distance) {
+        double initZ = getZAngle();
+        double currentZ = 0;
+        double zCorrection = 0;
+        boolean active = true;
+
+        double theta = Math.toRadians(90 + heading);
+        double lfStart = 0;
+        double lrStart = 0;
+        double rfStart = 0;
+        double rrStart = 0;
+
+        lfStart = robot.motorLF.getCurrentPosition();
+        lrStart = robot.motorLR.getCurrentPosition();
+        rfStart = robot.motorRF.getCurrentPosition();
+        rrStart = robot.motorRR.getCurrentPosition();
+
+        while(opMode.opModeIsActive() && active) {
+
+            RF = power * (Math.sin(theta) - Math.cos(theta));
+            LF = power * (Math.sin(theta) + Math.cos(theta));
+            LR = power * (Math.sin(theta) - Math.cos(theta));
+            RR = power * (Math.sin(theta) + Math.cos(theta));
+
+            if (initZ > 170 || initZ < -170){
+                currentZ = gyro360(0);      // always use 0 as the reference angle
+            } else {
+                currentZ = getZAngle();
+            }
+            if (currentZ != initZ){
+                zCorrection = Math.abs(initZ - currentZ)/100;
+
+                if (initZ < currentZ) {
+                    RF = RF - zCorrection;
+                    RR = RR - zCorrection;
+                    LF = LF + zCorrection;
+                    LR = LR + zCorrection;
+                }
+                if (initZ > currentZ) {
+                    RF = RF + zCorrection;
+                    RR = RR + zCorrection;
+                    LF = LF - zCorrection;
+                    LR = LR - zCorrection;
+                }
+            }   // end of if currentZ != initZ
+
+            /*
+             * Limit that value of the drive motors so that the power does not exceed 100%
+             */
+            RF = Range.clip(RF, -power,power);
+            LF = Range.clip(LF, -power,power);
+            RR = Range.clip(RR, -power,power);
+            LR = Range.clip(LR, -power,power);
+
+            /*
+             * Apply power to the drive wheels
+             */
+            setDrivePower(RF, LF, LR, RR);
+
+            /*
+            opMode.telemetry.addData("LF Start = ", lfStart);
+            opMode.telemetry.addData("Distance = ", distance);
+            opMode.telemetry.addData("Heading = ", heading);
+            opMode.telemetry.addData("Calculated Distance = ", calcDistance(heading, rfStart, rrStart, lfStart, lrStart));
+            opMode.telemetry.update();
+             */
+
+            if(calcDistance(heading, rfStart, rrStart, lfStart, lrStart) >= distance) active = false;
+            opMode.idle();
+
+        }   // end of while loop
+
+        motorsHalt();
+
+    }   // close driveDistance method
+
+    /**
+     * Method: PIDRotate
+     * Parameters:
+     * @param targetAngle -> desire ending angle/position of the robot
+     * @param targetError -> how close should the robot get to the desired angle
+     */
+    public void PIDRotate(double targetAngle, double targetError){
+        double integral = 0;
+        int iterations = 0;
+        ElapsedTime timeElapsed = new ElapsedTime();
+        double startTime = timeElapsed.time();
+        double totalTime;
+        double error;
+        double Cp = 0.06;
+        double Ci = 0.0003;
+        double Cd = 0.0001;
+        double maxSpeed = 0.5;
+        double rotationSpeed;
+        double derivative = 0, deltaError, lastError=0;
+
+        // check to see how far the robot is rotating to decide which gyro sensor value to use
+        error = updateError(targetAngle);
+
+        // nested while loops are used to allow for a final check of an overshoot situation
+        while ((Math.abs(error) >= targetError) && opMode.opModeIsActive()) {
+            while ((Math.abs(error) >= targetError) && opMode.opModeIsActive()) {
+                deltaError = lastError - error;
+                rotationSpeed = ((Cp * error) + (Ci * integral) + (Cd * derivative)) * maxSpeed;
+
+                // Clip motor speed
+                rotationSpeed = Range.clip(rotationSpeed, -maxSpeed, maxSpeed);
+
+                // bump the power up to min threshold if the robot doesn't have enough power to turn
+                if ((rotationSpeed > -0.15) && (rotationSpeed < 0)) {
+                    rotationSpeed = -robot.MIN_PIDROTATE_POWER;
+                } else if ((rotationSpeed < 0.15) && (rotationSpeed > 0)) {
+                    rotationSpeed = robot.MIN_PIDROTATE_POWER;
+                }
+
+                RF = -rotationSpeed;
+                LF = rotationSpeed;
+                LR = rotationSpeed;
+                RR = -rotationSpeed;
+
+                setDrivePower(RF, LF, LR, RR);
+
+                lastError = error;
+                iterations++;
+
+                /*
+                opMode.telemetry.addData("InitZ/targetAngle value  = ", targetAngle);
+                opMode.telemetry.addData("Current Angle  = ", getZAngle());
+                opMode.telemetry.addData("Theta/lastError Value= ", lastError);
+                opMode.telemetry.addData("CurrentZ/Error Value = ", error);
+                opMode.telemetry.addData("zCorrection/derivative Value = ", derivative);
+
+                opMode.telemetry.addData("Right Front = ", RF);
+                opMode.telemetry.addData("Left Front = ", LF);
+                opMode.telemetry.addData("Left Rear = ", LR);
+                opMode.telemetry.addData("Right Rear = ", RR);
+                opMode.telemetry.update();
+                 */
+
+                // check to see how far the robot is rotating to decide which gyro sensor value to use
+                error = updateError(targetAngle);
+
+            }   // end of while Math.abs(error)
+            motorsHalt();
+
+            // Perform a final calc on the error to confirm that the robot didn't overshoot the
+            // target position after the last measurement was taken.
+            opMode.sleep(10);
+            error = updateError(targetAngle);
+        }   // close outside while loop
+
+        // shut off the drive motors
+        motorsHalt();
+
+        /*
+        totalTime = timeElapsed.time() - startTime;
+        opMode.telemetry.addData("Iterations = ", iterations);
+        opMode.telemetry.addData("Final Angle = ", getZAngle());
+        opMode.telemetry.addData("Total Time Elapsed = ", totalTime);
+        opMode.telemetry.update();
+         */
+    }   //end of the PIDRotate Method
+
+
+    /**
+     *  Method: updateError
+     *  -   uses the gyro values to determine current angular position.
+     *  -   This method will calculate the variance between the current robot angle and the target angle
+     *  -   Note: this method is a sub method of PIDRotate
+     * @param targetAngle     - angle that the robot would like to turn to
+     */
+    private double updateError(double targetAngle){
+        double calculatedError = 0;
+
+        if (targetAngle > 100 || targetAngle < -100) {
+            calculatedError = gyro360(targetAngle) - targetAngle;
+        } else {
+            calculatedError = getZAngle() - targetAngle;}
+
+        return(calculatedError);
+    }
+
+
+
+
     /*
      *  Method: robotCorrect
      *  -   uses time (based on the clock value) to drive to a heading
@@ -348,7 +534,7 @@ public class DriveMecanum {
      * @param heading   - direction for the robot to strafe to
      * @param distance  - amount of time that the robot will move
      */
-    public void driveDistance(double power, double heading, double distance) {
+    public void driveDistance_old(double power, double heading, double distance) {
         String action = "Initializing";
         /*
         robot.motorRF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -592,81 +778,13 @@ public class DriveMecanum {
         opMode.telemetry.update();
     }   // close updateValues method
 
-    /*
-     * Method: PIDRotate
-     * Parameters:
-     *      targetAngle -> desire ending angle/position of the robot
-     *      targetError -> how close should the robot get to the desired angle
-     */
-    public void oldPIDRotate(double targetAngle, double targetError){
-        double integral = 0;
-        int iterations = 0;
-        ElapsedTime timer = new ElapsedTime();
-        ElapsedTime timeElapsed = new ElapsedTime();
-        double startTime = timer.time();
-        double totalTime;
-        double error = 0;
-        double Cp = 0.015;
-        double Ci = 0.0003;
-        double Cd = 0.0001;
-        double maxSpeed = 1;
-        double rotationSpeed;
-        double derivative = 0, deltaError, lastError=0;
-
-        error = targetAngle - getZAngle();
-
-        while ((Math.abs(error) >= targetError) && opMode.opModeIsActive()){
-            deltaError = lastError - error;
-            rotationSpeed = ((Cp*error) + (Ci * integral) + (Cd * derivative)) * maxSpeed;
-
-            // Clip motor speed to between -1 and 1
-            if (rotationSpeed > maxSpeed) rotationSpeed = maxSpeed;
-            else if (rotationSpeed < -maxSpeed) rotationSpeed = -maxSpeed;
-            if (rotationSpeed != 0 & Math.abs(rotationSpeed) < 0.05) rotationSpeed = rotationSpeed * 2;
-
-            RF = -rotationSpeed;
-            LF = rotationSpeed;
-            LR = rotationSpeed;
-            RR = -rotationSpeed;
-
-            setDrivePower(RF, LF, LR, RR);
-
-            lastError = error;
-            iterations++;
-
-            //  updateValues("PIDRotate", targetAngle, lastError, error, derivative);
-            opMode.telemetry.addData("Current First Angle", getZAngle());
-            opMode.telemetry.addData("Error", error);
-            opMode.telemetry.addData("Gyro 360 Value = ", gyro360(targetAngle));
-            opMode.telemetry.update();
-
-            derivative = deltaError/timer.time();
-            timer.reset();
-
-            error = gyro360(targetAngle) - targetAngle;
-
-            // Overshooting the targetAngle & need to make correction in the code
-            // underpowering the wheels on overshoot correction
-
-        }   // end of while Math.abs(error)
-
-        // shut off the drive motors
-        motorsHalt();
-
-        totalTime = timeElapsed.time() - startTime;
-        opMode.telemetry.addData("Iterations = ", iterations);
-        opMode.telemetry.addData("Final Angle = ", getZAngle());
-        opMode.telemetry.addData("Total Time Elapsed = ", totalTime);
-        opMode.telemetry.update();
-    }   //end of the PIDRotate Method
-
     /**
      * Method: PIDRotate
      * Parameters:
      * @param targetAngle -> desire ending angle/position of the robot
      * @param targetError -> how close should the robot get to the desired angle
      */
-    public void PIDRotate(double targetAngle, double targetError){
+    public void PIDRotate_OLD(double targetAngle, double targetError){
         double integral = 0;
         int iterations = 0;
         ElapsedTime timeElapsed = new ElapsedTime();

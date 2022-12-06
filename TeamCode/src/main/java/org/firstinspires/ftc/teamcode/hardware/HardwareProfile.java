@@ -21,6 +21,7 @@ public class HardwareProfile {
     public final double PIVOT_SPEED = 0.5;
     public final double COUNTS_PER_ROTATION = 28;
     public final double GB_COUNTS_PER_ROTATION = 28;    // goBilda encoder value
+    public final double MIN_PIDROTATE_POWER = 0.2;
 
     /*
      *  Constants & variables for wheel parameters
