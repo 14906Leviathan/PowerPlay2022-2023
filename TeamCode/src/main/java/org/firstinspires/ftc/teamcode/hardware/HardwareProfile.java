@@ -17,37 +17,28 @@ public class HardwareProfile {
     /*
      * Constants
      */
-    //public final double COUNTS_PER_INCH = 41.66;
     public final double PIVOT_SPEED = 0.5;
     public final double COUNTS_PER_ROTATION = 28;
     public final double GB_COUNTS_PER_ROTATION = 28;    // goBilda encoder value
-    public final double MIN_PIDROTATE_POWER = 0.2;
+    public final double MIN_PIDROTATE_POWER = 0.15;
 
     /*
      *  Constants & variables for wheel parameters
      */
-    private final double DRIVE_TICKS_PER_ROTATION = 416;       // from goBilda website
-    private final double WHEEL_RADIUS = 1.968505;         // 100mm wheel in inches
-    private final double WHEEL_CIRCUMFERENCE = 2 * Math.PI * WHEEL_RADIUS;    // circumference in inches
-    public final double DRIVE_TICKS_PER_INCH = DRIVE_TICKS_PER_ROTATION / WHEEL_CIRCUMFERENCE;
+    public final double DRIVE_TICKS_PER_INCH = 41.6;
+    public final double STRAFE_FACTOR = 0.9;
 
-    public final double STRAFE_FACTOR = 0.95;
-
-    public final double TARGET_SHOOTER_RPM = 5500;       // from goBilda website
-    public final double AUTO_SHOOTER_RPM = 5200;
-    public final double AUTO_SHOOTER_PS_RPM = 5000;
-
+    public final int LIFT_RESET = 0;
+    public final int LIFT_LOW_JUNCTION = 1700;
+    public final int LIFT_MID_JUNCTION = 3000;
+    public final int LIFT_HIGH_JUNCTION = 3800;
+    public final int LIFT_CONE5 = 600;
+    public final int LIFT_CONE4 = 400;
+    public final int LIFT_CONE3 = 300;
+    public final int LIFT_CONE2 = 200;
+    public final double LIFT_POWER = 1;
     public final double SERVO_GRAB_OPEN = 0.3;
     public final double SERVO_GRAB_CLOSE = 0.6;
-    public final double SERVO_LINEAR_INITIALIZED = 0.75;
-    public final double SERVO_LINEAR_HG_SHOOT = 0.46;
-    public final double SERVO_LINEAR_TELEOP_SHOOT = 0.40;
-    public final double SERVO_LINEAR_REDHG_SHOOT = 0.46;
-    public final double SERVO_LINEAR_PS_SHOOT = 0.35;
-    public final double SERVO_LINEAR_INTAKE = 0.65;
-    public final double SERVO_LINEAR_AUTO_SHOOT = 0.5;
-    public final double SERVO_WOBBLE_GRAB_OPEN = 0.5;
-    public final double SERVO_WOBBLE_GRAB_CLOSE = 0.9;
 
 
     /*
