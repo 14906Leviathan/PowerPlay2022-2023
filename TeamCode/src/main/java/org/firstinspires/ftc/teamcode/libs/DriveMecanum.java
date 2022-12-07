@@ -28,17 +28,13 @@ public class DriveMecanum {
         double currentZ = 0;
         double zCorrection = 0;
         boolean active = true;
+        double distanceTraveled = 0;
 
         double theta = Math.toRadians(90 + heading);
-        double lfStart = 0;
-        double lrStart = 0;
-        double rfStart = 0;
-        double rrStart = 0;
-
-        lfStart = robot.motorLF.getCurrentPosition();
-        lrStart = robot.motorLR.getCurrentPosition();
-        rfStart = robot.motorRF.getCurrentPosition();
-        rrStart = robot.motorRR.getCurrentPosition();
+        double lfStart = robot.motorLF.getCurrentPosition();
+        double lrStart = robot.motorLR.getCurrentPosition();
+        double rfStart = robot.motorRF.getCurrentPosition();
+        double rrStart = robot.motorRR.getCurrentPosition();
 
         while(opMode.opModeIsActive() && active) {
 
@@ -82,15 +78,11 @@ public class DriveMecanum {
              */
             setDrivePower(RF, LF, LR, RR);
 
-            /*
-            opMode.telemetry.addData("LF Start = ", lfStart);
+            distanceTraveled = calcDistance(heading, rfStart, rrStart, lfStart, lrStart);
+            if(distanceTraveled >= distance) active = false;
+            opMode.telemetry.addData("Distance Traveled = ", distanceTraveled);
             opMode.telemetry.addData("Distance = ", distance);
-            opMode.telemetry.addData("Heading = ", heading);
-            opMode.telemetry.addData("Calculated Distance = ", calcDistance(heading, rfStart, rrStart, lfStart, lrStart));
             opMode.telemetry.update();
-             */
-
-            if(calcDistance(heading, rfStart, rrStart, lfStart, lrStart) >= distance) active = false;
             opMode.idle();
 
         }   // end of while loop
@@ -693,27 +685,21 @@ public class DriveMecanum {
      */
     public double calcDistance(double heading, double rfStart, double rrStart, double lfStart, double lrStart){
 
+        double strafeFactor = 1;
         double distanceTraveled = 0;
         double rfEncoder = robot.motorRF.getCurrentPosition();
         double lfEncoder = robot.motorLF.getCurrentPosition();
         double rrEncoder = robot.motorRR.getCurrentPosition();
         double lrEncoder = robot.motorLR.getCurrentPosition();
 
-        if((heading == 0) || (heading == 180)) {
+        if(heading == 90 || heading == -90){
+            strafeFactor = robot.STRAFE_FACTOR;
+        }
+
             distanceTraveled = ((Math.abs(rfStart - rfEncoder) + Math.abs(lfStart - lfEncoder)
                     + Math.abs(rrStart-rrEncoder) + Math.abs(lrStart - lrEncoder))/4) / robot.DRIVE_TICKS_PER_INCH;
 
-//            distanceTraveled = (Math.abs(rfStart - rfEncoder)) / robot.DRIVE_TICKS_PER_INCH;
-        }
-
-        if ((heading == 90) || (heading == -90)){
-            distanceTraveled = ((Math.abs(rfStart - rfEncoder) + Math.abs(lfStart - lfEncoder)
-                    + Math.abs(rrStart-rrEncoder) + Math.abs(lrStart - lrEncoder))/4) / robot.DRIVE_TICKS_PER_INCH *1.2;
-
-//            distanceTraveled = (Math.abs(rfStart - rfEncoder)) / robot.DRIVE_TICKS_PER_INCH * 1.2;
-        }
-
-        return Math.abs(distanceTraveled);
+        return Math.abs(distanceTraveled * strafeFactor);
     }
 
 
@@ -777,6 +763,14 @@ public class DriveMecanum {
         opMode.telemetry.addData("Right Rear = ", RR);
         opMode.telemetry.update();
     }   // close updateValues method
+
+    public void closeClaw(){
+        robot.servoGrabber.setPosition(robot.SERVO_GRAB_CLOSE);
+    }
+    public void openClaw(){
+        robot.servoGrabber.setPosition(robot.SERVO_GRAB_OPEN);
+    }
+
 
     /**
      * Method: PIDRotate
@@ -899,7 +893,7 @@ public class DriveMecanum {
 
     private double convertToInches(double convValue){
 
-        return (convValue * robot.COUNTS_PER_INCH);
+        return (convValue * robot.DRIVE_TICKS_PER_INCH);
 
     }   // end of returnInches method
 

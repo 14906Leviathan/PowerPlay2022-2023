@@ -17,7 +17,7 @@ public class HardwareProfile {
     /*
      * Constants
      */
-    public final double COUNTS_PER_INCH = 307.699557;
+    //public final double COUNTS_PER_INCH = 41.66;
     public final double PIVOT_SPEED = 0.5;
     public final double COUNTS_PER_ROTATION = 28;
     public final double GB_COUNTS_PER_ROTATION = 28;    // goBilda encoder value
@@ -26,10 +26,12 @@ public class HardwareProfile {
     /*
      *  Constants & variables for wheel parameters
      */
-    private final double DRIVE_TICKS_PER_ROTATION = 537.6;       // from goBilda website
+    private final double DRIVE_TICKS_PER_ROTATION = 416;       // from goBilda website
     private final double WHEEL_RADIUS = 1.968505;         // 100mm wheel in inches
     private final double WHEEL_CIRCUMFERENCE = 2 * Math.PI * WHEEL_RADIUS;    // circumference in inches
     public final double DRIVE_TICKS_PER_INCH = DRIVE_TICKS_PER_ROTATION / WHEEL_CIRCUMFERENCE;
+
+    public final double STRAFE_FACTOR = 0.95;
 
     public final double TARGET_SHOOTER_RPM = 5500;       // from goBilda website
     public final double AUTO_SHOOTER_RPM = 5200;

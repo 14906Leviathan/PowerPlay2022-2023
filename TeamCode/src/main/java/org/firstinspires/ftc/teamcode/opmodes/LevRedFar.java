@@ -164,6 +164,9 @@ public class LevRedFar extends LinearOpMode{
         while (opModeIsActive() && (running)) {
             switch(runState){
                 case TEST:
+
+                    drive.driveDistance(0.3, 0, 24);
+                    sleep(10000);
                     runState = State.HALT;
                     break;
 
@@ -186,10 +189,15 @@ public class LevRedFar extends LinearOpMode{
                     telemetry.addData("TSE Position = ", scoreLevel);
                     telemetry.update();
  */                   //runState = State.HALT;  //FOR POSITION TEST
-                    runState = State.RUN;
+                    runState = State.TEST;
                     break;
 
                 case RUN:
+                    drive.closeClaw();
+                    sleep(400);
+
+
+
                     // Drive off wall
                     drive.robotCorrect(0.5, 0, 0.1);
                     // Rotate 90
