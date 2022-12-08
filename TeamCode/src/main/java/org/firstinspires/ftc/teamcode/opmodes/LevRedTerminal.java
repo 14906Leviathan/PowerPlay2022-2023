@@ -184,7 +184,7 @@ public class LevRedTerminal extends LinearOpMode{
                     sleep(1000);
 
                     // Drive forward to the high junction
-                    drive.driveDistance(0.3,0,5);
+                    drive.driveDistance(0.3,0,7);
 
                     // lower the arm and release the cone
                     drive.liftMidJunction();
@@ -196,7 +196,7 @@ public class LevRedTerminal extends LinearOpMode{
                     drive.liftHighJunction();
 
                     // back away from the junction
-                    drive.driveDistance(0.3, 180, 3);
+                    drive.driveDistance(0.3, 180, 7);
 
                     //rotate towards the cone stack
                     drive.PIDRotate(-90, 1);
@@ -209,7 +209,7 @@ public class LevRedTerminal extends LinearOpMode{
 
                 case CONE_2:
                     //rotate towards the cone stack
-                    drive.PIDRotate(-85, 1);
+                    drive.PIDRotate(-90, 1);
 
                     // lower the arm to pick up the top cone
                     drive.liftPosition(robot.LIFT_CONE5);
@@ -218,10 +218,10 @@ public class LevRedTerminal extends LinearOpMode{
                     drive.driveDistance(0.4,0,15);
 
                     // adjust direction - turn towards cone stack
-                    drive.PIDRotate(-88, 1);
+                    drive.PIDRotate(-90, 1);
 
                     //drive towards the stack of cones
-                    drive.driveDistance(0.4,0,15);
+                    drive.driveDistance(0.4,0,13);
 
                     // close the claw to grab the cone
                     drive.closeClaw();
@@ -232,7 +232,7 @@ public class LevRedTerminal extends LinearOpMode{
 
                     // lift the cone up to clear the stack
                     drive.liftLowJunction();
-                    sleep(300);
+                    sleep(600);
 
                     runState = State.LOW_JUNCTION_2;
                     break;
@@ -242,10 +242,10 @@ public class LevRedTerminal extends LinearOpMode{
                     drive.driveDistance(0.4,180,20);
 
                     // rotate towards the low junction
-                    drive.PIDRotate(-125, 1);
+                    drive.PIDRotate(-145, 1);
 
                     // drive towards the junction
-                    drive.driveDistance(0.3, 0, 6);
+                    drive.driveDistance(0.3, 0, 7);
 
                     // place the cone
                     drive.liftPosition(robot.LIFT_RESET);
@@ -322,7 +322,7 @@ public class LevRedTerminal extends LinearOpMode{
                         drive.PIDRotate(-90, 1);
 
                         // drive to park position 1
-                        drive.driveDistance(0.3, 0,30);
+                        drive.driveDistance(0.3, 0,25);
 
                     } else if (position == 2) {
                         // reset the lift
@@ -333,7 +333,7 @@ public class LevRedTerminal extends LinearOpMode{
                         drive.PIDRotate(-90, 1);
 
                         // drive to park position 1
-                        drive.driveDistance(0.3, 0,0);
+                        drive.driveDistance(0.3, 0,-3);
 
                     } else {
                         // reset the lift

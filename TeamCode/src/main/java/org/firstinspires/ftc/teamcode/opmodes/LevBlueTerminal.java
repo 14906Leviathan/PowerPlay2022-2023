@@ -233,7 +233,7 @@ public class LevBlueTerminal extends LinearOpMode{
 
                     // lift the cone up to clear the stack
                     drive.liftLowJunction();
-                    sleep(300);
+                    sleep(600);
 
                     runState = State.LOW_JUNCTION_2;
                     break;
@@ -314,7 +314,7 @@ public class LevBlueTerminal extends LinearOpMode{
 
                 case PARK:
 
-                    if(position == 1) {
+                    if(position == 3) {
                         // reset the lift
                         drive.liftReset();
                         drive.openClaw();
