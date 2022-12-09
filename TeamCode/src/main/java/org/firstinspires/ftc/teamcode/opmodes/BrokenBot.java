@@ -31,23 +31,15 @@ public class BrokenBot extends LinearOpMode {
     }   // end of BrokenBotTS constructor
 
     public void runOpMode() {
-        double startTime;
-        double timeElapsed;
-        double v1, v2, v3, v4, robotAngle, powerLevel = 1;
+        double v1, v2, v3, v4, robotAngle;
         double modePower = 1;
         double theta = 0;
         int mArm = 0;
         int mBase = 0;
-        double dpadup, dpaddown, dpadleft, dpadright;
         double r;
         double rightX, rightY;
-        double rightA, RightB;
-        double wristPosition = 0.5;
         double spinpower = 0;
-        boolean spintoggle = false;
         boolean fieldCentric = true;
-        int targetPosition = 0;
-        double linearServoPosition = 0.5;
 
         telemetry.addData("Robot State = ", "NOT READY");
         telemetry.update();
@@ -57,15 +49,14 @@ public class BrokenBot extends LinearOpMode {
          */
         robot.init(hardwareMap);
         robot.motorBase.setPower(1.0);
-        //robot.motorArm.setTargetPosition(0);
-        //robot.motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         /*
          * Initialize the drive class
          */
         DriveMecanum drive = new DriveMecanum(robot, opMode);
 
         /*
-         * Calibrate / initialize the gyro sensor
+         * Ready to go
          */
 
         telemetry.addData("Z Value = ", drive.getZAngle());
@@ -82,9 +73,10 @@ public class BrokenBot extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            /*
-             * Mecanum Drive Control section
-             */
+            /* #################################################################################
+               ####         Mecanum Drive Control section
+             * #################################################################################*/
+
             if (fieldCentric) {             // verify that the user hasn't disabled field centric drive
 //                theta = robot.imu.getAngularOrientation().firstAngle;
             } else {
@@ -94,10 +86,10 @@ public class BrokenBot extends LinearOpMode {
             rightX = gamepad1.right_stick_x;
             rightY = -gamepad1.right_stick_y;
             r = -Math.hypot(gamepad1.left_stick_x, -gamepad1.left_stick_y);
-            v1 = (r * Math.cos(robotAngle - Math.toRadians(theta)) + rightX + rightY) * powerLevel;
-            v2 = (r * Math.sin(robotAngle - Math.toRadians(theta)) - rightX + rightY) * powerLevel;
-            v3 = (r * Math.sin(robotAngle - Math.toRadians(theta)) + rightX + rightY) * powerLevel;
-            v4 = (r * Math.cos(robotAngle - Math.toRadians(theta)) - rightX + rightY) * powerLevel;
+            v1 = (r * Math.cos(robotAngle - Math.toRadians(theta)) + rightX + rightY);
+            v2 = (r * Math.sin(robotAngle - Math.toRadians(theta)) - rightX + rightY);
+            v3 = (r * Math.sin(robotAngle - Math.toRadians(theta)) + rightX + rightY);
+            v4 = (r * Math.cos(robotAngle - Math.toRadians(theta)) - rightX + rightY);
 
             if(gamepad2.dpad_up) {
                 v1 = 1;
@@ -115,31 +107,6 @@ public class BrokenBot extends LinearOpMode {
             robot.motorRR.setPower(v4 * modePower);
 
 
-            if(gamepad1.right_bumper){
-                drive.closeClaw();
-            } else if(gamepad1.left_bumper){
-                drive.openClaw();
-            }
-
-            if (gamepad1.dpad_up) {
-                mBase+=15;
-            }else if (gamepad1.dpad_down) {
-                mBase-=15;
-            }
-
-
-            if (gamepad1.dpad_down) {
-                mBase = mBase - 40;
-            }
-
-            if (mBase < 0 ){
-                mBase = 0;
-            }
-
-            // limit the values of liftPosition => This shouldn't be necessary if logic above works
-            Range.clip(mBase, robot.LIFT_RESET, robot.LIFT_HIGH_JUNCTION);
-
-
 
             /* #################################################################################
                ####         Lift Control
@@ -147,50 +114,69 @@ public class BrokenBot extends LinearOpMode {
             if(gamepad1.a){
                 // Set to low junction level
                 mBase = robot.LIFT_LOW_JUNCTION;
-            }
+            }   // end of if(gamepad1.a)
 
             if(gamepad1.b){
                 // set to mid junction level
                 mBase = robot.LIFT_MID_JUNCTION;
-            }
+            }   // end of if(gamepad1.b)
 
             if(gamepad1.y){
                 // set to high junction
                 mBase = robot.LIFT_HIGH_JUNCTION;
-            }
+            }   // end of if(gamepad1.y)
 
             if(gamepad1.x){
                 // reset lift to lowest position
                 mBase = robot.LIFT_RESET;
-            }
+            }   // end of if(gamepad1.x)
 
             if(gamepad2.a){
                 // Set to low junction level
                 mBase = robot.LIFT_CONE5;
-            }
+            }   // end of if(gamepad2.a)
 
             if(gamepad2.b){
                 // set to mid junction level
                 mBase = robot.LIFT_CONE4;
-            }
+            }   // end of if(gamepad2.b)
 
             if(gamepad2.y){
                 // set to high junction
                 mBase = robot.LIFT_CONE3;
-            }
+            }   // end of if(gamepad2.y)
 
             if(gamepad2.x){
                 // reset lift to lowest position
                 mBase = robot.LIFT_CONE2;
-            }
+            }   // end of if(gamepad2.x)
 
+            // limit the values of liftPosition => This shouldn't be necessary if logic above works
+            // allow manual control of the lift
+            if (gamepad1.dpad_up) {
+                mBase+=15;
+            }else if (gamepad1.dpad_down) {
+                mBase-=15;
+            }   // end of if(gamepad1.dpad_up)
+
+            // limit the max and min value of mBase
+            Range.clip(mBase, robot.LIFT_MIN_LOW,robot.LIFT_MAX_HIGH);
             drive.liftPosition(mBase);
 
+            /* #################################################################################
+               ####         Claw Control
+             * #################################################################################*/
+
             if (gamepad1.right_trigger > 0.1) {
-                robot.servoGrabber.setPosition(robot.SERVO_GRAB_OPEN);
+                drive.openClaw();
             } else if (gamepad1.left_trigger > 0.1) {
-                robot.servoGrabber.setPosition(robot.SERVO_GRAB_CLOSE);
-            }
+                drive.closeClaw();
+            }   // end of if(gamepad1.right_trigger)
+
+
+            /* #################################################################################
+               ####         User Feedback
+             * #################################################################################*/
 
             telemetry.addData("Gyro Value = ", drive.getZAngle());
             telemetry.addData("LF Start= ", lfStart);
@@ -221,8 +207,6 @@ public class BrokenBot extends LinearOpMode {
             telemetry.addData("Arm Setpoint = ", mArm);
             telemetry.addData("Base Setpoint = ", mBase);
             telemetry.update();
-
-
         }   // end of while opModeIsActive()
 
     }   // end of runOpMode method

@@ -14,6 +14,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.Range;
 
 
 import org.firstinspires.ftc.teamcode.hardware.HardwareProfile;
@@ -32,23 +33,14 @@ public class TeloOpRuntoP extends LinearOpMode {
     }   // end of BrokenBotTS constructor
 
     public void runOpMode() {
-        double startTime;
-        double timeElapsed;
-        double v1, v2, v3, v4, robotAngle, powerLevel = 1;
+        double v1, v2, v3, v4, robotAngle;
         double modePower = 1;
         double theta = 0;
         int mArm = 0;
         int mBase = 0;
-        double dpadup, dpaddown, dpadleft, dpadright;
         double r;
         double rightX, rightY;
-        double rightA, RightB;
-        double wristPosition = 0.5;
-        double spinpower = 0;
-        boolean spintoggle = false;
-        boolean fieldCentric = true;
-        int targetPosition = 0;
-        double linearServoPosition = 0.5;
+        boolean fieldCentric = false;
 
         telemetry.addData("Robot State = ", "NOT READY");
         telemetry.update();
@@ -58,8 +50,7 @@ public class TeloOpRuntoP extends LinearOpMode {
          */
         robot.init(hardwareMap);
         robot.motorBase.setPower(1.0);
-        //robot.motorArm.setTargetPosition(0);
-        //robot.motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         /*
          * Initialize the drive class
          */
@@ -68,9 +59,6 @@ public class TeloOpRuntoP extends LinearOpMode {
         /*
          * Calibrate / initialize the gyro sensor
          */
-
-//        robot.servoGrab.setPosition(0);
-//        robot.servoGrab.setPosition(0.5);
 
         telemetry.addData("Z Value = ", drive.getZAngle());
         telemetry.addData("Greetings = ", "HOME CHICKEN");
@@ -93,108 +81,64 @@ public class TeloOpRuntoP extends LinearOpMode {
             rightX = gamepad1.right_stick_x;
             rightY = -gamepad1.right_stick_y;
             r = -Math.hypot(gamepad1.left_stick_x, -gamepad1.left_stick_y);
-            v1 = (r * Math.cos(robotAngle - Math.toRadians(theta)) + rightX + rightY) * powerLevel;
-            v2 = (r * Math.sin(robotAngle - Math.toRadians(theta)) - rightX + rightY) * powerLevel;
-            v3 = (r * Math.sin(robotAngle - Math.toRadians(theta)) + rightX + rightY) * powerLevel;
-            v4 = (r * Math.cos(robotAngle - Math.toRadians(theta)) - rightX + rightY) * powerLevel;
-
-
-            //  robot.servoLinear.setPosition(linearServoPosition);
+            v1 = (r * Math.cos(robotAngle - Math.toRadians(theta)) + rightX + rightY);
+            v2 = (r * Math.sin(robotAngle - Math.toRadians(theta)) - rightX + rightY);
+            v3 = (r * Math.sin(robotAngle - Math.toRadians(theta)) + rightX + rightY);
+            v4 = (r * Math.cos(robotAngle - Math.toRadians(theta)) - rightX + rightY);
 
             robot.motorLF.setPower(v1 * modePower);
             robot.motorRF.setPower(v2 * modePower);
             robot.motorLR.setPower(v3 * modePower);
             robot.motorRR.setPower(v4 * modePower);
 
-            if (gamepad1.dpad_up) {
-                mBase+=15;
-            }else if (gamepad1.dpad_down) {
-                mBase-=15;
+
+            if (gamepad1.right_trigger > 0.1) {
+                robot.servoGrabber.setPosition(robot.SERVO_GRAB_OPEN);
+            } else if (gamepad1.left_trigger > 0.1) {
+                robot.servoGrabber.setPosition(robot.SERVO_GRAB_CLOSE);
             }
-
-
-
-
-            if (mBase < 0 ){
-                mBase = 0;
-            }
-            if (mBase > 10500 ) {
-                mBase = 10500;
-            }
-
-
-
-
-
-        //robot.motorArm.setPower(0.7);
-        //robot.motorArm.setTargetPosition(mArm);
-
-        if (gamepad1.right_trigger > 0.1) {
-            robot.servoGrabber.setPosition(robot.SERVO_GRAB_OPEN);
-        } else if (gamepad1.left_trigger > 0.1) {
-            robot.servoGrabber.setPosition(robot.SERVO_GRAB_CLOSE);
-        }
-
-
-
 
             if(gamepad1.x){
                 // Set to low junction level
                 mBase = robot.LIFT_LOW_JUNCTION;
-            }
+            }   // end of if(gamepad1.x)
 
             if(gamepad1.b){
                 // set to mid junction level
                 mBase = robot.LIFT_MID_JUNCTION;
-            }
+            }   // end of if(gamepad1.b)
 
             if(gamepad1.y){
                 // set to high junction
                 mBase = robot.LIFT_HIGH_JUNCTION;
-            }
+            }   // end of if(gamepad1.y)
 
             if(gamepad1.a){
                 // reset lift to lowest position
                 mBase = robot.LIFT_RESET;
-            }
+            }   // end of if(gamepad1.a)
 
-            if(gamepad2.a){
-                // Set to low junction level
-                mBase = robot.LIFT_CONE5;
-            }
+            // allow manual control of the lift
+            if (gamepad1.dpad_up) {
+                mBase+=15;
+            }else if (gamepad1.dpad_down) {
+                mBase-=15;
+            }   // end of if(gamepad1.dpad_up)
 
-            if(gamepad2.b){
-                // set to mid junction level
-                mBase = robot.LIFT_CONE4;
-            }
-
-            if(gamepad2.y){
-                // set to high junction
-                mBase = robot.LIFT_CONE3;
-            }
-
-            if(gamepad2.x){
-                // reset lift to lowest position
-                mBase = robot.LIFT_CONE2;
-            }
-
+            // limit the max and min value of mBase
+            Range.clip(mBase, robot.LIFT_MIN_LOW,robot.LIFT_MAX_HIGH);
             drive.liftPosition(mBase);
 
-        //    telemetry.addData("Servo Position = ", robot.servoLinear.getPosition());
-        telemetry.addData("motorLF = ", robot.motorLF.getCurrentPosition());
-        telemetry.addData("motorLR = ", robot.motorLR.getCurrentPosition());
-        telemetry.addData("motorRF = ", robot.motorRF.getCurrentPosition());
-        telemetry.addData("motorRR = ", robot.motorRR.getCurrentPosition());
-        //telemetry.addData("motorArm = ", robot.motorArm.getCurrentPosition());
-        telemetry.addData("motorBase = ", robot.motorBase.getCurrentPosition());
-        telemetry.addData("motorBase power = ",robot.motorBase.getPower());
-        telemetry.addData("spinpower = ", spinpower);
-        telemetry.addData("Arm Setpoint = ", mArm);
-        telemetry.addData("Base Setpoint = ", mBase);
-        //    telemetry.addData("Shooter Encoder = ", robot.motorShooter.getCurrentPosition());
-        //telemetry.addData("IMU Value: ", theta);
-        telemetry.update();
-
+            telemetry.addData("motorLF = ", robot.motorLF.getCurrentPosition());
+            telemetry.addData("motorLR = ", robot.motorLR.getCurrentPosition());
+            telemetry.addData("motorRF = ", robot.motorRF.getCurrentPosition());
+            telemetry.addData("motorRR = ", robot.motorRR.getCurrentPosition());
+            telemetry.addData("motorBase = ", robot.motorBase.getCurrentPosition());
+            telemetry.addData("motorBase power = ",robot.motorBase.getPower());
+            telemetry.addData("Arm Setpoint = ", mArm);
+            telemetry.addData("Base Setpoint = ", mBase);
+            //telemetry.addData("IMU Value: ", theta);
+            telemetry.update();
 
         }   // end of while opModeIsActive()
 

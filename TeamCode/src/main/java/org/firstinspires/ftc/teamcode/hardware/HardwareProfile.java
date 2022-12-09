@@ -29,6 +29,8 @@ public class HardwareProfile {
     public final double STRAFE_FACTOR = 0.9;
 
     public final int LIFT_RESET = 0;
+    public final int LIFT_MIN_LOW = 0;
+    public final int LIFT_MAX_HIGH = 4200;
     public final int LIFT_LOW_JUNCTION = 1700;
     public final int LIFT_MID_JUNCTION = 3000;
     public final int LIFT_HIGH_JUNCTION = 3800;
