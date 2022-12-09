@@ -36,7 +36,6 @@ public class TeloOpRuntoP extends LinearOpMode {
         double v1, v2, v3, v4, robotAngle;
         double modePower = 1;
         double theta = 0;
-        int mArm = 0;
         int mBase = 0;
         double r;
         double rightX, rightY;
@@ -91,6 +90,9 @@ public class TeloOpRuntoP extends LinearOpMode {
             robot.motorLR.setPower(v3 * modePower);
             robot.motorRR.setPower(v4 * modePower);
 
+            /* #################################################################################
+               ####         Claw Control
+             * #################################################################################*/
 
             if (gamepad1.right_trigger > 0.1) {
                 robot.servoGrabber.setPosition(robot.SERVO_GRAB_OPEN);
@@ -98,6 +100,9 @@ public class TeloOpRuntoP extends LinearOpMode {
                 robot.servoGrabber.setPosition(robot.SERVO_GRAB_CLOSE);
             }
 
+            /* #################################################################################
+               ####         Lift Control
+             * #################################################################################*/
             if(gamepad1.x){
                 // Set to low junction level
                 mBase = robot.LIFT_LOW_JUNCTION;
@@ -135,7 +140,6 @@ public class TeloOpRuntoP extends LinearOpMode {
             telemetry.addData("motorRR = ", robot.motorRR.getCurrentPosition());
             telemetry.addData("motorBase = ", robot.motorBase.getCurrentPosition());
             telemetry.addData("motorBase power = ",robot.motorBase.getPower());
-            telemetry.addData("Arm Setpoint = ", mArm);
             telemetry.addData("Base Setpoint = ", mBase);
             //telemetry.addData("IMU Value: ", theta);
             telemetry.update();

@@ -34,7 +34,6 @@ public class BrokenBot extends LinearOpMode {
         double v1, v2, v3, v4, robotAngle;
         double modePower = 1;
         double theta = 0;
-        int mArm = 0;
         int mBase = 0;
         double r;
         double rightX, rightY;
@@ -105,8 +104,6 @@ public class BrokenBot extends LinearOpMode {
             robot.motorRF.setPower(v2 * modePower);
             robot.motorLR.setPower(v3 * modePower);
             robot.motorRR.setPower(v4 * modePower);
-
-
 
             /* #################################################################################
                ####         Lift Control
@@ -204,7 +201,6 @@ public class BrokenBot extends LinearOpMode {
             }
             telemetry.addData("motorBase power = ",robot.motorBase.getPower());
             telemetry.addData("spinpower = ", spinpower);
-            telemetry.addData("Arm Setpoint = ", mArm);
             telemetry.addData("Base Setpoint = ", mBase);
             telemetry.update();
         }   // end of while opModeIsActive()

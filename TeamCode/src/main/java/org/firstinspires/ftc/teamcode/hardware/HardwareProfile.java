@@ -42,7 +42,6 @@ public class HardwareProfile {
     public final double SERVO_GRAB_OPEN = 0.3;
     public final double SERVO_GRAB_CLOSE = 0.6;
 
-
     /*
      * Hardware devices
      */
@@ -54,52 +53,19 @@ public class HardwareProfile {
 
     public DistanceSensor sensorWall = null;
 
-    /*
-    public DcMotor motorShooter1 = null;    // High Speed motor for the shooter
-    public DcMotor motorShooter2 = null;    // Second high Speed motor for the shooter
-
-     */
-
     public BNO055IMU imu;       // Internal accelerometer / Gyro sensor
-
-//    public Servo servoGrab;   // Servo that grabs the wobble goal
     public Servo servoGrabber;
-//    public Servo servoRwheel;
-//    public Servo servoLinear;
-
-/*
-    public Servo servoWobbleArm1;   // First servo that controls the Wobble Goal Arm
-    public Servo servoWobbleArm2;   // second servo that controls the Wobble Goal arm
-    public Servo servoIntake;   // Servo that deploys the intake mechanism
-
-    public TouchSensor touchLiftUp;
-    public TouchSensor touchLiftDown;
-
-    public ColorSensor colorStone;
-
-    public DistanceSensor distanceFront;
-
-    public WebcamName webcam;
-
-     */
-
     public RevBlinkinLedDriver LEDPort;
 
     /*
      * Declare Odometry hardware
      */
-//        public DcMotor verticalOdometryLeft = null;
-//        public DcMotor verticalOdometryRight = null;
-//        public DcMotor horizontalOdometry = null;
-
 
     /* Constructor */
     public HardwareProfile() {
-
     }
 
     public void init(HardwareMap ahwMap) {
-
         HardwareMap hwMap;
         hwMap = ahwMap;
 
@@ -135,22 +101,6 @@ public class HardwareProfile {
         motorRR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorRR.setPower(0);
 
-     /*   motorTurnTable = hwMap.dcMotor.get("motorTurnTable");
-        motorTurnTable.setDirection(DcMotor.Direction.FORWARD);
-        motorTurnTable.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorTurnTable.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorTurnTable.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorTurnTable.setPower(0);
-
-        //motorArm = hwMap.get(DcMotorEx.class, "motorArm");
-        //motorArm.setDirection(DcMotor.Direction.REVERSE);
-       // motorArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-       // motorArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-      //  motorArm.setTargetPosition(0);
-      //  motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-      //  motorArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-      //  motorArm.setPower(0);
-*/
         motorBase = hwMap.get(DcMotorEx.class,"motorBase");
         motorBase.setDirection(DcMotor.Direction.REVERSE);
         motorBase.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -159,49 +109,11 @@ public class HardwareProfile {
         motorBase.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         motorBase.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-
         /***
          * initialize sensors
          */
 //        sensorWall = hwMap.get(DistanceSensor.class, "Wall");
 
-/***
-        motorIntake = hwMap.dcMotor.get("motorIntake");
-        motorIntake.setDirection(DcMotor.Direction.FORWARD);
-        motorIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorIntake.setPower(0);
-
-        motorShooter = hwMap.get(DcMotorEx.class, "motorShooter");
-        motorShooter.setDirection(DcMotor.Direction.FORWARD);
-        motorShooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorShooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorShooter.setPower(0);
-
-
-        motorIntake = hwMap.dcMotor.get("motorIntake");
-        motorIntake.setDirection(DcMotor.Direction.FORWARD);
-        motorIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorIntake.setPower(0);
-
-        motorShooter2 = hwMap.dcMotor.get("motorShooter2");
-        motorShooter2.setDirection(DcMotor.Direction.REVERSE);
-        motorShooter2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorShooter2.setPower(0);
-
-        /*
-         * Initialize Odometry Encoders
-        verticalOdometryLeft = hwMap.dcMotor.get("odometryLeft");
-        verticalOdometryLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        verticalOdometryLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        verticalOdometryRight = hwMap.dcMotor.get("odometryRight");
-        verticalOdometryRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        verticalOdometryRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        horizontalOdometry = hwMap.dcMotor.get("odometryHorizontal");
-        horizontalOdometry.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        horizontalOdometry.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-       */
 
         /*
          * Initialize LED Controller
@@ -209,15 +121,7 @@ public class HardwareProfile {
         LEDPort.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
          */
 
-
         servoGrabber = hwMap.servo.get("servoGrabber");
-        /*
-//        servoWobbleGrab.setPosition(0.05);
-        servoWobbleArm1 = hwMap.servo.get("servoWobbleArm1");
-        servoWobbleArm2 = hwMap.servo.get("servoWobbleArm2");
-        servoIntake = hwMap.servo.get("servoIntake");
-
-         */
 
         /*
          * Initialize Sensors

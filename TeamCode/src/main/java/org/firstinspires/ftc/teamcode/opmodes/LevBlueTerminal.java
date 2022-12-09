@@ -19,6 +19,7 @@ import java.util.List;
 
 public class LevBlueTerminal extends LinearOpMode{
 
+    /*      Original
     private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
 
@@ -26,6 +27,16 @@ public class LevBlueTerminal extends LinearOpMode{
             "1 Bolt",
             "2 Bulb",
             "3 Panel"
+    };
+     */
+
+    private static final String TFOD_MODEL_ASSET = "PP-version1.tflite";
+    // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
+
+    private static final String[] LABELS = {
+            "Qrcode",
+            "logo",
+            "peacock"
     };
 
  private static final String VUFORIA_KEY =
@@ -101,10 +112,8 @@ public class LevBlueTerminal extends LinearOpMode{
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
-        robot.motorBase.setTargetPosition(0);
-        //robot.motorArm.setTargetPosition(0);
+        robot.motorBase.setTargetPosition(robot.LIFT_RESET);
         robot.motorBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //robot.motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
@@ -130,11 +139,21 @@ public class LevBlueTerminal extends LinearOpMode{
                         telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
                         telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
                         telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
-                        if(recognition.getLabel() == "1 Bolt"){
+
+                        if(recognition.getLabel() == "Qrcode"){
+                            position =1;
+                        } else if(recognition.getLabel() == "logo" ){
+                            position = 2;
+                        } else position = 3;
+
+
+                        /*                        if(recognition.getLabel() == "1 Bolt"){
                             position =1;
                         } else if(recognition.getLabel() == "2 Bulb" ){
                             position = 2;
                         } else position = 3;
+
+ */
                     }
                     telemetry.update();
                 }
