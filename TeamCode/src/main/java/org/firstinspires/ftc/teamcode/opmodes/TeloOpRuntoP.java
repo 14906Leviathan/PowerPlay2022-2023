@@ -113,23 +113,19 @@ public class TeloOpRuntoP extends LinearOpMode {
             }
 
 
-            if (gamepad1.dpad_down) {
-                mBase = mBase - 40;
-            }
+
 
             if (mBase < 0 ){
                 mBase = 0;
             }
+            if (mBase > 10500 ) {
+                mBase = 10500;
+            }
 
 
 
 
-        if (gamepad1.dpad_left) {
-            mArm = mArm - 20;
-        }
-        if (gamepad1.dpad_right) {
-            mArm = mArm + 20;
-        }
+
         //robot.motorArm.setPower(0.7);
         //robot.motorArm.setTargetPosition(mArm);
 
@@ -139,57 +135,50 @@ public class TeloOpRuntoP extends LinearOpMode {
             robot.servoGrabber.setPosition(robot.SERVO_GRAB_CLOSE);
         }
 
-        if (!gamepad1.x ^ gamepad1.b) {
-            spintoggle = true;
-        }
 
-        if (gamepad1.x && spintoggle) {
-            spintoggle = false;
-            if (spinpower == 0) {
-                spinpower = .3;
-            } else
-                spinpower = spinpower + .1;
-        }
-        if (gamepad1.b && spintoggle) {
-            spintoggle = false;
-            if (spinpower == 0) {
-                spinpower = -.3;
-            } else
-                spinpower = spinpower - .1;
 
-        }
-        ;
-        if (gamepad1.a) {
-            mBase = 0;
-        }
-        if (gamepad1.b) {
-            mBase = 7900;
-            }
-            if (gamepad1.x) {
 
-                mBase = 4580;
+            if(gamepad1.x){
+                // Set to low junction level
+                mBase = robot.LIFT_LOW_JUNCTION;
             }
-            if (gamepad1.y) {
 
-            mBase = 10580;
-        }
-            if (gamepad1.right_bumper) {
-                mArm = 650;
-                //mBase = 0;
+            if(gamepad1.b){
+                // set to mid junction level
+                mBase = robot.LIFT_MID_JUNCTION;
             }
-            if (gamepad1.left_bumper) {
-                mArm = 280;
-                //mBase = 0;
+
+            if(gamepad1.y){
+                // set to high junction
+                mBase = robot.LIFT_HIGH_JUNCTION;
             }
-        //robot.motorTurnTable.setPower(spinpower);
-/*
-            if(gamepad1.dpad_up || gamepad2.dpad_up){   // open the claw
-                robot.servoGrab.setPosition(0);
-            } else if(gamepad1.dpad_down || gamepad2.dpad_down){  // close the claw
-                robot.servoGrab.setPosition(0.4);
+
+            if(gamepad1.a){
+                // reset lift to lowest position
+                mBase = robot.LIFT_RESET;
             }
-*/
-            robot.motorBase.setTargetPosition(mBase);
+
+            if(gamepad2.a){
+                // Set to low junction level
+                mBase = robot.LIFT_CONE5;
+            }
+
+            if(gamepad2.b){
+                // set to mid junction level
+                mBase = robot.LIFT_CONE4;
+            }
+
+            if(gamepad2.y){
+                // set to high junction
+                mBase = robot.LIFT_CONE3;
+            }
+
+            if(gamepad2.x){
+                // reset lift to lowest position
+                mBase = robot.LIFT_CONE2;
+            }
+
+            drive.liftPosition(mBase);
 
         //    telemetry.addData("Servo Position = ", robot.servoLinear.getPosition());
         telemetry.addData("motorLF = ", robot.motorLF.getCurrentPosition());
