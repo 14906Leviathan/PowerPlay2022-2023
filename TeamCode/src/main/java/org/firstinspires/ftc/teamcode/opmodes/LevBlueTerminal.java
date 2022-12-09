@@ -35,8 +35,8 @@ public class LevBlueTerminal extends LinearOpMode{
 
     private static final String[] LABELS = {
             "Qrcode",
-            "logo",
-            "peacock"
+            "Logo",
+            "Peacock"
     };
 
  private static final String VUFORIA_KEY =
@@ -147,13 +147,13 @@ public class LevBlueTerminal extends LinearOpMode{
                         } else position = 3;
 
 
-                        /*                        if(recognition.getLabel() == "1 Bolt"){
+                        /*
+                        if(recognition.getLabel() == "1 Bolt"){
                             position =1;
                         } else if(recognition.getLabel() == "2 Bulb" ){
                             position = 2;
                         } else position = 3;
-
- */
+                         */
                     }
                     telemetry.update();
                 }
