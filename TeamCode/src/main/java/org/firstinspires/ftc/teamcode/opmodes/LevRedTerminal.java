@@ -244,8 +244,8 @@ public class LevRedTerminal extends LinearOpMode{
                     // rotate towards the low junction
                     drive.PIDRotate(-145, 1);
 
-                    // drive towards the junction
-                    drive.driveDistance(0.3, 0, 7);
+                    // drive towards the junction reduced from 7 to 6 after TSAS
+                    drive.driveDistance(0.3, 0, 6);
 
                     // place the cone
                     drive.liftPosition(robot.LIFT_RESET);

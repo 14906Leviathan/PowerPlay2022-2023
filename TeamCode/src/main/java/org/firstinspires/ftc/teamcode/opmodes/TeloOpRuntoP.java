@@ -119,8 +119,15 @@ public class TeloOpRuntoP extends LinearOpMode {
             }   // end of if(gamepad1.y)
 
             if(gamepad1.a){
-                // reset lift to lowest position
-                mBase = robot.LIFT_RESET;
+
+                if (mBase != 0){
+                    // reset lift to lowest position
+                    mBase = robot.LIFT_RESET;
+                }
+                else {
+                    // lift to cone f
+                    mBase = robot.LIFT_CONE5;
+                }
             }   // end of if(gamepad1.a)
 
             // allow manual control of the lift

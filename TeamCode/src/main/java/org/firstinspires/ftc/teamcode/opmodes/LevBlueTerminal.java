@@ -19,7 +19,7 @@ import java.util.List;
 
 public class LevBlueTerminal extends LinearOpMode{
 
-    /*      Original
+     //    Original
     private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
 
@@ -28,8 +28,8 @@ public class LevBlueTerminal extends LinearOpMode{
             "2 Bulb",
             "3 Panel"
     };
-     */
 
+/*
     private static final String TFOD_MODEL_ASSET = "PP-version1.tflite";
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
 
@@ -38,7 +38,7 @@ public class LevBlueTerminal extends LinearOpMode{
             "Logo",
             "Peacock"
     };
-
+*/
  private static final String VUFORIA_KEY =
 
         "ARLYRsf/////AAABmWpsWSsfQU1zkK0B5+iOOr0tULkAWVuhNuM3EbMfgb1+zbcOEG8fRRe3G+iLqL1/iAlTYqqoLetWeulG8hkCOOtkMyHwjS/Ir8/2vUVgC36M/wb9a7Ni2zuSrlEanb9jPVsNqq+71/uzTpS3TNvJI8WeICQNPAq3qMwmfqnCphVlC6h2ZSLsAR3wcdzknFmtpApdOp1jHJvITPeD/CMdAXjZDN0XJwJNQJ6qtaYSLGC23vJdQ2b1aeqnJauOvswapsG7BlmR7m891VN92rNEcOX7WmMT4L0JOM0yKKhPfF/aSROwIdNtSOpQW4qEKVjw3aMU1QDZ0jj5SnRV8RPO0hGiHtXy6QJcZsSj/Y6q5nyf";
