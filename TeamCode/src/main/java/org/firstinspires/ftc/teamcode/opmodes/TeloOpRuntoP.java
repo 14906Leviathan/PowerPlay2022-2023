@@ -14,6 +14,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 
@@ -27,7 +28,7 @@ public class TeloOpRuntoP extends LinearOpMode {
 
     private final static HardwareProfile robot = new HardwareProfile();
     private LinearOpMode opMode = this;
-
+    private ElapsedTime elapsedTime = new ElapsedTime();
     public TeloOpRuntoP(){
 
     }   // end of BrokenBotTS constructor
@@ -40,6 +41,7 @@ public class TeloOpRuntoP extends LinearOpMode {
         double r;
         double rightX, rightY;
         boolean fieldCentric = false;
+        double delay=elapsedTime.time();
 
         telemetry.addData("Robot State = ", "NOT READY");
         telemetry.update();
@@ -123,8 +125,10 @@ public class TeloOpRuntoP extends LinearOpMode {
                 if (mBase != 0){
                     // reset lift to lowest position
                     mBase = robot.LIFT_RESET;
+
+
                 }
-                else {
+                else if(robot.motorBase.getCurrentPosition()<10) {
                     // lift to cone f
                     mBase = robot.LIFT_CONE5;
                 }

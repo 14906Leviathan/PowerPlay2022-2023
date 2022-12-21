@@ -43,7 +43,7 @@ public class HardwareProfile {
     public final int LIFT_CONE2 = 200;
     public final double LIFT_POWER = 1;
     public final double SERVO_GRAB_OPEN = 0.3;
-    public final double SERVO_GRAB_CLOSE = 0.6;
+    public final double SERVO_GRAB_CLOSE = 0.65;
 
     /*
      * Hardware devices
