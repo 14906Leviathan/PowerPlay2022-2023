@@ -12,13 +12,18 @@
 
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.hardware.HardwareProfile;
 import org.firstinspires.ftc.teamcode.libs.DriveMecanum;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Broken Bot", group = "Test")
+@Config
+@TeleOp(name = "Broken Bot", group = "Test")
 //@Disabled
 
 public class BrokenBot extends LinearOpMode {
@@ -26,9 +31,17 @@ public class BrokenBot extends LinearOpMode {
     private final static HardwareProfile robot = new HardwareProfile();
     private LinearOpMode opMode = this;
 
+    FtcDashboard dashboard;
+    public static double l1_CLAW_OPEN = robot.SERVO_GRAB_OPEN;
+    public static double l2_CLAW_CLOSE = robot.SERVO_GRAB_CLOSE;
+    public static int l3_LIFT_JUNCTION_HIGH = robot.LIFT_HIGH_JUNCTION;
+    public static int l4_LIFT_JUNCTION_MID = robot.LIFT_MID_JUNCTION;
+    public static int l5_LIFT_JUNCTION_LOW = robot.LIFT_LOW_JUNCTION;
+    public static int l6_LIFT_POSITION = 0;
+
     public BrokenBot(){
 
-    }   // end of BrokenBotTS constructor
+    }   // end of BrokenBot constructor
 
     public void runOpMode() {
         double v1, v2, v3, v4, robotAngle;
@@ -39,6 +52,10 @@ public class BrokenBot extends LinearOpMode {
         double rightX, rightY;
         double spinpower = 0;
         boolean fieldCentric = true;
+
+        dashboard = FtcDashboard.getInstance();
+        TelemetryPacket dashTelemetry = new TelemetryPacket();
+
 
         telemetry.addData("Robot State = ", "NOT READY");
         telemetry.update();
@@ -57,6 +74,19 @@ public class BrokenBot extends LinearOpMode {
         /*
          * Ready to go
          */
+
+        // post telemetry to FTC Dashboard as well
+        dashTelemetry.put("01 - IMU Angle X = ", robot.imu.getAngularOrientation().firstAngle);
+        dashTelemetry.put("02 - IMU Angle Y = ", robot.imu.getAngularOrientation().secondAngle);
+        dashTelemetry.put("03 - IMU Angle Z = ", robot.imu.getAngularOrientation().thirdAngle);
+        dashTelemetry.put("04 - Lift Front Encoder Value = ", robot.motorBase.getCurrentPosition());
+        dashTelemetry.put("06 - Claw Value = ", robot.servoGrabber.getPosition());
+        dashTelemetry.put("07 - GP1.Button.X = ", "RESET LIFT");
+        dashTelemetry.put("08 - GP1.Button.A = ", "LIFT LOW JUNCTION");
+        dashTelemetry.put("09 - GP1.Button.B = ", "LIFT MID JUNCTION");
+        dashTelemetry.put("10 - GP1.Button.Y = ", "LIFT HIGH JUNCTION");
+        dashTelemetry.put("11 - GP2.Button.A = ", "Custom Position - program stack cone levels");
+        dashboard.sendTelemetryPacket(dashTelemetry);
 
         telemetry.addData("Z Value = ", drive.getZAngle());
         telemetry.addData("Greetings = ", "HOME CHICKEN");
@@ -110,17 +140,17 @@ public class BrokenBot extends LinearOpMode {
              * #################################################################################*/
             if(gamepad1.a){
                 // Set to low junction level
-                mBase = robot.LIFT_LOW_JUNCTION;
+                mBase = l5_LIFT_JUNCTION_LOW;
             }   // end of if(gamepad1.a)
 
             if(gamepad1.b){
                 // set to mid junction level
-                mBase = robot.LIFT_MID_JUNCTION;
+                mBase = l4_LIFT_JUNCTION_MID;
             }   // end of if(gamepad1.b)
 
             if(gamepad1.y){
                 // set to high junction
-                mBase = robot.LIFT_HIGH_JUNCTION;
+                mBase = l3_LIFT_JUNCTION_HIGH;
             }   // end of if(gamepad1.y)
 
             if(gamepad1.x){
@@ -130,23 +160,8 @@ public class BrokenBot extends LinearOpMode {
 
             if(gamepad2.a){
                 // Set to low junction level
-                mBase = robot.LIFT_CONE5;
+                mBase = l6_LIFT_POSITION;
             }   // end of if(gamepad2.a)
-
-            if(gamepad2.b){
-                // set to mid junction level
-                mBase = robot.LIFT_CONE4;
-            }   // end of if(gamepad2.b)
-
-            if(gamepad2.y){
-                // set to high junction
-                mBase = robot.LIFT_CONE3;
-            }   // end of if(gamepad2.y)
-
-            if(gamepad2.x){
-                // reset lift to lowest position
-                mBase = robot.LIFT_CONE2;
-            }   // end of if(gamepad2.x)
 
             // limit the values of liftPosition => This shouldn't be necessary if logic above works
             // allow manual control of the lift
@@ -203,6 +218,20 @@ public class BrokenBot extends LinearOpMode {
             telemetry.addData("spinpower = ", spinpower);
             telemetry.addData("Base Setpoint = ", mBase);
             telemetry.update();
+
+            // post telemetry to FTC Dashboard as well
+            dashTelemetry.put("01 - IMU Angle X = ", robot.imu.getAngularOrientation().firstAngle);
+            dashTelemetry.put("02 - IMU Angle Y = ", robot.imu.getAngularOrientation().secondAngle);
+            dashTelemetry.put("03 - IMU Angle Z = ", robot.imu.getAngularOrientation().thirdAngle);
+            dashTelemetry.put("04 - Lift Front Encoder Value = ", robot.motorBase.getCurrentPosition());
+            dashTelemetry.put("06 - Claw Value = ", robot.servoGrabber.getPosition());
+            dashTelemetry.put("07 - GP1.Button.X = ", "RESET LIFT");
+            dashTelemetry.put("08 - GP1.Button.A = ", "LIFT LOW JUNCTION");
+            dashTelemetry.put("09 - GP1.Button.B = ", "LIFT MID JUNCTION");
+            dashTelemetry.put("10 - GP1.Button.Y = ", "LIFT HIGH JUNCTION");
+            dashTelemetry.put("11 - GP2.Button.A = ", "Custom Position - program stack cone levels");
+            dashboard.sendTelemetryPacket(dashTelemetry);
+
         }   // end of while opModeIsActive()
 
     }   // end of runOpMode method
