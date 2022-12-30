@@ -53,6 +53,7 @@ public class HardwareProfile {
     public DcMotor motorRF = null;  // Right Front Drive Motor
     public DcMotor motorRR = null;  // Right Rear Drive Motor
     public DcMotorEx motorBase = null;
+    public DcMotor lampRobot = null;
 
     public DistanceSensor sensorWall = null;
 
@@ -115,6 +116,9 @@ public class HardwareProfile {
         motorBase.setPower(0);
         motorBase.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         motorBase.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        lampRobot = hwMap.dcMotor.get("RobotLamp");
+        lampRobot.setPower(0);
 
         /***
          * initialize sensors

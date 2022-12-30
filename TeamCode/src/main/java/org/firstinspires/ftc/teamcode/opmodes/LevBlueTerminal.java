@@ -114,6 +114,7 @@ public class LevBlueTerminal extends LinearOpMode{
         robot.init(hardwareMap);
         robot.motorBase.setTargetPosition(robot.LIFT_RESET);
         robot.motorBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.lampRobot.setPower(1);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
@@ -164,7 +165,7 @@ public class LevBlueTerminal extends LinearOpMode{
         if(!running) requestOpModeStop();   // user requested to abort setup
 
         // Wait for the game to start (driver presses PLAY)
-        waitForStart();
+//        waitForStart();
 
         runtime.reset();
         runState = State.LEVEL_ADJUST;
@@ -180,6 +181,7 @@ public class LevBlueTerminal extends LinearOpMode{
 
                 case LEVEL_ADJUST:
 
+                    robot.lampRobot.setPower(0);
                     runState = State.HIGH_JUNCTION_1;
                     break;
 

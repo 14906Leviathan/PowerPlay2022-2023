@@ -185,6 +185,9 @@ public class BrokenBot extends LinearOpMode {
                 drive.closeClaw();
             }   // end of if(gamepad1.right_trigger)
 
+            if(gamepad2.left_bumper) {
+                robot.lampRobot.setPower(1);
+            } //else robot.lampRobot.setPower(0);
 
             /* #################################################################################
                ####         User Feedback

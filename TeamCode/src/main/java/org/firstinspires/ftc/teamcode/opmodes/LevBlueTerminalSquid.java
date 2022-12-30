@@ -30,7 +30,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
     };
      */
 
-    private static final String TFOD_MODEL_ASSET = "Squid3.tflite";
+    private static final String TFOD_MODEL_ASSET = "squid3.tflite";
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
 
     private static final String[] LABELS = {
@@ -114,7 +114,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
         robot.init(hardwareMap);
         robot.motorBase.setTargetPosition(robot.LIFT_RESET);
         robot.motorBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+        robot.lampRobot.setPower(1);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
         telemetry.update();
@@ -179,7 +179,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                     break;
 
                 case LEVEL_ADJUST:
-
+                    robot.lampRobot.setPower(0);
                     runState = State.HIGH_JUNCTION_1;
                     break;
 
