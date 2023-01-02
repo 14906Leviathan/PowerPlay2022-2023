@@ -30,13 +30,13 @@ public class LevBlueTerminalSquid extends LinearOpMode{
     };
      */
 
-    private static final String TFOD_MODEL_ASSET = "squid3.tflite";
+    private static final String TFOD_MODEL_ASSET = "MultiSquidRow.tflite";
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
 
     private static final String[] LABELS = {
-            "Point",
+            "Pointy",
             "Seattle",
-            "Chlulu"
+            "GreenSq"
     };
 
  private static final String VUFORIA_KEY =
@@ -140,9 +140,9 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                         telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
                         telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
 
-                        if(recognition.getLabel() == "Point"){
+                        if(recognition.getLabel() == "Pointy"){
                             position =3;
-                        } else if(recognition.getLabel() == "Chlulu" ){
+                        } else if(recognition.getLabel() == "GreenSq" ){
                             position = 2;
                         } else position = 1;
 
