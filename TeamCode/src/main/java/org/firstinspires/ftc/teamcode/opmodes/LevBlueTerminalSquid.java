@@ -30,7 +30,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
     };
      */
 
-    private static final String TFOD_MODEL_ASSET = "MultiSquidRow.tflite";
+    private static final String TFOD_MODEL_ASSET = "MultiSquidRow2.tflite";
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
 
     private static final String[] LABELS = {

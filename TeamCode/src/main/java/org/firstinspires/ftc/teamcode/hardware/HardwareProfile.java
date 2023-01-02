@@ -37,8 +37,8 @@ public class HardwareProfile {
     public final int LIFT_LOW_JUNCTION = 1700;
     public final int LIFT_MID_JUNCTION = 3000;
     public final int LIFT_HIGH_JUNCTION = 4000;
-    public final int LIFT_CONE5 = 600;
-    public final int LIFT_CONE4 = 400;
+    public final int LIFT_CONE5 = 630;
+    public final int LIFT_CONE4 = 500;
     public final int LIFT_CONE3 = 300;
     public final int LIFT_CONE2 = 200;
     public final double LIFT_POWER = 1;
