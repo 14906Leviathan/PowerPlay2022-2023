@@ -30,13 +30,13 @@ public class LevBlueTerminalSquid extends LinearOpMode{
     };
      */
 
-    private static final String TFOD_MODEL_ASSET = "MultiSquidRow2.tflite";
+    private static final String TFOD_MODEL_ASSET = "GenericSignalSleve.tflite";
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
 
     private static final String[] LABELS = {
-            "Pointy",
-            "Seattle",
-            "GreenSq"
+            "circle",
+            "star",
+            "triangle"
     };
 
  private static final String VUFORIA_KEY =
@@ -140,9 +140,9 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                         telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
                         telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
 
-                        if(recognition.getLabel() == "Pointy"){
+                        if(recognition.getLabel() == "star"){
                             position =3;
-                        } else if(recognition.getLabel() == "GreenSq" ){
+                        } else if(recognition.getLabel() == "triangle" ){
                             position = 2;
                         } else position = 1;
 
@@ -200,11 +200,11 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                     //turn to high junction
                     drive.PIDRotate(-35,1);
 
-                   //Wait for raise
+                    //Wait for raise
                     sleep(1000);
 
                     // Drive forward to the high junction
-                    drive.driveDistance(0.3,0,5);
+                    drive.driveDistance(0.3,0,7.5);
 
                     // lower the arm and release the cone
                     drive.liftMidJunction();
@@ -216,7 +216,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                     drive.liftHighJunction();
 
                     // back away from the junction
-                    drive.driveDistance(0.3, 180, 3);
+                    drive.driveDistance(0.3, 180, 4);
 
                     //rotate towards the cone stack
                     drive.PIDRotate(90, 1);
@@ -241,7 +241,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                     drive.PIDRotate(88, 1);
 
                     //drive towards the stack of cones
-                    drive.driveDistance(0.4,0,15);
+                    drive.driveDistance(0.4,0,13);
 
                     // close the claw to grab the cone
                     drive.closeClaw();
@@ -259,10 +259,10 @@ public class LevBlueTerminalSquid extends LinearOpMode{
 
                 case LOW_JUNCTION_2:
                     // back away to tile 2
-                    drive.driveDistance(0.4,180,20);
+                    drive.driveDistance(0.4,180,21);
 
                     // rotate towards the low junction
-                    drive.PIDRotate(125, 1);
+                    drive.PIDRotate(135, 1);
 
                     // drive towards the junction
                     drive.driveDistance(0.3, 0, 6);
@@ -277,12 +277,12 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                     sleep(500);
 
                     // back away from the junction
-                    drive.driveDistance(0.3, 180, 6);
+                    drive.driveDistance(0.3, 180, 7);
 
                     // turn towards the stack
                     drive.PIDRotate(90, 1);
 
-                    runState = State.PARK;
+                    runState = State.CONE_3;
                     break;
 
                 case CONE_3:
@@ -296,16 +296,23 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                     drive.PIDRotate(90, 1);
 
                     //drive towards the stack of cones
-                    drive.driveDistance(0.4,0,15);
+                    drive.driveDistance(0.4,0,12);
 
                     // close the claw to grab the cone
+
                     drive.closeClaw();
+                    sleep(600);
+
+
+                    //back away from the wall slightly
+                    drive.driveDistance(0.2,180,0.5);
 
                     // lift the cone up to clear the stack
                     drive.liftLowJunction();
+                    sleep(600);
 
                     // back away to tile 2
-                    drive.driveDistance(0.4,0,30);
+                    drive.driveDistance(0.4,180,25);
 
                     runState = State.LOW_JUNCTION_3;
                     break;
@@ -327,6 +334,42 @@ public class LevBlueTerminalSquid extends LinearOpMode{
 
                     // turn towards the stack
                     drive.PIDRotate(90, 1);
+
+                    runState = State.PARK;
+                    break;
+                case MID_JUNCTION_3:
+                    // rotate towards the low junction
+                    drive.PIDRotate(225, 1);
+
+                    // raise the arm to position the cone
+                    drive.liftMidJunction();
+
+                    //Wait for raise
+                    sleep(1000);
+
+                    // Drive forward to the high junction
+                    drive.driveDistance(0.3,0,6);
+
+                    // lower the arm and release the cone
+                    drive.liftLowJunction();
+                    sleep(400);
+
+                    drive.openClaw();
+
+                    // raise the lift to keep from entagling on junction
+                    drive.liftMidJunction();
+
+                    // back away from the junction
+                    drive.driveDistance(0.3, 180, 4);
+
+                    //rotate towards the cone stack
+                    drive.PIDRotate(90, 1);
+
+                    // reset the lift to its starting position
+                    drive.liftReset();
+
+                    // back away to center
+                    //drive.driveDistance(0.4,0,1.5);
 
                     runState = State.PARK;
                     break;
@@ -399,7 +442,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
      * Enumerate the states of the machine
      */
     enum State {
-        TEST, ALLIANCE_SELECT, HIGH_JUNCTION_1, CONE_2, LOW_JUNCTION_2, CONE_3, LOW_JUNCTION_3, LEVEL_ADJUST, PARK, HALT, SET_DISTANCES
+        TEST, ALLIANCE_SELECT, HIGH_JUNCTION_1, CONE_2, LOW_JUNCTION_2, CONE_3, LOW_JUNCTION_3, MID_JUNCTION_3, LEVEL_ADJUST, PARK, HALT, SET_DISTANCES
     }   // end of enum State
 
     /**

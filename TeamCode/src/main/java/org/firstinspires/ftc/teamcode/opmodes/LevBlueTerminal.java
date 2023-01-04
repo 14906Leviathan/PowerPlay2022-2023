@@ -206,7 +206,7 @@ public class LevBlueTerminal extends LinearOpMode{
                     sleep(1000);
 
                     // Drive forward to the high junction
-                    drive.driveDistance(0.3,0,5.5);
+                    drive.driveDistance(0.3,0,7.5);
 
                     // lower the arm and release the cone
                     drive.liftMidJunction();
@@ -267,7 +267,7 @@ public class LevBlueTerminal extends LinearOpMode{
                     drive.PIDRotate(135, 1);
 
                     // drive towards the junction
-                    drive.driveDistance(0.3, 0, 7);
+                    drive.driveDistance(0.3, 0, 6);
 
                     // place the cone
                     drive.liftPosition(robot.LIFT_RESET);
@@ -279,7 +279,7 @@ public class LevBlueTerminal extends LinearOpMode{
                     sleep(500);
 
                     // back away from the junction
-                    drive.driveDistance(0.3, 180, 6);
+                    drive.driveDistance(0.3, 180, 7);
 
                     // turn towards the stack
                     drive.PIDRotate(90, 1);
@@ -324,7 +324,7 @@ public class LevBlueTerminal extends LinearOpMode{
                     drive.PIDRotate(120, 1);
 
                     // drive towards the junction
-                    drive.driveDistance(0.3, 0, 3);
+                    drive.driveDistance(0.3, 0, 4);
 
                     // place the cone
                     drive.liftReset();
@@ -380,7 +380,7 @@ public class LevBlueTerminal extends LinearOpMode{
                 case HIGH_JUNCTION_3:
 
                     // back away to tile 2
-                    drive.driveDistance(0.4,180,30);
+                    drive.driveDistance(0.4,180,28);
 
 
                     // rotate towards the low junction
@@ -390,10 +390,10 @@ public class LevBlueTerminal extends LinearOpMode{
                     drive.liftHighJunction();
 
                     //Wait for raise
-                    sleep(1000);
+                    sleep(500);
 
                     // Drive forward to the high junction
-                    drive.driveDistance(0.3,0,5.5);
+                    drive.driveDistance(0.3,0,6);
 
                     // lower the arm and release the cone
                     drive.liftMidJunction();

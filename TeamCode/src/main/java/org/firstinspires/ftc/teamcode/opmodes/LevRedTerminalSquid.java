@@ -19,13 +19,13 @@ import java.util.List;
 
 public class LevRedTerminalSquid extends LinearOpMode{
 
-    private static final String TFOD_MODEL_ASSET = "Squid3.tflite";
+    private static final String TFOD_MODEL_ASSET = "GenericSignalSleve.tflite";
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
 
     private static final String[] LABELS = {
-            "Point",
-            "Seattle",
-            "Chlulu"
+            "circle",
+            "star",
+            "triangle"
     };
 
     private static final String VUFORIA_KEY =
@@ -129,9 +129,9 @@ public class LevRedTerminalSquid extends LinearOpMode{
                         telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
                         telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
                         telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
-                        if(recognition.getLabel() == "Point"){
+                        if(recognition.getLabel() == "star"){
                             position =3;
-                        } else if(recognition.getLabel() == "Chlulu" ){
+                        } else if(recognition.getLabel() == "triangle" ){
                             position = 2;
                         } else position = 1;
                     }
