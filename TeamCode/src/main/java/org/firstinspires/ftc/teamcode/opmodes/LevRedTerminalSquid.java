@@ -19,7 +19,7 @@ import java.util.List;
 
 public class LevRedTerminalSquid extends LinearOpMode{
 
-    private static final String TFOD_MODEL_ASSET = "GenericSignalSleve.tflite";
+    private static final String TFOD_MODEL_ASSET = "GenericSignalSleeve.tflite";
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
 
     private static final String[] LABELS = {
@@ -101,6 +101,7 @@ public class LevRedTerminalSquid extends LinearOpMode{
          */
         robot.init(hardwareMap);
         robot.motorBase.setTargetPosition(0);
+        robot.lampRobot.setPower(1);
         //robot.motorArm.setTargetPosition(0);
         robot.motorBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //robot.motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -129,6 +130,7 @@ public class LevRedTerminalSquid extends LinearOpMode{
                         telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
                         telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
                         telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
+
                         if(recognition.getLabel() == "star"){
                             position =3;
                         } else if(recognition.getLabel() == "triangle" ){
@@ -159,7 +161,7 @@ public class LevRedTerminalSquid extends LinearOpMode{
                     break;
 
                 case LEVEL_ADJUST:
-
+                    robot.lampRobot.setPower(0);
                     runState = State.HIGH_JUNCTION_1;
                     break;
 
@@ -181,10 +183,10 @@ public class LevRedTerminalSquid extends LinearOpMode{
                     drive.PIDRotate(35,1);
 
                    //Wait for the lift to raise
-                    sleep(1000);
+                    sleep(800);
 
                     // Drive forward to the high junction
-                    drive.driveDistance(0.3,0,7);
+                    drive.driveDistance(0.3,0,7.5);
 
                     // lower the arm and release the cone
                     drive.liftMidJunction();
@@ -196,7 +198,7 @@ public class LevRedTerminalSquid extends LinearOpMode{
                     drive.liftHighJunction();
 
                     // back away from the junction
-                    drive.driveDistance(0.3, 180, 7);
+                    drive.driveDistance(0.3, 180, 4);
 
                     //rotate towards the cone stack
                     drive.PIDRotate(-90, 1);
@@ -239,13 +241,13 @@ public class LevRedTerminalSquid extends LinearOpMode{
 
                 case LOW_JUNCTION_2:
                     // back away to tile 2
-                    drive.driveDistance(0.4,180,20);
+                    drive.driveDistance(0.4,180,21);
 
                     // rotate towards the low junction
-                    drive.PIDRotate(-145, 1);
+                    drive.PIDRotate(-135, 1);
 
                     // drive towards the junction
-                    drive.driveDistance(0.3, 0, 7);
+                    drive.driveDistance(0.3, 0, 6);
 
                     // place the cone
                     drive.liftPosition(robot.LIFT_RESET);
@@ -257,7 +259,7 @@ public class LevRedTerminalSquid extends LinearOpMode{
                     sleep(500);
 
                     // back away from the junction
-                    drive.driveDistance(0.3, 180, 6);
+                    drive.driveDistance(0.3, 180, 7);
 
                     // turn towards the stack
                     drive.PIDRotate(-90, 1);
@@ -280,14 +282,20 @@ public class LevRedTerminalSquid extends LinearOpMode{
 
                     // close the claw to grab the cone
                     drive.closeClaw();
+                    sleep(600);
+
+
+                    //back away from the wall slightly
+                    drive.driveDistance(0.2,180,0.5);
 
                     // lift the cone up to clear the stack
                     drive.liftLowJunction();
+                    sleep(600);
 
                     // back away to tile 2
-                    drive.driveDistance(0.4,0,30);
+                    drive.driveDistance(0.4,180,25);
 
-                    runState = State.LOW_JUNCTION_3;
+                    runState = State.MID_JUNCTION_3;
                     break;
 
                 case LOW_JUNCTION_3:
@@ -311,6 +319,43 @@ public class LevRedTerminalSquid extends LinearOpMode{
                     runState = State.PARK;
                     break;
 
+                case MID_JUNCTION_3:
+                    // rotate towards the low junction
+                    drive.PIDRotate(-225, 1);
+
+                    // raise the arm to position the cone
+                    drive.liftMidJunction();
+
+                    //Wait for raise
+                    sleep(600);
+
+                    // Drive forward to the high junction
+                    drive.driveDistance(0.3,0,6);
+
+                    // lower the arm and release the cone
+                    drive.liftLowJunction();
+                    sleep(400);
+
+                    drive.openClaw();
+
+                    // raise the lift to keep from entagling on junction
+                    drive.liftMidJunction();
+
+                    // back away from the junction
+                    drive.driveDistance(0.3, 180, 4);
+
+                    //rotate towards the cone stack
+                    drive.PIDRotate(-90, 1);
+
+                    // reset the lift to its starting position
+                    drive.liftReset();
+
+                    // back away to center
+                    //drive.driveDistance(0.4,0,1.5);
+
+                    runState = State.PARK;
+                    break;
+
                 case PARK:
 
                     if(position == 1) {
@@ -322,7 +367,7 @@ public class LevRedTerminalSquid extends LinearOpMode{
                         drive.PIDRotate(-90, 1);
 
                         // drive to park position 1
-                        drive.driveDistance(0.3, 0,25);
+                        drive.driveDistance(0.3, 0,30);
 
                     } else if (position == 2) {
                         // reset the lift
@@ -379,7 +424,7 @@ public class LevRedTerminalSquid extends LinearOpMode{
      * Enumerate the states of the machine
      */
     enum State {
-        TEST, ALLIANCE_SELECT, HIGH_JUNCTION_1, CONE_2, LOW_JUNCTION_2, CONE_3, LOW_JUNCTION_3, LEVEL_ADJUST, PARK, HALT, SET_DISTANCES
+        TEST, ALLIANCE_SELECT, HIGH_JUNCTION_1, CONE_2, LOW_JUNCTION_2, CONE_3, LOW_JUNCTION_3, MID_JUNCTION_3, LEVEL_ADJUST, PARK, HALT, SET_DISTANCES
     }   // end of enum State
 
     /**

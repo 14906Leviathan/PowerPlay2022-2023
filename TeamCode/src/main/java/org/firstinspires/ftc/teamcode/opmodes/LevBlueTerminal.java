@@ -348,7 +348,7 @@ public class LevBlueTerminal extends LinearOpMode{
                     drive.liftMidJunction();
 
                     //Wait for raise
-                    sleep(1000);
+                    sleep(600);
 
                     // Drive forward to the high junction
                     drive.driveDistance(0.3,0,6);

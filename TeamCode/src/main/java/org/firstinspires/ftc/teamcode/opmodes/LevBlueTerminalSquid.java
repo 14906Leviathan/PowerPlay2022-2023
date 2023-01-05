@@ -30,7 +30,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
     };
      */
 
-    private static final String TFOD_MODEL_ASSET = "GenericSignalSleve.tflite";
+    private static final String TFOD_MODEL_ASSET = "GenericSignalSleeve.tflite";
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
 
     private static final String[] LABELS = {
@@ -201,7 +201,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                     drive.PIDRotate(-35,1);
 
                     //Wait for raise
-                    sleep(1000);
+                    sleep(800);
 
                     // Drive forward to the high junction
                     drive.driveDistance(0.3,0,7.5);
@@ -314,7 +314,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                     // back away to tile 2
                     drive.driveDistance(0.4,180,25);
 
-                    runState = State.LOW_JUNCTION_3;
+                    runState = State.MID_JUNCTION_3;
                     break;
 
                 case LOW_JUNCTION_3:
@@ -337,6 +337,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
 
                     runState = State.PARK;
                     break;
+
                 case MID_JUNCTION_3:
                     // rotate towards the low junction
                     drive.PIDRotate(225, 1);
@@ -345,7 +346,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                     drive.liftMidJunction();
 
                     //Wait for raise
-                    sleep(1000);
+                    sleep(600);
 
                     // Drive forward to the high junction
                     drive.driveDistance(0.3,0,6);
