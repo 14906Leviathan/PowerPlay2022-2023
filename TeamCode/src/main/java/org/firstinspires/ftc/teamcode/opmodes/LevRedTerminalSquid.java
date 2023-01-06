@@ -198,7 +198,7 @@ public class LevRedTerminalSquid extends LinearOpMode{
                     drive.liftHighJunction();
 
                     // back away from the junction
-                    drive.driveDistance(0.3, 180, 4);
+                    drive.driveDistance(0.3, 180, 7.5);
 
                     //rotate towards the cone stack
                     drive.PIDRotate(-90, 1);
@@ -241,13 +241,15 @@ public class LevRedTerminalSquid extends LinearOpMode{
 
                 case LOW_JUNCTION_2:
                     // back away to tile 2
-                    drive.driveDistance(0.4,180,21);
-
+                    drive.PIDRotate(-90, 1);
+                    drive.driveDistance(0.4,180,10);
+                    drive.PIDRotate(-90, 1);
+                    drive.driveDistance(0.4,180,11);
                     // rotate towards the low junction
                     drive.PIDRotate(-135, 1);
 
                     // drive towards the junction
-                    drive.driveDistance(0.3, 0, 6);
+                    drive.driveDistance(0.3, 0, 7);
 
                     // place the cone
                     drive.liftPosition(robot.LIFT_RESET);
@@ -259,12 +261,12 @@ public class LevRedTerminalSquid extends LinearOpMode{
                     sleep(500);
 
                     // back away from the junction
-                    drive.driveDistance(0.3, 180, 7);
+                    drive.driveDistance(0.3, 180, 5.5);
 
                     // turn towards the stack
                     drive.PIDRotate(-90, 1);
 
-                    runState = State.PARK;
+                    runState = State.CONE_3;
                     break;
 
                 case CONE_3:
@@ -327,10 +329,10 @@ public class LevRedTerminalSquid extends LinearOpMode{
                     drive.liftMidJunction();
 
                     //Wait for raise
-                    sleep(600);
+                    sleep(300);
 
                     // Drive forward to the high junction
-                    drive.driveDistance(0.3,0,6);
+                    drive.driveDistance(0.3,0,8);
 
                     // lower the arm and release the cone
                     drive.liftLowJunction();
@@ -345,7 +347,7 @@ public class LevRedTerminalSquid extends LinearOpMode{
                     drive.driveDistance(0.3, 180, 4);
 
                     //rotate towards the cone stack
-                    drive.PIDRotate(-90, 1);
+                    drive.PIDRotate(-91, 1);
 
                     // reset the lift to its starting position
                     drive.liftReset();

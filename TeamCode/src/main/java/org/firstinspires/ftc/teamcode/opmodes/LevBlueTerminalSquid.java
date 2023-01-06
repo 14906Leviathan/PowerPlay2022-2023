@@ -119,7 +119,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
         telemetry.addData("Status", "Ready to run");    //
         telemetry.update();
 
-        while(!opModeIsActive()) {
+        while(!isStarted() && !isStopRequested()) {
             if (tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since
                 // the last time that call was made.
@@ -161,10 +161,8 @@ public class LevBlueTerminalSquid extends LinearOpMode{
 
         }  // end of while
 
-        if(!running) requestOpModeStop();   // user requested to abort setup
+        if(isStopRequested()) requestOpModeStop();   // user requested to abort setup
 
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
 
         runtime.reset();
         runState = State.LEVEL_ADJUST;
@@ -364,7 +362,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                     drive.driveDistance(0.3, 180, 4);
 
                     //rotate towards the cone stack
-                    drive.PIDRotate(90, 1);
+                    drive.PIDRotate(315, 1);
 
                     // reset the lift to its starting position
                     drive.liftReset();
