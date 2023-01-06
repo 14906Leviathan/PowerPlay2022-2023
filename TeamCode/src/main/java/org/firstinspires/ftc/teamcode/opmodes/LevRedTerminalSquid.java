@@ -110,7 +110,7 @@ public class LevRedTerminalSquid extends LinearOpMode{
         telemetry.addData("Status", "Ready to run");    //
         telemetry.update();
 
-        while(!opModeIsActive()) {
+        while(!isStarted() && !isStopRequested()) {
             if (tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since
                 // the last time that call was made.

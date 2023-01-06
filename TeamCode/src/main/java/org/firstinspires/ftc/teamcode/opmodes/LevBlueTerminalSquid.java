@@ -161,8 +161,9 @@ public class LevBlueTerminalSquid extends LinearOpMode{
 
         }  // end of while
 
-        if(isStopRequested()) requestOpModeStop();   // user requested to abort setup
+        if(!running) requestOpModeStop();   // user requested to abort setup
 
+        waitForStart();
 
         runtime.reset();
         runState = State.LEVEL_ADJUST;
