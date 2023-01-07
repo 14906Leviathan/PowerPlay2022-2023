@@ -60,6 +60,8 @@ public class HardwareProfile {
     public BNO055IMU imu;       // Internal accelerometer / Gyro sensor
     public Servo servoGrabber;
     public RevBlinkinLedDriver LEDPort;
+    public DistanceSensor sensorJunction;
+
 
     /*
      * Declare Odometry hardware
@@ -133,6 +135,8 @@ public class HardwareProfile {
          */
 
         servoGrabber = hwMap.servo.get("servoGrabber");
+
+        sensorJunction = hwMap.get(DistanceSensor.class, "sensorJunction");
 
         /*
          * Initialize Sensors

@@ -19,6 +19,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.hardware.HardwareProfile;
 import org.firstinspires.ftc.teamcode.libs.DriveMecanum;
 
@@ -194,6 +195,7 @@ public class BrokenBot extends LinearOpMode {
              * #################################################################################*/
 
             telemetry.addData("Gyro Value = ", drive.getZAngle());
+            telemetry.addData("sensor Junction", String.format("%.01f in", robot.sensorJunction.getDistance(DistanceUnit.INCH)));
             telemetry.addData("LF Start= ", lfStart);
             telemetry.addData("LR Start= ", lrStart);
             telemetry.addData("RF Start= ", rfStart);

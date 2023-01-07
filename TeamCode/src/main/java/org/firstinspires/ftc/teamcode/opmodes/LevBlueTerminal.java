@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -16,7 +17,7 @@ import org.firstinspires.ftc.teamcode.libs.DriveMecanum;
 import java.util.List;
 
 @Autonomous(name = "Auto - Blue Terminal Side", group = "Leviathan")
-
+@Disabled
 public class LevBlueTerminal extends LinearOpMode{
 
      //    Original
