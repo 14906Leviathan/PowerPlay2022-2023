@@ -222,8 +222,8 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                     drive.driveDistance(0.4,180,5);
 
                     //turn to high junction
-                    drive.PIDRotate(-35,1);
-                    drive.PIDRotate(-35,1);
+                    drive.PIDRotate(-45,1);
+                    drive.PIDRotate(-45,1);
 
                     //Wait for raise
                     sleep(400);
@@ -240,7 +240,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
 
                     drive.motorsHalt();
 
-                    //drive.driveDistance(0.2, 180, 1);
+                    drive.driveDistance(0.2, 180, 0.5);
 
                     // lower the arm and release the cone
                     drive.liftMidJunction();
@@ -351,7 +351,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                     drive.PIDRotate(90, 1);
 
                     //drive towards the stack of cones
-                    drive.driveDistance(0.4,0,12);
+                    drive.driveDistance(0.4,0,11);
 
                     // close the claw to grab the cone
 
@@ -397,8 +397,8 @@ public class LevBlueTerminalSquid extends LinearOpMode{
 
                 case MID_JUNCTION_3:
                     // rotate towards the low junction
-                    drive.PIDRotate(225, 1);
-                    drive.PIDRotate(225, 1);
+                    drive.PIDRotate(220, 1);
+                    drive.PIDRotate(220, 1);
 
                     // raise the arm to position the cone
                     drive.liftMidJunction();
@@ -418,7 +418,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
 
                     drive.motorsHalt();
                     //Overshoot Correct
-                    //drive.driveDistance(0.2, 180, 1);
+                    drive.driveDistance(0.2, 180, 0);
                     // lower the arm and release the cone
                     drive.liftLowJunction();
                     sleep(400);

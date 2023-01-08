@@ -191,7 +191,7 @@ public class LevRedTerminalSquid extends LinearOpMode{
                     sleep(300);
 
                     // Drive forward to the high junction
-                    drive.driveDistance(0.3,0,4);
+                    drive.driveDistance(0.3,0,2);
 
                     //Turn on drive to sensor
                     drive.setDrivePower(0.2, .2, .2, .2);
