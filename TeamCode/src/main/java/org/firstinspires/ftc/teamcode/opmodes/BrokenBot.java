@@ -19,6 +19,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
+import org.ejml.interfaces.decomposition.LUDecomposition_F32;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.hardware.HardwareProfile;
 import org.firstinspires.ftc.teamcode.libs.DriveMecanum;
@@ -39,6 +40,13 @@ public class BrokenBot extends LinearOpMode {
     public static int l4_LIFT_JUNCTION_MID = robot.LIFT_MID_JUNCTION;
     public static int l5_LIFT_JUNCTION_LOW = robot.LIFT_LOW_JUNCTION;
     public static int l6_LIFT_POSITION = 0;
+    public static double l11_TARGET_ANGLE = 0;
+    public static double l12_ANGLE_ERROR = 2;
+//    public static double l20_Kp = 0.02;
+//    public static double l21_Ki = 0.001;
+//    public static double l22_Kd = 0.001;
+//    public static double l23_MIN_SPEED = 0.18;
+
 
     public BrokenBot(){
 
@@ -53,6 +61,7 @@ public class BrokenBot extends LinearOpMode {
         double rightX, rightY;
         double spinpower = 0;
         boolean fieldCentric = true;
+        double targetAngle = l11_TARGET_ANGLE;
 
         dashboard = FtcDashboard.getInstance();
         TelemetryPacket dashTelemetry = new TelemetryPacket();
@@ -77,9 +86,9 @@ public class BrokenBot extends LinearOpMode {
          */
 
         // post telemetry to FTC Dashboard as well
-        dashTelemetry.put("01 - IMU Angle X = ", robot.imu.getAngularOrientation().firstAngle);
-        dashTelemetry.put("02 - IMU Angle Y = ", robot.imu.getAngularOrientation().secondAngle);
-        dashTelemetry.put("03 - IMU Angle Z = ", robot.imu.getAngularOrientation().thirdAngle);
+        dashTelemetry.put("p01 - PID IMU Angle X                  = ", robot.imu.getAngles()[0]);
+        dashTelemetry.put("p02 - PID IMU Angle Y                  = ", robot.imu.getAngles()[1]);
+        dashTelemetry.put("p03 - PID IMU Angle Z                  = ", robot.imu.getAngles()[2]);
         dashTelemetry.put("04 - Lift Front Encoder Value = ", robot.motorBase.getCurrentPosition());
         dashTelemetry.put("06 - Claw Value = ", robot.servoGrabber.getPosition());
         dashTelemetry.put("07 - GP1.Button.X = ", "RESET LIFT");
@@ -224,10 +233,21 @@ public class BrokenBot extends LinearOpMode {
             telemetry.addData("Base Setpoint = ", mBase);
             telemetry.update();
 
+            if(gamepad1.dpad_left){
+                targetAngle = l11_TARGET_ANGLE;
+                drive.PIDRotate(90, 0.5);
+  //              drive.ctsPIDRotate(targetAngle, l12_ANGLE_ERROR, l20_Kp, l21_Ki, l22_Kd, l23_MIN_SPEED);
+            }
+            if(gamepad1.dpad_right){
+                targetAngle = -l11_TARGET_ANGLE;
+                drive.PIDRotate(-90, 0.5);
+//                drive.ctsPIDRotate(targetAngle, l12_ANGLE_ERROR, l20_Kp, l21_Ki, l22_Kd,l23_MIN_SPEED);
+            }
+
             // post telemetry to FTC Dashboard as well
-            dashTelemetry.put("01 - IMU Angle X = ", robot.imu.getAngularOrientation().firstAngle);
-            dashTelemetry.put("02 - IMU Angle Y = ", robot.imu.getAngularOrientation().secondAngle);
-            dashTelemetry.put("03 - IMU Angle Z = ", robot.imu.getAngularOrientation().thirdAngle);
+            dashTelemetry.put("p01 - PID IMU Angle X                  = ", robot.imu.getAngles()[0]);
+            dashTelemetry.put("p02 - PID IMU Angle Y                  = ", robot.imu.getAngles()[1]);
+            dashTelemetry.put("p03 - PID IMU Angle Z                  = ", robot.imu.getAngles()[2]);
             dashTelemetry.put("04 - Lift Front Encoder Value = ", robot.motorBase.getCurrentPosition());
             dashTelemetry.put("06 - Claw Value = ", robot.servoGrabber.getPosition());
             dashTelemetry.put("07 - GP1.Button.X = ", "RESET LIFT");

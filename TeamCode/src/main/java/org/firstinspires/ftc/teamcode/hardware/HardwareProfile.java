@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.arcrobotics.ftclib.hardware.RevIMU;
+
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
@@ -45,6 +47,11 @@ public class HardwareProfile {
     public final double SERVO_GRAB_OPEN = 0.3;
     public final double SERVO_GRAB_CLOSE = 0.65;
 
+    public final double PID_Kp = 0.01;
+    public final double PID_Ki = 0.01;
+    public final double PID_Kd = 0.000001;
+    public final double PID_MIN_SPEED = 0.05;
+
     /*
      * Hardware devices
      */
@@ -57,7 +64,9 @@ public class HardwareProfile {
 
     public DistanceSensor sensorWall = null;
 
-    public BNO055IMU imu;       // Internal accelerometer / Gyro sensor
+    public RevIMU imu =                 null;
+
+//    public BNO055IMU imu;       // Internal accelerometer / Gyro sensor
     public Servo servoGrabber;
     public RevBlinkinLedDriver LEDPort;
     public DistanceSensor sensorJunction;
@@ -141,6 +150,12 @@ public class HardwareProfile {
         /*
          * Initialize Sensors
          **/
+
+        // imu init
+        imu = new RevIMU(hwMap);
+        imu.init();
+
+        /*
         imu = hwMap.get(BNO055IMU.class, "imu");
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -151,6 +166,8 @@ public class HardwareProfile {
         parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
         imu.initialize(parameters);
+
+         */
 
         /* Webcam device will go here */
 //        webcam = hwMap.get(WebcamName.class, "Webcam 1");

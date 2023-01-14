@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode.libs;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.checkerframework.checker.units.qual.K;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.hardware.HardwareProfile;
 
@@ -15,6 +18,10 @@ public class DriveMecanum {
     private HardwareProfile robot;
     public double RF, LF, LR, RR;
     public LinearOpMode opMode;
+
+    FtcDashboard dashboard;
+
+
 
     /*
      * Constructor method
@@ -108,6 +115,129 @@ public class DriveMecanum {
     }   // close driveDistance method
 
 
+    /**
+     * Method: PIDRotate
+     * Parameters:
+     * @param targetAngle -> desire ending angle/position of the robot
+     * @param targetError -> how close should the robot get to the desired angle
+     */
+    public void PIDRotate(double targetAngle, double targetError){
+        dashboard = FtcDashboard.getInstance();
+        TelemetryPacket dashTelemetry = new TelemetryPacket();
+
+        double integral = 0;
+        ElapsedTime timeElapsed = new ElapsedTime();
+        double startTime = timeElapsed.time();
+        double totalTime;
+        double error;
+        double Cp = robot.PID_Kp;
+        double Ci = robot.PID_Ki;
+        double Cd = robot.PID_Kd;
+        /* enable these for tuning
+        double Cp = kP;
+        double Ci = kI;
+        double Cd = kD;
+        double maxRotateSpeed = maxSpeed;
+        double maxRotateSpeed = minSpeed;
+         */
+        double minRotateSpeed = robot.PID_MIN_SPEED;
+        double maxRotateSpeed = 1;
+        double rotationSpeed;
+        double derivative = 0, lastError=0;
+
+        // check to see how far the robot is rotating to decide which gyro sensor value to use
+        if(targetAngle > 90 || targetAngle < -90){
+            error = gyro360(targetAngle) - targetAngle;
+        } else {
+            error = getZAngle() - targetAngle;
+        }
+
+        // nested while loops are used to allow for a final check of an overshoot situation
+        while ((Math.abs(error) >= targetError) && opMode.opModeIsActive()) {
+            while ((Math.abs(error) >= targetError) && opMode.opModeIsActive()) {
+                derivative = lastError - error;
+                rotationSpeed = ((Cp * error) + (Ci * integral) + (Cd * derivative));
+                lastError = error;
+
+                // Clip motor speed
+                rotationSpeed = Range.clip(rotationSpeed, -maxRotateSpeed, maxRotateSpeed);
+
+                if ((rotationSpeed > -0.25) && (rotationSpeed < 0)) {
+                    rotationSpeed = -minRotateSpeed;
+                } else if ((rotationSpeed < 0.25) && (rotationSpeed > 0)) {
+                    rotationSpeed = minRotateSpeed;
+                }
+
+                RF = rotationSpeed;
+                LF = -rotationSpeed;
+                LR = -rotationSpeed;
+                RR = rotationSpeed;
+
+                setDrivePower(RF, LF, LR, RR);
+
+                opMode.idle();
+
+                // check to see how far the robot is rotating to decide which gyro sensor value to use
+                if (targetAngle > 90 || targetAngle < -90) {
+                    error = gyro360(targetAngle) - targetAngle;
+                } else {
+                    error = getZAngle() - targetAngle;
+                }
+
+            }   // end of while Math.abs(error)
+            setDrivePower(0,0,0,0);
+            maxRotateSpeed = maxRotateSpeed / 2;
+            opMode.sleep(20);
+//            opMode.idle();
+
+            // Perform a final calc on the error to confirm that the robot didn't overshoot the
+            // target position after the last measurement was taken.
+//            opMode.sleep(5);
+            if (targetAngle > 90 || targetAngle < -90) {
+                error = gyro360(targetAngle) - targetAngle;
+            } else {
+                error = -robot.imu.getAngles()[0] - targetAngle;
+//                error = getZAngle() - targetAngle;
+            }
+
+            totalTime = timeElapsed.time() - startTime;
+            // post telemetry to FTC Dashboard
+            dashTelemetry.put("p00 - PIDTurn Telemetry Data", "");
+            dashTelemetry.put("p01 - PID IMU Angle X                  = ", robot.imu.getAngles()[0]);
+            dashTelemetry.put("p02 - PID IMU Angle Y                  = ", robot.imu.getAngles()[1]);
+            dashTelemetry.put("p03 - PID IMU Angle Z                  = ", robot.imu.getAngles()[2]);
+            dashTelemetry.put("p04 - InitZ/targetAngle value      = ", targetAngle);
+            dashTelemetry.put("p05 - Current Angle                = ", getZAngle());
+            dashTelemetry.put("p06 - Angle Error                  = ", error);
+            dashTelemetry.put("p07 - zCorrection/derivative Value = ", derivative);
+            dashTelemetry.put("p08 - Turn Time                    = ", totalTime);
+            dashTelemetry.put("p09 - Right Front                  = ", RF);
+            dashTelemetry.put("p10 - Right Rear                   = ", RR);
+            dashTelemetry.put("p11 - Left Front                   = ", LF);
+            dashTelemetry.put("p12 - Right Rear                   = ", RR);
+            dashboard.sendTelemetryPacket(dashTelemetry);
+
+        }
+
+        // shut off the drive motors
+        motorsHalt();
+
+    }   //end of the PIDRotate Method
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /********************************************************************************************
      * Method:      PIDRotate
      * Function:    Rotates the robot to the desired angle using a PID algorithm controled by the
@@ -116,7 +246,7 @@ public class DriveMecanum {
      * @param targetAngle -> desire ending angle/position of the robot
      * @param targetError -> how close should the robot get to the desired angle
      *******************************************************************************************/
-    public void PIDRotate(double targetAngle, double targetError){
+    public void oldPIDRotate(double targetAngle, double targetError){
         double integral = 0;
         double error;
         double Cp = 0.06;
@@ -533,7 +663,7 @@ public class DriveMecanum {
      * Method:  getZAngle()
      ******************************************************************************************/
     public double getZAngle(){
-        return (-robot.imu.getAngularOrientation().firstAngle);
+        return (-robot.imu.getAbsoluteHeading());
     }   // close getZAngle method
     /*
      * Method calcRPM()
