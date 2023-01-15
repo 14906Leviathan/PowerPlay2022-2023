@@ -51,6 +51,7 @@ public class HardwareProfile {
     public final double PID_Ki = 0.01;
     public final double PID_Kd = 0.000001;
     public final double PID_MIN_SPEED = 0.05;
+    public final double PID_ROTATE_ERROR = 0.5;
 
     /*
      * Hardware devices

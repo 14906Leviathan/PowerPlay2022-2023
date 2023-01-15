@@ -53,13 +53,7 @@ public class LevRedTerminalSquid extends LinearOpMode{
     private State setupState = State.ALLIANCE_SELECT;     // default setupState configuration
     private State runState = State.SET_DISTANCES;
     private DriveMecanum drive = new DriveMecanum(robot, opMode);
-    boolean debugMode = false;
-    double wristPosition = 0.5;
-    int mArm = 0;
-    int mBase = 0;
     int position = 2;
-    /* Declare DataLogger variables */
-    private String action = "";
 
     @Override
     public void runOpMode() {
@@ -68,10 +62,6 @@ public class LevRedTerminalSquid extends LinearOpMode{
         telemetry.update();
 
         boolean running = true;
-        long startDelay = 0;
-
-        // set default values
-        int scoreLevel = 1;
 
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
@@ -146,9 +136,6 @@ public class LevRedTerminalSquid extends LinearOpMode{
 
         if(!running) requestOpModeStop();   // user requested to abort setup
 
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
-
         runtime.reset();
         runState = State.LEVEL_ADJUST;
 
@@ -169,7 +156,6 @@ public class LevRedTerminalSquid extends LinearOpMode{
                 case HIGH_JUNCTION_1:
                     // starting from start position, close claw
                     drive.closeClaw();
-//                    sleep(400);
 
                     // Drive forward away from wall, pushing signal cone out of position
 
@@ -184,8 +170,8 @@ public class LevRedTerminalSquid extends LinearOpMode{
                     drive.driveDistance(0.4,180,5);
 
                     //turn to high junction
-                    drive.PIDRotate(35,1);
-                    drive.PIDRotate(35,1);
+                    drive.PIDRotate(35,robot.PID_ROTATE_ERROR);
+                    drive.PIDRotate(35,robot.PID_ROTATE_ERROR);
 
                    //Wait for the lift to raise
                     sleep(300);
@@ -218,19 +204,18 @@ public class LevRedTerminalSquid extends LinearOpMode{
                     drive.driveDistance(0.3, 180, 6);
                     drive.liftReset();
                     //rotate towards the cone stack
-                    drive.PIDRotate(-90, 1);
-                    drive.PIDRotate(-90, 1);
+                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
+                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
 
                     // reset the lift to its starting position
-
 
                     runState = State.CONE_2;
                     break;
 
                 case CONE_2:
                     //rotate towards the cone stack
-                    drive.PIDRotate(-90, 1);
-                    drive.PIDRotate(-90, 1);
+                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
+                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
 
                     // lower the arm to pick up the top cone
                     drive.liftPosition(robot.LIFT_CONE5);
@@ -239,8 +224,8 @@ public class LevRedTerminalSquid extends LinearOpMode{
                     drive.driveDistance(0.7,0,17);
 
                     // adjust direction - turn towards cone stack
-                    drive.PIDRotate(-90, 1);
-                    drive.PIDRotate(-90, 1);
+                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
+                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
 
                     //drive towards the stack of cones
                     drive.driveDistance(0.4,0,14);
@@ -261,13 +246,13 @@ public class LevRedTerminalSquid extends LinearOpMode{
 
                 case LOW_JUNCTION_2:
                     // back away to tile 2
-                    drive.PIDRotate(-90, 1);
+                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
                     drive.driveDistance(0.4,180,10);
-                    drive.PIDRotate(-90, 1);
+                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
                     drive.driveDistance(0.4,180,12);
                     // rotate towards the low junction
-                    drive.PIDRotate(-135, 1);
-                    drive.PIDRotate(-135, 1);
+                    drive.PIDRotate(-135, robot.PID_ROTATE_ERROR);
+                    drive.PIDRotate(-135, robot.PID_ROTATE_ERROR);
 
                     // drive towards the junction
                     drive.driveDistance(0.3, 0, 4);
@@ -298,8 +283,8 @@ public class LevRedTerminalSquid extends LinearOpMode{
                     drive.driveDistance(0.3, 180, 7);
 
                     // turn towards the stack
-                    drive.PIDRotate(-90, 1);
-                    drive.PIDRotate(-90, 1);
+                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
+                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
 
                     runState = State.CONE_3;
                     break;
@@ -312,8 +297,8 @@ public class LevRedTerminalSquid extends LinearOpMode{
                     drive.driveDistance(0.4,0,15);
 
                     // adjust direction - turn towards cone stack
-                    drive.PIDRotate(-90, 1);
-                    drive.PIDRotate(-90, 1);
+                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
+                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
 
                     //drive towards the stack of cones
                     drive.driveDistance(0.4,0,12);
@@ -338,7 +323,7 @@ public class LevRedTerminalSquid extends LinearOpMode{
 
                 case LOW_JUNCTION_3:
                     // rotate towards the low junction
-                    drive.PIDRotate(-125, 1);
+                    drive.PIDRotate(-125, robot.PID_ROTATE_ERROR);
 
                     // drive towards the junction
                     drive.driveDistance(0.3, 0, 3);
@@ -352,15 +337,15 @@ public class LevRedTerminalSquid extends LinearOpMode{
                     drive.liftLowJunction();
 
                     // turn towards the stack
-                    drive.PIDRotate(-90, 1);
+                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
 
                     runState = State.PARK;
                     break;
 
                 case MID_JUNCTION_3:
                     // rotate towards the low junction
-                    drive.PIDRotate(-225, 1);
-                    drive.PIDRotate(-225, 1);
+                    drive.PIDRotate(-225, robot.PID_ROTATE_ERROR);
+                    drive.PIDRotate(-225, robot.PID_ROTATE_ERROR);
 
                     // raise the arm to position the cone
                     drive.liftMidJunction();
@@ -396,8 +381,8 @@ public class LevRedTerminalSquid extends LinearOpMode{
                     drive.driveDistance(0.3, 180, 4);
 
                     //rotate towards the cone stack
-                    drive.PIDRotate(-91, 1);
-                    drive.PIDRotate(-91, 1);
+                    drive.PIDRotate(-91, robot.PID_ROTATE_ERROR);
+                    drive.PIDRotate(-91, robot.PID_ROTATE_ERROR);
 
                     // reset the lift to its starting position
                     drive.liftReset();
@@ -416,7 +401,7 @@ public class LevRedTerminalSquid extends LinearOpMode{
                         drive.openClaw();
 
                         // rotate towards the stack to park - ready to grab the first cone in teleop
-                        drive.PIDRotate(-90, 1);
+                        drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
 
                         // drive to park position 1
                         drive.driveDistance(0.5, 0,26);
@@ -427,7 +412,7 @@ public class LevRedTerminalSquid extends LinearOpMode{
                         drive.openClaw();
 
                         // rotate towards the outside wall position
-                        drive.PIDRotate(-90, 1);
+                        drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
 
                         // drive to park position 1
                         drive.driveDistance(0.3, 0,2);
@@ -438,7 +423,7 @@ public class LevRedTerminalSquid extends LinearOpMode{
                         drive.openClaw();
 
                         // rotate towards the outside wall position
-                        drive.PIDRotate(-90, 1);
+                        drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
 
                         // drive to park position 1
                         drive.driveDistance(0.5, 180,18);
