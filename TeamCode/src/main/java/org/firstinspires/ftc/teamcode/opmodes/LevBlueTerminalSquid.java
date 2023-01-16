@@ -142,19 +142,10 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                             position = 2;
                         } else position = 1;
 
-
-                        /*
-                        if(recognition.getLabel() == "1 Bolt"){
-                            position =1;
-                        } else if(recognition.getLabel() == "2 Bulb" ){
-                            position = 2;
-                        } else position = 3;
-                         */
                     }
                     telemetry.update();
                 }
             }
-
         }  // end of while
 
         if(!running) requestOpModeStop();   // user requested to abort setup
@@ -351,7 +342,6 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                     drive.closeClaw();
                     sleep(600);
 
-
                     //back away from the wall slightly
                     drive.driveDistance(0.2,180,0.5);
 
@@ -522,8 +512,6 @@ public class LevBlueTerminalSquid extends LinearOpMode{
 
         //  Instantiate the Vuforia engine
        vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
     }
 
     /**
