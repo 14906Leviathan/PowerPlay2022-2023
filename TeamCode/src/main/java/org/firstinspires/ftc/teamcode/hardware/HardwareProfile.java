@@ -47,7 +47,7 @@ public class HardwareProfile {
     public final double SERVO_GRAB_OPEN = 0.3;
     public final double SERVO_GRAB_CLOSE = 0.65;
 
-    public final double PID_Kp = 0.01;
+    public final double PID_Kp = 0.08;
     public final double PID_Ki = 0.01;
     public final double PID_Kd = 0.000001;
     public final double PID_MIN_SPEED = 0.05;
