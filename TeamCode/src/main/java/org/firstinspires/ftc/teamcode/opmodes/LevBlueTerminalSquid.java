@@ -120,6 +120,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
         robot.lampRobot.setPower(1);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
+        telemetry.addData("sensor Junction", String.format("%.01f in", robot.sensorJunction.getDistance(DistanceUnit.INCH)));
         telemetry.update();
 
         while(!isStarted() && !isStopRequested()) {
@@ -142,6 +143,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                         telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
                         telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
                         telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
+                        telemetry.addData("sensor Junction", String.format("%.01f in", robot.sensorJunction.getDistance(DistanceUnit.INCH)));
 
 
                         dashTelemetry.put(""," ");
@@ -219,13 +221,13 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                     //sleep(300);
 
                     // Drive forward away from wall, pushing signal cone out of position
-                    drive.driveDistance(0.8, 0, 60);
+                    drive.driveDistance(0.8, 0, 61);
 
                     // raise the arm to position the cone
                     drive.liftHighJunction();
 
                     //back up to position to score cone
-                    drive.driveDistance(0.4,180,4.5);
+                    drive.driveDistance(0.4,180,4);
 
                     //turn to high junction
                     drive.PIDRotate(-45,robot.PID_ROTATE_ERROR);
@@ -256,7 +258,8 @@ public class LevBlueTerminalSquid extends LinearOpMode{
 
                     // raise the lift to keep from entagling on junction
                     drive.liftHighJunction();
-
+                    sleep(300);
+                    drive.liftReset();
                     // back away from the junction
                     drive.driveDistance(0.3, 180, 4);
 
@@ -333,7 +336,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
 
                     // raise the lift to clear the junction
                     drive.liftLowJunction();
-                    sleep(500);
+                    sleep(300);
 
                     // back away from the junction
                     drive.driveDistance(0.3, 180, 9);
@@ -460,7 +463,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                         //drive.PIDRotate(90, robot.PID_ROTATE_ERROR);
 
                         // drive to park position 1
-                        drive.driveDistance(0.6, 180,24);
+                        drive.driveDistance(0.6, 180,26);
 
                     } else if (position == 2) {
                         // reset the lift
@@ -471,7 +474,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                         //drive.PIDRotate(90, robot.PID_ROTATE_ERROR);
 
                         // drive to park position 1
-                        drive.driveDistance(0.6, 0,0);
+                        drive.driveDistance(0.3, 180,1);
 
                     } else {
                         // reset the lift
@@ -482,7 +485,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                         //drive.PIDRotate(90, robot.PID_ROTATE_ERROR);
 
                         // drive to park position 1
-                        drive.driveDistance(0.6, 0,20);
+                        drive.driveDistance(0.6, 0,18);
                     }
 
                     while(opModeIsActive() && robot.motorBase.getCurrentPosition() > 10){

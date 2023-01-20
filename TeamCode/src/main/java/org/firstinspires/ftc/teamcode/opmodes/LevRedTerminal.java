@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
@@ -65,6 +66,7 @@ public class LevRedTerminal extends LinearOpMode{
     public void runOpMode() {
 
         telemetry.addData("Robot State = ", "NOT READY");
+        telemetry.addData("sensor Junction", String.format("%.01f in", robot.sensorJunction.getDistance(DistanceUnit.INCH)));
         telemetry.update();
 
         boolean running = true;
@@ -108,6 +110,7 @@ public class LevRedTerminal extends LinearOpMode{
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
+        telemetry.addData("sensor Junction", String.format("%.01f in", robot.sensorJunction.getDistance(DistanceUnit.INCH)));
         telemetry.update();
 
         while(!opModeIsActive()) {
@@ -130,6 +133,7 @@ public class LevRedTerminal extends LinearOpMode{
                         telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
                         telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
                         telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
+                        telemetry.addData("sensor Junction", String.format("%.01f in", robot.sensorJunction.getDistance(DistanceUnit.INCH)));
                         if(recognition.getLabel() == "1 Bolt"){
                             position =1;
                         } else if(recognition.getLabel() == "2 Bulb" ){
@@ -170,22 +174,23 @@ public class LevRedTerminal extends LinearOpMode{
                     sleep(400);
 
                     // Drive forward away from wall, pushing signal cone out of position
-                    drive.driveDistance(0.5, 0, 60);
+                    drive.driveDistance(0.7, 0, 61);
 
                     // raise the arm to position the cone
                     drive.liftHighJunction();
 
                     //back up to position to score cone
-                    drive.driveDistance(0.4,180,5);
+                    drive.driveDistance(0.4,180,4);
 
                     //turn to high junction
-                    drive.PIDRotate(35,1);
+                    drive.PIDRotate(45,1);
+                    drive.PIDRotate(45,1);
 
-                   //Wait for the lift to raise
-                    sleep(1000);
+                    //Wait for the lift to raise
+                    sleep(400);
 
                     // Drive forward to the high junction
-                    drive.driveDistance(0.3,0,11);
+                    drive.driveDistance(0.3,0,4);
 
                     // lower the arm and release the cone
                     drive.liftMidJunction();
