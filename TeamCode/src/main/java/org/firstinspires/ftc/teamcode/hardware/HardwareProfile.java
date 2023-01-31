@@ -56,10 +56,10 @@ public class HardwareProfile {
     /*
      * Hardware devices
      */
-    public DcMotor motorLF = null;  // Left Front Drive Motor
-    public DcMotor motorLR = null;  // Left Rear  Drive Motor
-    public DcMotor motorRF = null;  // Right Front Drive Motor
-    public DcMotor motorRR = null;  // Right Rear Drive Motor
+    public DcMotorEx motorLF = null;  // Left Front Drive Motor
+    public DcMotorEx motorLR = null;  // Left Rear  Drive Motor
+    public DcMotorEx motorRF = null;  // Right Front Drive Motor
+    public DcMotorEx motorRR = null;  // Right Rear Drive Motor
     public DcMotorEx motorBase = null;
     public DcMotor lampRobot = null;
 
@@ -93,28 +93,28 @@ public class HardwareProfile {
          * Initialize Motors
          */
 
-        motorLF = hwMap.dcMotor.get("motorLF");
+        motorLF = hwMap.get(DcMotorEx.class,"motorLF");
         motorLF.setDirection(DcMotor.Direction.REVERSE);
         motorLF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorLF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorLF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorLF.setPower(0);
 
-        motorLR = hwMap.dcMotor.get("motorLR");
+        motorLR = hwMap.get(DcMotorEx.class,"motorLR");
         motorLR.setDirection(DcMotor.Direction.REVERSE);
         motorLR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorLR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorLR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorLR.setPower(0);
 
-        motorRF = hwMap.dcMotor.get("motorRF");
+        motorRF = hwMap.get(DcMotorEx.class,"motorRF");
         motorRF.setDirection(DcMotor.Direction.FORWARD);
         motorRF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorRF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorRF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorRF.setPower(0);
 
-        motorRR = hwMap.dcMotor.get("motorRR");
+        motorRR = hwMap.get(DcMotorEx.class,"motorRR");
         motorRR.setDirection(DcMotor.Direction.FORWARD);
         motorRR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorRR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

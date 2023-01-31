@@ -203,7 +203,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
             //        }
             //        telemetry.update();
 
-                    drive.driveDistance(0.3, 0, 12);
+                    drive.driveDistance(1, 0, 12);
                     drive.openClaw();
                     sleep(5000);
 
