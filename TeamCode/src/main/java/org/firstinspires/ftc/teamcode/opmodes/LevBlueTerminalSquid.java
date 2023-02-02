@@ -175,7 +175,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
         if(!running) requestOpModeStop();   // user requested to abort setup
 
         runtime.reset();
-        runState = State.TEST;  //Change to State.LEVEL_ADJUST; for normal
+        runState = State.LEVEL_ADJUST;  //Change to State.LEVEL_ADJUST; for normal
 
         while (opModeIsActive() && (running)) {
             switch(runState){
@@ -261,7 +261,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                     sleep(300);
                     drive.liftReset();
                     // back away from the junction
-                    drive.driveDistance(0.3, 180, 4);
+                    drive.driveDistance(0.3, 180, 5);
 
                     //rotate towards the cone stack
                     drive.PIDRotate(90, robot.PID_ROTATE_ERROR);
@@ -307,7 +307,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
 
                 case LOW_JUNCTION_2:
                     // back away to tile 2
-                    drive.driveDistance(0.4,180,22);
+                    drive.driveDistance(0.4,180,23);
 
                     // rotate towards the low junction
                     drive.PIDRotate(135, robot.PID_ROTATE_ERROR);
@@ -375,7 +375,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                     sleep(600);
 
                     // back away to tile 2
-                    drive.driveDistance(0.4,180,26);
+                    drive.driveDistance(0.4,180,27);
 
                     runState = State.MID_JUNCTION_3;
                     break;
