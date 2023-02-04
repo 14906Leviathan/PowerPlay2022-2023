@@ -179,12 +179,12 @@ public class LevRedTerminalSquid extends LinearOpMode{
                     sleep(300);
 
                     // Drive forward to the high junction
-                    drive.driveDistance(0.3,0,4);
+                    drive.driveDistance(0.5,0,4);
 
                     //Turn on drive to sensor
                     drive.setDrivePower(0.2, .2, .2, .2);
                     runtime.reset();
-                    while((robot.sensorJunction.getDistance(DistanceUnit.INCH) > 9) && (runtime.time() < 0.75)) {
+                    while((robot.sensorJunction.getDistance(DistanceUnit.INCH) > 9) && (runtime.time() < 2)) {
                         telemetry.addData("sensor Junction", String.format("%.01f in", robot.sensorJunction.getDistance(DistanceUnit.INCH)));
                         telemetry.update();
                     }
@@ -225,14 +225,14 @@ public class LevRedTerminalSquid extends LinearOpMode{
                     drive.liftPosition(robot.LIFT_CONE5);
 
                     //drive towards the stack of cones
-                    drive.driveDistance(0.7,0,16);
+                    drive.driveDistance(0.7,0,22);
 
                     // adjust direction - turn towards cone stack
                     drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
                     drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
 
                     //drive towards the stack of cones
-                    drive.driveDistance(0.4,0,13);
+                    drive.driveDistance(0.4,0,5);
 
                     // close the claw to grab the cone
                     drive.closeClaw();
@@ -253,13 +253,13 @@ public class LevRedTerminalSquid extends LinearOpMode{
                     //drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
                     //drive.driveDistance(0.4,180,10);
                     //drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
-                    drive.driveDistance(0.4,180,23);
+                    drive.driveDistance(0.5,180,23);
                     // rotate towards the low junction
                     drive.PIDRotate(-135, robot.PID_ROTATE_ERROR);
                     drive.PIDRotate(-135, robot.PID_ROTATE_ERROR);
 
                     // drive towards the junction
-                    drive.driveDistance(0.3, 0, 4);
+                    drive.driveDistance(0.5, 0, 4);
 
                     //Turn on drive to sensor
                     drive.setDrivePower(0.2, .2, .2, .2);
@@ -298,14 +298,14 @@ public class LevRedTerminalSquid extends LinearOpMode{
                     drive.liftPosition(robot.LIFT_CONE4);
 
                     //drive towards the stack of cones
-                    drive.driveDistance(0.4,0,15);
+                    drive.driveDistance(0.7,0,22);
 
                     // adjust direction - turn towards cone stack
                     drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
                     drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
 
                     //drive towards the stack of cones
-                    drive.driveDistance(0.4,0,12);
+                    drive.driveDistance(0.4,0,5);
 
                     // close the claw to grab the cone
                     drive.closeClaw();
@@ -320,7 +320,7 @@ public class LevRedTerminalSquid extends LinearOpMode{
                     sleep(600);
 
                     // back away to tile 2
-                    drive.driveDistance(0.4,180,26);
+                    drive.driveDistance(0.5,180,26);
 
                     runState = State.MID_JUNCTION_3;
                     break;
@@ -358,7 +358,7 @@ public class LevRedTerminalSquid extends LinearOpMode{
                     sleep(500);
 
                     // Drive forward to the high junction
-                    drive.driveDistance(0.3,0,3);
+                    drive.driveDistance(0.5,0,3);
                     //Turn on drive to sensor
                     drive.setDrivePower(0.2, .2, .2, .2);
                     runtime.reset();
@@ -408,7 +408,7 @@ public class LevRedTerminalSquid extends LinearOpMode{
                         //drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
 
                         // drive to park position 1
-                        drive.driveDistance(0.5, 0,24);
+                        drive.driveDistance(0.8, 0,22);
 
                     } else if (position == 2) {
                         // reset the lift
@@ -430,7 +430,7 @@ public class LevRedTerminalSquid extends LinearOpMode{
                         //drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
 
                         // drive to park position 1
-                        drive.driveDistance(0.5, 180,18);
+                        drive.driveDistance(0.8, 180,25);
                     }
 
                     while(opModeIsActive() && robot.motorBase.getCurrentPosition() > 10){

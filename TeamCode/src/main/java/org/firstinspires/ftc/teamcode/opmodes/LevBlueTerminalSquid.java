@@ -144,6 +144,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                         telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
                         telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
                         telemetry.addData("sensor Junction", String.format("%.01f in", robot.sensorJunction.getDistance(DistanceUnit.INCH)));
+                        telemetry.addData("sensor Junction2", String.format("%.01f in", robot.sensorJunction2.getDistance(DistanceUnit.INCH)));
 
 
                         dashTelemetry.put(""," ");
@@ -175,7 +176,7 @@ public class LevBlueTerminalSquid extends LinearOpMode{
         if(!running) requestOpModeStop();   // user requested to abort setup
 
         runtime.reset();
-        runState = State.LEVEL_ADJUST;  //Change to State.LEVEL_ADJUST; for normal
+        runState = State.TEST;  //Change to State.LEVEL_ADJUST; for normal
 
         while (opModeIsActive() && (running)) {
             switch(runState){
@@ -186,26 +187,34 @@ public class LevBlueTerminalSquid extends LinearOpMode{
                     sleep(400);
                     drive.liftLowJunction();
                     sleep(700);
-            //        drive.setDrivePower(0.2, .2, .2, .2);
-            //        boolean flag = false;
-            //        runtime.reset();
-            //        while(!flag && (runtime.time() < 3)) {
-            //            telemetry.addData("sensor Junction", String.format("%.01f in", robot.sensorJunction.getDistance(DistanceUnit.INCH)));
-            //            telemetry.update();
-            //            if (robot.sensorJunction.getDistance(DistanceUnit.INCH) < 9) flag = true;
-            //         }
-            //        drive.motorsHalt();
-            //
-            //        if (flag) {
-            //            telemetry.addData("Junction ", "Detected");
-            //        } else {
-            //            telemetry.addData("Junction ", "NOT Detected");
-            //        }
-            //        telemetry.update();
+                    drive.detectJunction(0.2, 2);
 
-                    drive.driveDistance(1, 0, 12);
-                    drive.openClaw();
-                    sleep(5000);
+                    /*
+                    drive.setDrivePower(0.2, .2, .2, .2);
+                    boolean flag = false;
+                    runtime.reset();
+                    while(!flag && (runtime.time() < 3)) {
+                        telemetry.addData("sensor Junction", String.format("%.01f in", robot.sensorJunction.getDistance(DistanceUnit.INCH)));
+                        telemetry.update();
+                        if (robot.sensorJunction.getDistance(DistanceUnit.INCH) < 9) flag = true;
+                        if (robot.sensorJunction2.getDistance(DistanceUnit.INCH) < 9) flag = true;
+                     }
+                    drive.motorsHalt();
+
+
+
+                    if (flag) {
+                        telemetry.addData("Junction ", "Detected");
+                    } else {
+                        telemetry.addData("Junction ", "NOT Detected");
+                    }
+                    telemetry.update();
+
+
+                     */
+                 //   drive.driveDistance(1, 0, 12);
+                 //   drive.openClaw();
+                 //   sleep(5000);
 
                     runState = State.HALT;
                     break;

@@ -231,7 +231,21 @@ public class DriveMecanum {
 
 
 
+public void detectJunction(double forwardSpeed, double timeout){
+    ElapsedTime localtime = new ElapsedTime();
 
+
+    setDrivePower(forwardSpeed, forwardSpeed, forwardSpeed, forwardSpeed);
+    localtime.reset();
+    while(((robot.sensorJunction.getDistance(DistanceUnit.INCH) > 5) &&
+            (robot.sensorJunction2.getDistance(DistanceUnit.INCH) > 5)) && (localtime.time() < timeout)) {
+        opMode.telemetry.addData("sensor Junction", String.format("%.01f in", robot.sensorJunction.getDistance(DistanceUnit.INCH)));
+        opMode.telemetry.update();
+    }
+
+    motorsHalt();
+
+}
 
 
 

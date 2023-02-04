@@ -67,7 +67,11 @@ public class HardwareProfileFTClib {
     public Servo servoGrabber;
     public RevBlinkinLedDriver LEDPort;
     public DistanceSensor sensorJunction;
-
+    public DistanceSensor sensorJunction2;
+    public Motor motorLF;
+    public Motor motorLR;
+    public Motor motorRF;
+    public Motor motorRR;
 
     /*
      * Declare Odometry hardware

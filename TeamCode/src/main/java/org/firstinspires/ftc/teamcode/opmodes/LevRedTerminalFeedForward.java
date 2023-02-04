@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.libs.DriveMecanumFTCLib;
 
 import java.util.List;
 
-@Autonomous(name = "Auto - Squid Red Terminal Side", group = "Leviathan")
+@Autonomous(name = "Auto - Squid Red Terminal eed Forward", group = "Leviathan")
 
 public class LevRedTerminalFeedForward extends LinearOpMode{
 
@@ -102,6 +102,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode{
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
         telemetry.addData("sensor Junction", robot.sensorJunction.getDistance(DistanceUnit.INCH));
+        telemetry.addData("sensor Junction2", robot.sensorJunction2.getDistance(DistanceUnit.INCH));
         telemetry.update();
 
         while(!isStarted() && !isStopRequested()) {
@@ -125,6 +126,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode{
                         telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
                         telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
                         telemetry.addData("sensor Junction", robot.sensorJunction.getDistance(DistanceUnit.INCH));
+                        telemetry.addData("sensor Junction2", robot.sensorJunction2.getDistance(DistanceUnit.INCH));
 
                         if(recognition.getLabel() == "circle"){
                             position =1;
@@ -153,7 +155,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode{
                     robot.motorLF.set(0);
 
 // set the tolerance
-                    motorLeftF.setPositionTolerance(13.6);   // allowed maximum error
+                    /*motorLeftF.setPositionTolerance(13.6);   // allowed maximum error
 
 // perform the control loop
                     while (!m_motor.atTargetPosition()) {
@@ -163,6 +165,8 @@ public class LevRedTerminalFeedForward extends LinearOpMode{
 
 
 
+
+                     */
 
 
 

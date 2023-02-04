@@ -541,10 +541,10 @@ public class DriveMecanumFTCLib {
      * @param RR    - power for right rear motor
      ******************************************************************************************/
     public void setDrivePower(double RF, double LF, double LR, double RR){
-        robot.motorRF.setPower(RF);
-        robot.motorLF.setPower(LF);
-        robot.motorLR.setPower(LR);
-        robot.motorRR.setPower(RR);
+        robot.motorRF.set(RF);
+        robot.motorLF.set(LF);
+        robot.motorLR.set(LR);
+        robot.motorRR.set(RR);
     }   // end of setDrivePower method
 
     /******************************************************************************************
@@ -552,10 +552,10 @@ public class DriveMecanumFTCLib {
      * Function:    Shut off all drive motors
      ******************************************************************************************/
     public void motorsHalt(){
-        robot.motorRF.setPower(0);
-        robot.motorLF.setPower(0);
-        robot.motorLR.setPower(0);
-        robot.motorRR.setPower(0);
+        robot.motorRF.set(0);
+        robot.motorLF.set(0);
+        robot.motorLR.set(0);
+        robot.motorRR.set(0);
     }   // end of motorsHalt method
 
 

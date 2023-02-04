@@ -71,7 +71,7 @@ public class HardwareProfile {
     public Servo servoGrabber;
     public RevBlinkinLedDriver LEDPort;
     public DistanceSensor sensorJunction;
-
+    public DistanceSensor sensorJunction2;
 
     /*
      * Declare Odometry hardware
@@ -147,7 +147,7 @@ public class HardwareProfile {
         servoGrabber = hwMap.servo.get("servoGrabber");
 
         sensorJunction = hwMap.get(DistanceSensor.class, "sensorJunction");
-
+        sensorJunction2 = hwMap.get(DistanceSensor.class, "sensorJunction2");
         /*
          * Initialize Sensors
          **/
