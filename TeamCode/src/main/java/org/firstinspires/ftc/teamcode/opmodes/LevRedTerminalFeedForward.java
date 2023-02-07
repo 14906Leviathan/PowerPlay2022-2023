@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -13,14 +16,29 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.teamcode.hardware.HardwareProfile;
 import org.firstinspires.ftc.teamcode.hardware.HardwareProfileFTClib;
 import org.firstinspires.ftc.teamcode.libs.DriveMecanumFTCLib;
 
 import java.util.List;
 
-@Autonomous(name = "Auto - Squid Red Terminal eed Forward", group = "Leviathan")
+@Autonomous(name = "Auto - Squid Red Terminal Feed Forward", group = "Leviathan")
+//@TeleOp(name = "Auto - Squid Red Terminal Feed Forward", group = "Leviathan")
 
-public class LevRedTerminalFeedForward extends LinearOpMode{
+public class LevRedTerminalFeedForward extends LinearOpMode {
+
+    private final static HardwareProfileFTClib robot = new HardwareProfileFTClib();
+    private LinearOpMode opMode = this;
+
+    FtcDashboard dashboard;
+    public static double l1_Kp = 0.05;
+    public static double l2_Ki = 0.001;
+    public static double l3_Kd = 0.01;
+    public static double l4_MIN_SPEED = 0.10;
+//    public static double l20_Kp = 0.02;
+//    public static double l21_Ki = 0.001;
+//    public static double l22_Kd = 0.001;
+//    public static double l23_MIN_SPEED = 0.18;
 
     private static final String TFOD_MODEL_ASSET = "GenericSignalSleeve.tflite";
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
@@ -50,20 +68,27 @@ public class LevRedTerminalFeedForward extends LinearOpMode{
     private boolean blueAlliance = false;       //red if false, blue if true
 
     /* Declare OpMode members. */
-    private HardwareProfileFTClib robot   = new HardwareProfileFTClib();
-    private LinearOpMode opMode = this;
+//    public HardwareProfileFTClib robot = new HardwareProfileFTClib();
+//    public LinearOpMode opMode = this;
     private State setupState = State.ALLIANCE_SELECT;     // default setupState configuration
     private State runState = State.SET_DISTANCES;
-    private DriveMecanumFTCLib drive = new DriveMecanumFTCLib(robot, opMode);
+    public DriveMecanumFTCLib drive = new DriveMecanumFTCLib(robot, opMode);
     int position = 2;
 
-    @Override
+    public LevRedTerminalFeedForward(){
+
+    }
+
+//    @Override
     public void runOpMode() {
 
         telemetry.addData("Robot State = ", "NOT READY");
         telemetry.update();
 
-        boolean running = true;
+        robot.init(hardwareMap);
+
+        dashboard = FtcDashboard.getInstance();
+        TelemetryPacket dashTelemetry = new TelemetryPacket();
 
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
@@ -92,17 +117,14 @@ public class LevRedTerminalFeedForward extends LinearOpMode{
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap);
         robot.motorBase.setTargetPosition(0);
-        robot.lampRobot.setPower(1);
+//        robot.lampRobot.setPower(1);
         //robot.motorArm.setTargetPosition(0);
         robot.motorBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //robot.motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
-        telemetry.addData("sensor Junction", robot.sensorJunction.getDistance(DistanceUnit.INCH));
-        telemetry.addData("sensor Junction2", robot.sensorJunction2.getDistance(DistanceUnit.INCH));
         telemetry.update();
 
         while(!isStarted() && !isStopRequested()) {
@@ -125,8 +147,6 @@ public class LevRedTerminalFeedForward extends LinearOpMode{
                         telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
                         telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
                         telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
-                        telemetry.addData("sensor Junction", robot.sensorJunction.getDistance(DistanceUnit.INCH));
-                        telemetry.addData("sensor Junction2", robot.sensorJunction2.getDistance(DistanceUnit.INCH));
 
                         if(recognition.getLabel() == "circle"){
                             position =1;
@@ -134,41 +154,75 @@ public class LevRedTerminalFeedForward extends LinearOpMode{
                             position = 2;
                         } else position = 3;
                     }
+                    telemetry.addData("sensor Junction", robot.sensorJunction.getDistance(DistanceUnit.INCH));
+                    telemetry.addData("sensor Junction2", robot.sensorJunction2.getDistance(DistanceUnit.INCH));
                     telemetry.update();
+                    // post telemetry to FTC Dashboard as well
+                    /*
+                    dashTelemetry.put("p01 - PID IMU Angle X                  = ", robot.imu.getAngles()[0]);
+                    dashTelemetry.put("p02 - PID IMU Angle Y                  = ", robot.imu.getAngles()[1]);
+                    dashTelemetry.put("p03 - PID IMU Angle Z                  = ", robot.imu.getAngles()[2]);
+                    dashTelemetry.put("p04 - Lift Front Encoder Value = ", robot.motorBase.getCurrentPosition());
+                    dashTelemetry.put("p06 - sensor Junction", robot.sensorJunction.getDistance(DistanceUnit.INCH));
+                    dashTelemetry.put("p07 - sensor Junction2", robot.sensorJunction2.getDistance(DistanceUnit.INCH));
+                    dashboard.sendTelemetryPacket(dashTelemetry);
+
+                     */
                 }
             }
 
         }  // end of while
 
-        if(!running) requestOpModeStop();   // user requested to abort setup
+        if(isStopRequested()) requestOpModeStop();   // user requested to abort setup
+        robot.lampRobot.setPower(0);
 
         runtime.reset();
-        runState = State.TEST;
+        runState = State.LEVEL_ADJUST;
+        double turnAngle = 90;
 
-        while (opModeIsActive() && (running)) {
+        while (opModeIsActive()) {
             switch(runState){
                 case TEST:
-// set the target position
-                    robot.motorLF.setTargetPosition(1200);      // an integer representing
-                    // desired tick count
 
-                    robot.motorLF.set(0);
+//                    drive.ftclibDrive(0, 50);
+                    drive.ftclibRotate(45, 1);
+                    sleep(2000);
 
-// set the tolerance
-                    /*motorLeftF.setPositionTolerance(13.6);   // allowed maximum error
+                    drive.ftclibRotate(0, 1);
+                    sleep(2000);
 
-// perform the control loop
-                    while (!m_motor.atTargetPosition()) {
-                        m_motor.set(0.75);
-                    }
-                    m_motor.stopMotor(); // stop the motor
+                    drive.ftclibRotate(-45, 1);
+                    sleep(2000);
 
+                    drive.ftclibRotate(0, 1);
+                    sleep(2000);
 
+                    drive.ftclibRotate(90, 1);
+                    sleep(2000);
 
+                    drive.ftclibRotate(0, 1);
+                    sleep(2000);
 
-                     */
+                    drive.ftclibRotate(-90, 1);
+                    sleep(2000);
 
+                    drive.ftclibRotate(0, 1);
+                    sleep(2000);
 
+                    drive.ftclibRotate(135, 1);
+                    sleep(2000);
+
+                    drive.ftclibRotate(0, 1);
+                    sleep(2000);
+
+                    drive.ftclibRotate(-135, 1);
+                    sleep(2000);
+
+                    drive.ftclibRotate(135, 1);
+                    sleep(2000);
+
+                    drive.ftclibRotate(0, 1);
+                    sleep(2000);
 
                     runState = State.HALT;
                     break;
@@ -184,37 +238,25 @@ public class LevRedTerminalFeedForward extends LinearOpMode{
 
                     // Drive forward away from wall, pushing signal cone out of position
 
-                    //drive.driveDistance(0.3, 0, 3);
-                    //drive.driveDistance(0.5, 0, 7);
-                    drive.driveDistance(0.8, 0, 61);
+                    drive.ftclibDrive(0, 61);
 
                     // raise the arm to position the cone
                     drive.liftHighJunction();
 
                     //back up to position to score cone
-                    drive.driveDistance(0.4,180,5);
+                    drive.ftclibDrive(180,5);
 
                     //turn to high junction
-                    drive.PIDRotate(45,robot.PID_ROTATE_ERROR);
-                    drive.PIDRotate(45,robot.PID_ROTATE_ERROR);
+                    drive.ftclibRotate(45,robot.PID_ROTATE_ERROR);
 
                    //Wait for the lift to raise
                     sleep(300);
 
                     // Drive forward to the high junction
-                    drive.driveDistance(0.3,0,4);
+                    drive.ftclibDrive(0,4);
 
-                    //Turn on drive to sensor
-                    drive.setDrivePower(0.2, .2, .2, .2);
-                    runtime.reset();
-                    while((robot.sensorJunction.getDistance(DistanceUnit.INCH) > 9) && (runtime.time() < 0.75)) {
-                        telemetry.addData("sensor Junction", String.format("%.01f in", robot.sensorJunction.getDistance(DistanceUnit.INCH)));
-                        telemetry.update();
-                    }
-
-                    drive.motorsHalt();
-                    //Overshoot Correct
-                    //drive.driveDistance(0.2, 180, 1);
+                    // drive forward to detect the junction
+                    drive.detectJunction(0.2, 0.75);
 
                     // lower the arm and release the cone
                     drive.liftMidJunction();
@@ -228,41 +270,39 @@ public class LevRedTerminalFeedForward extends LinearOpMode{
                     drive.liftReset();
 
                     // back away from the junction
-                    drive.driveDistance(0.5, 180, 6);
-                    drive.liftReset();
-                    //rotate towards the cone stack
-                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
-                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
+                    drive.ftclibDrive(180, 6);
 
                     // reset the lift to its starting position
+                    drive.liftReset();
+
+                    //rotate towards the cone stack
+                    drive.ftclibRotate(-90, robot.PID_ROTATE_ERROR);
 
                     runState = State.CONE_2;
                     break;
 
                 case CONE_2:
                     //rotate towards the cone stack
-                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
-                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
+                    drive.ftclibRotate(-90, robot.PID_ROTATE_ERROR);
 
                     // lower the arm to pick up the top cone
                     drive.liftPosition(robot.LIFT_CONE5);
 
                     //drive towards the stack of cones
-                    drive.driveDistance(0.7,0,16);
+                    drive.ftclibDrive(0,16);
 
                     // adjust direction - turn towards cone stack
-                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
-                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
+                    drive.ftclibRotate(-90, robot.PID_ROTATE_ERROR);
 
                     //drive towards the stack of cones
-                    drive.driveDistance(0.4,0,13);
+                    drive.ftclibDrive(0,13);
 
                     // close the claw to grab the cone
                     drive.closeClaw();
                     sleep(700);
 
                     //back away from the wall slightly
-                    drive.driveDistance(0.2,180,0.5);
+                    drive.ftclibDrive(180,0.5);
 
                     // lift the cone up to clear the stack
                     drive.liftLowJunction();
@@ -273,29 +313,16 @@ public class LevRedTerminalFeedForward extends LinearOpMode{
 
                 case LOW_JUNCTION_2:
                     // back away to tile 2
-                    //drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
-                    //drive.driveDistance(0.4,180,10);
-                    //drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
-                    drive.driveDistance(0.4,180,23);
+                    drive.ftclibDrive(180,23);
+
                     // rotate towards the low junction
-                    drive.PIDRotate(-135, robot.PID_ROTATE_ERROR);
-                    drive.PIDRotate(-135, robot.PID_ROTATE_ERROR);
+                    drive.ftclibRotate(-135, robot.PID_ROTATE_ERROR);
 
                     // drive towards the junction
-                    drive.driveDistance(0.3, 0, 4);
+                    drive.ftclibDrive(0, 4);
 
-                    //Turn on drive to sensor
-                    drive.setDrivePower(0.2, .2, .2, .2);
-                    runtime.reset();
-                    while((robot.sensorJunction.getDistance(DistanceUnit.INCH) > 9) && (runtime.time() < 2)) {
-                        telemetry.addData("sensor Junction", String.format("%.01f in", robot.sensorJunction.getDistance(DistanceUnit.INCH)));
-                        telemetry.update();
-                    }
-
-                    drive.motorsHalt();
-                    //Overshoot Correct
-                    //drive.driveDistance(0.2, 180, 1);
-
+                    // drive forward to detect the junction
+                    drive.detectJunction(0.2, 2);
 
                     // place the cone
                     drive.liftPosition(robot.LIFT_RESET);
@@ -307,11 +334,10 @@ public class LevRedTerminalFeedForward extends LinearOpMode{
                     sleep(300);
 
                     // back away from the junction
-                    drive.driveDistance(0.3, 180, 9);
+                    drive.ftclibDrive(180, 9);
 
                     // turn towards the stack
-                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
-                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
+                    drive.ftclibRotate(-90, robot.PID_ROTATE_ERROR);
 
                     runState = State.CONE_3;
                     break;
@@ -321,39 +347,37 @@ public class LevRedTerminalFeedForward extends LinearOpMode{
                     drive.liftPosition(robot.LIFT_CONE4);
 
                     //drive towards the stack of cones
-                    drive.driveDistance(0.4,0,15);
+                    drive.ftclibDrive(0,15);
 
                     // adjust direction - turn towards cone stack
-                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
-                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
+                    drive.ftclibRotate(-90, robot.PID_ROTATE_ERROR);
 
                     //drive towards the stack of cones
-                    drive.driveDistance(0.4,0,12);
+                    drive.ftclibDrive(0,12);
 
                     // close the claw to grab the cone
                     drive.closeClaw();
                     sleep(600);
 
-
                     //back away from the wall slightly
-                    drive.driveDistance(0.2,180,0.5);
+                    drive.ftclibDrive(180,0.5);
 
                     // lift the cone up to clear the stack
                     drive.liftLowJunction();
                     sleep(600);
 
                     // back away to tile 2
-                    drive.driveDistance(0.4,180,26);
+                    drive.ftclibDrive(180,26);
 
                     runState = State.MID_JUNCTION_3;
                     break;
 
                 case LOW_JUNCTION_3:
                     // rotate towards the low junction
-                    drive.PIDRotate(-125, robot.PID_ROTATE_ERROR);
+                    drive.ftclibRotate(-125, robot.PID_ROTATE_ERROR);
 
                     // drive towards the junction
-                    drive.driveDistance(0.3, 0, 3);
+                    drive.ftclibDrive(0, 3);
 
                     // place the cone
                     drive.liftReset();
@@ -364,15 +388,14 @@ public class LevRedTerminalFeedForward extends LinearOpMode{
                     drive.liftLowJunction();
 
                     // turn towards the stack
-                    drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
+                    drive.ftclibRotate(-90, robot.PID_ROTATE_ERROR);
 
                     runState = State.PARK;
                     break;
 
                 case MID_JUNCTION_3:
                     // rotate towards the low junction
-                    drive.PIDRotate(-225, robot.PID_ROTATE_ERROR);
-                    drive.PIDRotate(-225, robot.PID_ROTATE_ERROR);
+                    drive.ftclibRotate(-225, robot.PID_ROTATE_ERROR);
 
                     // raise the arm to position the cone
                     drive.liftMidJunction();
@@ -381,19 +404,10 @@ public class LevRedTerminalFeedForward extends LinearOpMode{
                     sleep(500);
 
                     // Drive forward to the high junction
-                    drive.driveDistance(0.3,0,3);
-                    //Turn on drive to sensor
-                    drive.setDrivePower(0.2, .2, .2, .2);
-                    runtime.reset();
-                    while((robot.sensorJunction.getDistance(DistanceUnit.INCH) > 9) && (runtime.time() < 2)) {
-                        telemetry.addData("sensor Junction", String.format("%.01f in", robot.sensorJunction.getDistance(DistanceUnit.INCH)));
-                        telemetry.update();
-                    }
+                    drive.ftclibDrive(0,3);
 
-                    drive.motorsHalt();
-                    //Overshoot Correct
-                    drive.driveDistance(0.2, 180, 0);
-
+                    //drive forward to detect the junction
+                    drive.detectJunction(0.2, 2);
 
                     // lower the arm and release the cone
                     drive.liftLowJunction();
@@ -401,21 +415,17 @@ public class LevRedTerminalFeedForward extends LinearOpMode{
 
                     drive.openClaw();
 
-                    // raise the lift to keep from entagling on junction
+                    // raise the lift to keep from entangling on junction
                     drive.liftMidJunction();
 
                     // back away from the junction
-                    drive.driveDistance(0.3, 180, 5);
+                    drive.ftclibDrive(180, 5);
 
                     //rotate towards the cone stack
-                    drive.PIDRotate(90, robot.PID_ROTATE_ERROR);
-                    drive.PIDRotate(90, robot.PID_ROTATE_ERROR);
+                    drive.ftclibRotate(90, robot.PID_ROTATE_ERROR);
 
                     // reset the lift to its starting position
                     drive.liftReset();
-
-                    // back away to center
-                    //drive.driveDistance(0.4,0,1.5);
 
                     runState = State.PARK;
                     break;
@@ -431,7 +441,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode{
                         //drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
 
                         // drive to park position 1
-                        drive.driveDistance(0.5, 0,24);
+                        drive.ftclibDrive(0,24);
 
                     } else if (position == 2) {
                         // reset the lift
@@ -442,7 +452,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode{
                         //drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
 
                         // drive to park position 1
-                        drive.driveDistance(0.3, 180,2);
+                        drive.ftclibDrive(180,2);
 
                     } else {
                         // reset the lift
@@ -453,7 +463,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode{
                         //drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
 
                         // drive to park position 1
-                        drive.driveDistance(0.5, 180,18);
+                        drive.ftclibDrive(180,18);
                     }
 
                     while(opModeIsActive() && robot.motorBase.getCurrentPosition() > 10){
@@ -470,7 +480,6 @@ public class LevRedTerminalFeedForward extends LinearOpMode{
                     // shut down all motors
                     drive.motorsHalt();
 
-                    running = false;        // exit the program loop
                     requestOpModeStop();    // request stoppage of the program
 
                     break;

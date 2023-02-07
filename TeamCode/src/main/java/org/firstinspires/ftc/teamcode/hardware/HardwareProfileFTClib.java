@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
+import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -30,7 +32,7 @@ public class HardwareProfileFTClib {
     /*
      *  Constants & variables for wheel parameters
      */
-    public final double DRIVE_TICKS_PER_INCH = 41.6;
+    public final double DRIVE_TICKS_PER_INCH = 47;
     public final double STRAFE_FACTOR = 0.9;
 
     public final int LIFT_RESET = 0;
@@ -53,6 +55,10 @@ public class HardwareProfileFTClib {
     public final double PID_MIN_SPEED = 0.05;
     public final double PID_ROTATE_ERROR = 0.5;
 
+    public final double DRIVE_Kp = 0.05;
+    public final double DRIVE_Ki = 0.01;
+    public final double DRIVE_Kd = 0.31;
+
     /*
      * Hardware devices
      */
@@ -61,17 +67,20 @@ public class HardwareProfileFTClib {
 
     public DistanceSensor sensorWall = null;
 
-    public RevIMU imu =                 null;
-
-//    public BNO055IMU imu;       // Internal accelerometer / Gyro sensor
+    public RevIMU imu = null;
     public Servo servoGrabber;
     public RevBlinkinLedDriver LEDPort;
     public DistanceSensor sensorJunction;
     public DistanceSensor sensorJunction2;
-    public Motor motorLF;
-    public Motor motorLR;
-    public Motor motorRF;
-    public Motor motorRR;
+
+    public MotorEx motorLF = null;
+    public MotorEx motorLR = null;
+    public MotorEx motorRF = null;
+    public MotorEx motorRR = null;
+
+    public MecanumDrive mecanum = null;
+
+    HardwareMap hwMap;
 
     /*
      * Declare Odometry hardware
@@ -83,87 +92,47 @@ public class HardwareProfileFTClib {
 
     public void init(HardwareMap ahwMap) {
 
-        HardwareMap hwMap;
         hwMap = ahwMap;
-        Motor motorLeftF = new Motor(hardwareMap, "motorLF", Motor.GoBILDA.RPM_312);
-        Motor motorLeftR = new Motor(hardwareMap, "motorLR", Motor.GoBILDA.RPM_312);
-        Motor motorRightF = new Motor(hardwareMap, "motorRF", Motor.GoBILDA.RPM_312);
-        Motor motorRightR = new Motor(hardwareMap, "motorRR", Motor.GoBILDA.RPM_312);
 
-        List<LynxModule> allHubs = hwMap.getAll(LynxModule.class);
+
+        motorLF = new MotorEx(ahwMap, "motorLF", Motor.GoBILDA.RPM_312);
+        motorLF.setRunMode(Motor.RunMode.VelocityControl);
+//        motorLF.setVeloCoefficients(DRIVE_Kp, DRIVE_Ki, DRIVE_Kd);
+        motorLF.setInverted(true);
+        motorLF.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+
+        motorLR = new MotorEx(ahwMap, "motorLR", Motor.GoBILDA.RPM_312);
+        motorLR.setRunMode(Motor.RunMode.VelocityControl);
+//        motorLR.setVeloCoefficients(DRIVE_Kp, DRIVE_Ki, DRIVE_Kd);
+        motorLR.setInverted(true);
+        motorLR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+
+        motorRF = new MotorEx(ahwMap, "motorRF", Motor.GoBILDA.RPM_312);
+        motorRF.setRunMode(Motor.RunMode.VelocityControl);
+//        motorRF.setVeloCoefficients(DRIVE_Kp, DRIVE_Ki, DRIVE_Kd);
+        motorRF.setInverted(false);
+        motorRF.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+
+        motorRR = new MotorEx(ahwMap, "motorRR", Motor.GoBILDA.RPM_312);
+        motorRR.setRunMode(Motor.RunMode.VelocityControl);
+//        motorRR.setVeloCoefficients(DRIVE_Kp, DRIVE_Ki, DRIVE_Kd);
+        motorRR.setInverted(false);
+        motorRR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+
+        //drivebase init
+        mecanum = new MecanumDrive(motorLF, motorRF, motorLR, motorRR);
+
+        /*
+        List<LynxModule> allHubs = ahwMap.getAll(LynxModule.class);
 
         for (LynxModule hub : allHubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
-        DcMotor motorLF  = motorLeftF.motor;
-        DcMotor motorLR = motorLeftR.motor;
-        DcMotor motorRF = motorRightF.motor;
-        DcMotor motorRR = motorRightR.motor;
 
-        // set the run mode
-        motorLeftF.setRunMode(Motor.RunMode.PositionControl);
-        motorLeftR.setRunMode(Motor.RunMode.PositionControl);
-        motorRightF.setRunMode(Motor.RunMode.PositionControl);
-        motorRightR.setRunMode(Motor.RunMode.PositionControl);
-
-// set and get the position coefficient
-        motorLeftF.setPositionCoefficient(0.05);
-        double kP = motorLeftF.getPositionCoefficient();
-
-        /* ALTERNATIVE TARGET DISTANCE
-
-// configure a distance per pulse,
-// which is the distance traveled in a single tick
-// dpp = distance traveled in one rotation / CPR
-        m_motor.setDistancePerPulse(0.015);
-
-// set the target
-        m_motor.setTargetDistance(18.0);
-
-// this must be called in a control loop
-        m_motor.set(0.5); // mode must be PositionControl
-  */
+         */
 
 
-        /*
-         * Initialize Motors
-
-
-        motorLF = hwMap.get(DcMotorEx.class,"motorLF");
-        motorLF.setDirection(DcMotor.Direction.REVERSE);
-        motorLF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorLF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorLF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorLF.setPower(0);
-
-        motorLR = hwMap.get(DcMotorEx.class,"motorLR");
-        motorLR.setDirection(DcMotor.Direction.REVERSE);
-        motorLR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorLR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorLR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorLR.setPower(0);
-
-        motorRF = hwMap.get(DcMotorEx.class,"motorRF");
-        motorRF.setDirection(DcMotor.Direction.FORWARD);
-        motorRF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorRF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorRF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorRF.setPower(0);
-
-        motorRR = hwMap.get(DcMotorEx.class,"motorRR");
-        motorRR.setDirection(DcMotor.Direction.FORWARD);
-        motorRR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorRR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorRR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorRR.setPower(0);
-*/
-
-
-
-
-
-
-        motorBase = hwMap.get(DcMotorEx.class,"motorBase");
+        motorBase = ahwMap.get(DcMotorEx.class,"motorBase");
         motorBase.setDirection(DcMotor.Direction.REVERSE);
         motorBase.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         motorBase.setTargetPosition(0);
@@ -171,8 +140,9 @@ public class HardwareProfileFTClib {
         motorBase.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         motorBase.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        lampRobot = hwMap.dcMotor.get("RobotLamp");
+        lampRobot = ahwMap.dcMotor.get("RobotLamp");
         lampRobot.setPower(0);
+
 
         /***
          * initialize sensors
@@ -186,31 +156,23 @@ public class HardwareProfileFTClib {
         LEDPort.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
          */
 
-        servoGrabber = hwMap.servo.get("servoGrabber");
 
-        sensorJunction = hwMap.get(DistanceSensor.class, "sensorJunction");
+        servoGrabber = ahwMap.servo.get("servoGrabber");
+
+        sensorJunction = ahwMap.get(DistanceSensor.class, "sensorJunction");
+        sensorJunction2 = ahwMap.get(DistanceSensor.class, "sensorJunction2");
+
 
         /*
          * Initialize Sensors
          **/
 
         // imu init
-        imu = new RevIMU(hwMap);
+
+        imu = new RevIMU(ahwMap);
         imu.init();
 
-        /*
-        imu = hwMap.get(BNO055IMU.class, "imu");
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
-        parameters.loggingEnabled = true;
-        parameters.loggingTag = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-        imu.initialize(parameters);
-
-         */
 
         /* Webcam device will go here */
 //        webcam = hwMap.get(WebcamName.class, "Webcam 1");
