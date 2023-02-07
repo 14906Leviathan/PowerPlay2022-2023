@@ -38,9 +38,9 @@ public class HardwareProfileFTClib {
     public final int LIFT_RESET = 0;
     public final int LIFT_MIN_LOW = 0;
     public final int LIFT_MAX_HIGH = 4200;
-    public final int LIFT_LOW_JUNCTION = 1700;
+    public final int LIFT_LOW_JUNCTION = 1750;
     public final int LIFT_MID_JUNCTION = 3000;
-    public final int LIFT_HIGH_JUNCTION = 4000;
+    public final int LIFT_HIGH_JUNCTION = 4100;
     public final int LIFT_CONE5 = 630;
     public final int LIFT_CONE4 = 500;
     public final int LIFT_CONE3 = 300;
@@ -53,7 +53,7 @@ public class HardwareProfileFTClib {
     public final double PID_Ki = 0.01;
     public final double PID_Kd = 0.000001;
     public final double PID_MIN_SPEED = 0.05;
-    public final double PID_ROTATE_ERROR = 0.5;
+    public final double PID_ROTATE_ERROR = 1;
 
     public final double DRIVE_Kp = 0.05;
     public final double DRIVE_Ki = 0.01;

@@ -134,14 +134,15 @@ public class DriveMecanumFTCLib {
         double Kp = 0.05;
         double Ki = 0.001;
         double Kd = 0.01;
-        double minSpeed = 0.10;
-
+        double minSpeed = 0.15;
         double theta = Math.toRadians(90 + heading);
+
         robot.motorLF.resetEncoder();
         robot.motorLR.resetEncoder();
         robot.motorRF.resetEncoder();
         robot.motorRR.resetEncoder();
 
+        opMode.sleep(100);  // allow time for encoder resets
         // make sure distance is positive. Use heading to change direction.
         distance = Math.abs(distance);
 
@@ -437,8 +438,8 @@ public class DriveMecanumFTCLib {
 
         setDrivePower(forwardSpeed, forwardSpeed, forwardSpeed, forwardSpeed);
         localtime.reset();
-        while(((robot.sensorJunction.getDistance(DistanceUnit.INCH) > 5) &&
-                (robot.sensorJunction2.getDistance(DistanceUnit.INCH) > 5)) && (localtime.time() < timeout)) {
+        while(((robot.sensorJunction.getDistance(DistanceUnit.INCH) > 7) &&
+                (robot.sensorJunction2.getDistance(DistanceUnit.INCH) > 7)) && (localtime.time() < timeout)) {
             opMode.telemetry.addData("sensor Junction", String.format("%.01f in", robot.sensorJunction.getDistance(DistanceUnit.INCH)));
             opMode.telemetry.update();
         }
