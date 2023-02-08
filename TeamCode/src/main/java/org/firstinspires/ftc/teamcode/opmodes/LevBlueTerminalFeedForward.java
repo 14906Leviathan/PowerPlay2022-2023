@@ -2,12 +2,9 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -16,19 +13,18 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.hardware.HardwareProfile;
 import org.firstinspires.ftc.teamcode.hardware.HardwareProfileFTClib;
 import org.firstinspires.ftc.teamcode.libs.DriveMecanumFTCLib;
 
 import java.util.List;
 
-@Autonomous(name = "Auto - Squid Red Terminal Feed Forward", group = "Leviathan")
+@Autonomous(name = "Auto - Squid Blue Terminal Feed Forward", group = "Leviathan")
 
-public class LevRedTerminalFeedForward extends LinearOpMode {
+public class LevBlueTerminalFeedForward extends LinearOpMode {
 
     private final static HardwareProfileFTClib robot = new HardwareProfileFTClib();
     private LinearOpMode opMode = this;
-    private boolean distanceSensorFlag = false;
+    final private boolean distanceSensorFlag = false;
 
     FtcDashboard dashboard;
     public static double l1_Kp = 0.05;
@@ -69,7 +65,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
     public DriveMecanumFTCLib drive = new DriveMecanumFTCLib(robot, opMode);
     int position = 2;
 
-    public LevRedTerminalFeedForward(){
+    public LevBlueTerminalFeedForward(){
 
     }
 
@@ -234,7 +230,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
                     drive.ftclibDrive(0, 50);
 
                     //turn to high junction
-                    drive.ftclibRotate(45,robot.PID_ROTATE_ERROR);
+                    drive.ftclibRotate(-45,robot.PID_ROTATE_ERROR);
 
                     // decide if the program should use the distance sensors to find the junction
                     if(distanceSensorFlag) {
@@ -270,7 +266,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
 
                 case CONE_2:        // top cone of the starter stack
                     //rotate towards the cone stack
-                    drive.ftclibRotate(-92, robot.PID_ROTATE_ERROR);
+                    drive.ftclibRotate(90, robot.PID_ROTATE_ERROR);
 
                     // lower the arm to pick up the top cone
                     drive.liftPosition(robot.LIFT_CONE5);
@@ -279,7 +275,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
                     drive.ftclibDrive(0,16);
 
                     // adjust direction - turn towards cone stack
-                    drive.ftclibRotate(-90, robot.PID_ROTATE_ERROR);
+                    drive.ftclibRotate(90, robot.PID_ROTATE_ERROR);
 
                     //drive towards the stack of cones
                     drive.ftclibDrive(0,12);
@@ -306,7 +302,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
                     drive.liftPosition(robot.LIFT_LOW_JUNCTION);
 
                     // rotate towards the low junction
-                    drive.ftclibRotate(-135, robot.PID_ROTATE_ERROR);
+                    drive.ftclibRotate(135, robot.PID_ROTATE_ERROR);
 
                     // decide if the program should use the distance sensors to find the junction
                     if(distanceSensorFlag) {
@@ -333,7 +329,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
                     drive.ftclibDrive(180, 8);
 
                     // turn towards the starter stack
-                    drive.ftclibRotate(-90, robot.PID_ROTATE_ERROR);
+                    drive.ftclibRotate(90, robot.PID_ROTATE_ERROR);
 
                     runState = State.CONE_3;
                     break;
@@ -347,7 +343,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
                     drive.ftclibDrive(0,15);
 
                     // adjust direction - turn towards cone stack
-                    drive.ftclibRotate(-90, robot.PID_ROTATE_ERROR);
+                    drive.ftclibRotate(90, robot.PID_ROTATE_ERROR);
 
                     //drive towards the stack of cones
                     drive.ftclibDrive(0,11);
@@ -371,7 +367,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
                     drive.liftPosition(robot.LIFT_LOW_JUNCTION);
 
                     // rotate towards the low junction
-                    drive.ftclibRotate(-135, robot.PID_ROTATE_ERROR);
+                    drive.ftclibRotate(135, robot.PID_ROTATE_ERROR);
 
                     // decide if the program should use the distance sensors to find the junction
                     if(distanceSensorFlag) {
@@ -397,7 +393,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
                     drive.ftclibDrive(180, 8);
 
                     // turn towards the stack
-                    drive.ftclibRotate(-90, robot.PID_ROTATE_ERROR);
+                    drive.ftclibRotate(90, robot.PID_ROTATE_ERROR);
 
                     runState = State.PARK;
                     break;
@@ -410,7 +406,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
                     drive.liftMidJunction();
 
                     // rotate towards the mid junction
-                    drive.ftclibRotate(-135, robot.PID_ROTATE_ERROR);
+                    drive.ftclibRotate(135, robot.PID_ROTATE_ERROR);
 
                     // decide if the program should use the distance sensors to find the junction
                     if(distanceSensorFlag) {
@@ -436,7 +432,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
                     drive.ftclibDrive(180, 8);
 
                     //rotate towards the cone stack
-                    drive.ftclibRotate(-90, robot.PID_ROTATE_ERROR);
+                    drive.ftclibRotate(90, robot.PID_ROTATE_ERROR);
 
                     // reset the lift to its starting position
                     drive.liftReset();
@@ -479,7 +475,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
                         // drive to park position 1
                         drive.ftclibDrive(0,12);
 
-                        drive.ftclibRotate(-95, 1);
+                        drive.ftclibRotate(95, 1);
 
                         drive.ftclibDrive(0, 12);
                     }

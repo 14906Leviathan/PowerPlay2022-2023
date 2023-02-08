@@ -41,6 +41,7 @@ public class HardwareProfileFTClib {
     public final int LIFT_LOW_JUNCTION = 1750;
     public final int LIFT_MID_JUNCTION = 3000;
     public final int LIFT_HIGH_JUNCTION = 4100;
+    public final int LIFT_EXTRACT_CONE = 900;
     public final int LIFT_CONE5 = 630;
     public final int LIFT_CONE4 = 500;
     public final int LIFT_CONE3 = 300;

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -19,7 +20,7 @@ import org.firstinspires.ftc.teamcode.libs.DriveMecanum;
 import java.util.List;
 
 @Autonomous(name = "Auto - Squid Blue Terminal Side", group = "Leviathan")
-
+@Disabled
 public class LevBlueTerminalSquid extends LinearOpMode{
 
     FtcDashboard dashboard;
