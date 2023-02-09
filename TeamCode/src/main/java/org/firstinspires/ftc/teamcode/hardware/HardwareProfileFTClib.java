@@ -55,7 +55,7 @@ public class HardwareProfileFTClib {
     public final double PID_Kd = 0.000001;
     public final double PID_MIN_SPEED = 0.05;
     public final double PID_ROTATE_ERROR = 1;
-
+    public final double PID_ROTATE_TELEOP_ERROR = 5;
     public final double DRIVE_Kp = 0.05;
     public final double DRIVE_Ki = 0.01;
     public final double DRIVE_Kd = 0.31;

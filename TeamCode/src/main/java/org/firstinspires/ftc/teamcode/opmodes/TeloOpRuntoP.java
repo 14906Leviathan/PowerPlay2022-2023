@@ -145,6 +145,16 @@ public class TeloOpRuntoP extends LinearOpMode {
             Range.clip(mBase, robot.LIFT_MIN_LOW,robot.LIFT_MAX_HIGH);
             drive.liftPosition(mBase);
 
+            if(gamepad1.dpad_left){
+
+                drive.PIDRotate((drive.getZAngle() + 180),5);
+                                }
+
+            if(gamepad1.dpad_right){
+
+                drive.PIDRotate((drive.getZAngle() - 180),5);
+            }
+
             telemetry.addData("motorLF = ", robot.motorLF.getCurrentPosition());
             telemetry.addData("motorLR = ", robot.motorLR.getCurrentPosition());
             telemetry.addData("motorRF = ", robot.motorRF.getCurrentPosition());
