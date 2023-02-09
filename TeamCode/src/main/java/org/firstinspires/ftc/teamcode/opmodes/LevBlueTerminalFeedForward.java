@@ -63,7 +63,7 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
     private State setupState = State.ALLIANCE_SELECT;     // default setupState configuration
     private State runState = State.SET_DISTANCES;
     public DriveMecanumFTCLib drive = new DriveMecanumFTCLib(robot, opMode);
-    int position = 2;
+    int position = 3;
 
     public LevBlueTerminalFeedForward(){
 
@@ -108,7 +108,7 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
          * The init() method of the hardware class does all the work here
          */
         robot.motorBase.setTargetPosition(0);
-        robot.lampRobot.setPower(1);
+//        robot.lampRobot.setPower(1);
         robot.motorBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Send telemetry message to signify robot waiting;
@@ -253,7 +253,7 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
                     drive.liftHighJunction();
 
                     // back away from the junction
-                    drive.ftclibDrive(180, 9);
+                    drive.ftclibDrive(180, 7);
 
                     // reset the lift to its starting position
                     drive.liftPosition(robot.LIFT_CONE5);
@@ -285,7 +285,7 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
                     sleep(300);
 
                     //back away from the wall slightly
-                    drive.ftclibDrive(180,0.5);
+                    drive.ftclibDrive(180,1);
 
                     // lift the cone up to clear the stack
                     drive.liftPosition(robot.LIFT_EXTRACT_CONE);
@@ -351,6 +351,9 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
                     // close the claw to grab the cone
                     drive.closeClaw();
                     sleep(400);
+
+                    //back away from the wall slightly
+                    drive.ftclibDrive(180,1);
 
                     // lift the cone up to clear the stack
                     drive.liftPosition(robot.LIFT_EXTRACT_CONE);
@@ -451,7 +454,7 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
                         //drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
 
                         // drive to park position 1
-                        drive.ftclibDrive(180,24);
+                        drive.ftclibDrive(180,25);
 
                     } else if (position == 2) {
                         // reset the lift
