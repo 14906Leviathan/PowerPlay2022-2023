@@ -14,6 +14,13 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.List;
 
@@ -41,7 +48,7 @@ public class HardwareProfileFTClib {
     public final int LIFT_LOW_JUNCTION = 1800;
     public final int LIFT_MID_JUNCTION = 3000;
     public final int LIFT_HIGH_JUNCTION = 4100;
-    public final int LIFT_EXTRACT_CONE = 1100;
+    public final int LIFT_EXTRACT_CONE = 1200;
     public final int LIFT_CONE5 = 680;
     public final int LIFT_CONE4 = 550;
     public final int LIFT_CONE3 = 300;
@@ -71,8 +78,8 @@ public class HardwareProfileFTClib {
     public RevIMU imu = null;
     public Servo servoGrabber;
     public RevBlinkinLedDriver LEDPort;
-    public DistanceSensor sensorJunction;
-    public DistanceSensor sensorJunction2;
+    public Rev2mDistanceSensor sensorJunction;
+    public Rev2mDistanceSensor sensorJunction2;
 
     public MotorEx motorLF = null;
     public MotorEx motorLR = null;
@@ -160,8 +167,8 @@ public class HardwareProfileFTClib {
 
         servoGrabber = ahwMap.servo.get("servoGrabber");
 
-        sensorJunction = ahwMap.get(DistanceSensor.class, "sensorJunction");
-        sensorJunction2 = ahwMap.get(DistanceSensor.class, "sensorJunction2");
+        sensorJunction = (Rev2mDistanceSensor) ahwMap.get(DistanceSensor.class, "sensorJunction");
+        sensorJunction2 = (Rev2mDistanceSensor) ahwMap.get(DistanceSensor.class, "sensorJunction2");
 
 
         /*

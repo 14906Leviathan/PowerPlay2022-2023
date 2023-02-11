@@ -24,7 +24,10 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
 
     private final static HardwareProfileFTClib robot = new HardwareProfileFTClib();
     private LinearOpMode opMode = this;
+
+
     final private boolean distanceSensorFlag = false;
+
 
     FtcDashboard dashboard;
     public static double l1_Kp = 0.05;
@@ -227,7 +230,7 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
                     drive.liftHighJunction();
 
                     // Drive forward away from wall, pushing signal cone out of position
-                    drive.ftclibDrive(0, 50);
+                    drive.ftclibDrive(0, 50.5, 0);
 
                     //turn to high junction
                     drive.ftclibRotate(-45,robot.PID_ROTATE_ERROR);
@@ -238,10 +241,10 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
                         drive.detectJunction(0.2, 1.5);
 
                         // reverse distance slightly
-                        drive.ftclibDrive(180, 2);
+                        drive.ftclibDrive(180, 2, 0);
                     } else {
                         // Drive forward to the high junction
-                        drive.ftclibDrive(0,7);
+                        drive.ftclibDrive(0,7, 0);
                     }
 
                     // lower the arm and release the cone
@@ -253,7 +256,18 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
                     drive.liftHighJunction();
 
                     // back away from the junction
-                    drive.ftclibDrive(180, 7);
+                    drive.ftclibDrive(180, 7,0);
+
+                    if(distanceSensorFlag) {
+                    // drive forward to detect the junction
+                    drive.detectJunction(0.5, 1.5);
+
+                    // reverse distance slightly
+                    drive.ftclibDrive(180, 0,0);
+                } else {
+                    // Drive forward to the high junction
+                    drive.ftclibDrive(0,12,0);
+                }
 
                     // reset the lift to its starting position
                     drive.liftPosition(robot.LIFT_CONE5);
@@ -272,20 +286,32 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
                     drive.liftPosition(robot.LIFT_CONE5);
 
                     //drive towards the stack of cones
-                    drive.ftclibDrive(0,16);
+                    drive.ftclibDrive(0,16,0);
 
                     // adjust direction - turn towards cone stack
                     drive.ftclibRotate(90, robot.PID_ROTATE_ERROR);
+/*
+                    if(distanceSensorFlag) {
+                        // drive forward to detect the junction
+                        drive.detectJunction(0.2, 1.5);
 
+                        // reverse distance slightly
+                        drive.ftclibDrive(180, 0);
+                    } else {
+                        // Drive forward to the high junction
+                        drive.ftclibDrive(0,12);
+                    }
+
+ */
                     //drive towards the stack of cones
-                    drive.ftclibDrive(0,12);
+                    drive.ftclibDrive(0,14,1.2);
 
                     // close the claw to grab the cone
                     drive.closeClaw();
                     sleep(300);
 
                     //back away from the wall slightly
-                    drive.ftclibDrive(180,1);
+                    drive.ftclibDrive(180,1,0);
 
                     // lift the cone up to clear the stack
                     drive.liftPosition(robot.LIFT_EXTRACT_CONE);
@@ -296,7 +322,7 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
 
                 case LOW_JUNCTION_2:    // low junction 1st pass
                     // back away to tile 2
-                    drive.ftclibDrive(180,22);
+                    drive.ftclibDrive(180,22,0);
 
                     // lift the rest of the way to low junction
                     drive.liftPosition(robot.LIFT_LOW_JUNCTION);
@@ -310,10 +336,10 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
                         drive.detectJunction(0.2, 1.5);
 
                         // reverse distance slightly
-                        drive.ftclibDrive(180, 2);
+                        drive.ftclibDrive(180, 2,0);
                     } else {
                         // Drive forward to the high junction
-                        drive.ftclibDrive(0,8);
+                        drive.ftclibDrive(0,8,0);
                     }
 
                     // place the cone
@@ -326,7 +352,7 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
                     sleep(200);
 
                     // back away from the junction
-                    drive.ftclibDrive(180, 8);
+                    drive.ftclibDrive(180, 8,0);
 
                     // turn towards the starter stack
                     drive.ftclibRotate(90, robot.PID_ROTATE_ERROR);
@@ -340,20 +366,33 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
                     drive.liftPosition(robot.LIFT_CONE4);
 
                     //drive towards the stack of cones
-                    drive.ftclibDrive(0,15);
+                    drive.ftclibDrive(0,14,0);
 
                     // adjust direction - turn towards cone stack
                     drive.ftclibRotate(90, robot.PID_ROTATE_ERROR);
 
+                    /*
+                    if(distanceSensorFlag) {
+                        // drive forward to detect the junction
+                        drive.detectJunction(0.2, 1.5);
+
+                        // reverse distance slightly
+                        drive.ftclibDrive(180, 0);
+                    } else {
+                        // Drive forward to the high junction
+                        drive.ftclibDrive(0,11);
+                    }
+
+                     */
                     //drive towards the stack of cones
-                    drive.ftclibDrive(0,11);
+                    drive.ftclibDrive(0,12,1.2);
 
                     // close the claw to grab the cone
                     drive.closeClaw();
                     sleep(400);
 
                     //back away from the wall slightly
-                    drive.ftclibDrive(180,1);
+                    drive.ftclibDrive(180,1,0);
 
                     // lift the cone up to clear the stack
                     drive.liftPosition(robot.LIFT_EXTRACT_CONE);
@@ -364,7 +403,7 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
 
                 case LOW_JUNCTION_3:
                     // back away to tile 2
-                    drive.ftclibDrive(180,22);
+                    drive.ftclibDrive(180,22,0);
 
                     // lift the rest of the way to low junction
                     drive.liftPosition(robot.LIFT_LOW_JUNCTION);
@@ -378,10 +417,10 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
                         drive.detectJunction(0.2, 1.5);
 
                         // reverse distance slightly
-                        drive.ftclibDrive(180, 2);
+                        drive.ftclibDrive(180, 2,0);
                     } else {
                         // Drive forward to the high junction
-                        drive.ftclibDrive(0,8);
+                        drive.ftclibDrive(0,8,0);
                     }
 
                     // place the cone
@@ -393,7 +432,7 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
                     drive.liftLowJunction();
 
                     //back away from the junction
-                    drive.ftclibDrive(180, 8);
+                    drive.ftclibDrive(180, 8,0);
 
                     // turn towards the stack
                     drive.ftclibRotate(90, robot.PID_ROTATE_ERROR);
@@ -403,7 +442,7 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
 
                 case MID_JUNCTION_3:
                     // back away to tile 2
-                    drive.ftclibDrive(180,50);
+                    drive.ftclibDrive(180,50,0);
 
                     // raise the arm to position the cone
                     drive.liftMidJunction();
@@ -417,10 +456,10 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
                         drive.detectJunction(0.2, 1.5);
 
                         // reverse distance slightly
-                        drive.ftclibDrive(180, 2);
+                        drive.ftclibDrive(180, 2,0);
                     } else {
                         // Drive forward to the high junction
-                        drive.ftclibDrive(0,8);
+                        drive.ftclibDrive(0,8,0);
                     }
 
                     // lower the arm and release the cone
@@ -432,7 +471,7 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
                     drive.liftMidJunction();
 
                     // back away from the junction
-                    drive.ftclibDrive(180, 8);
+                    drive.ftclibDrive(180, 8,0);
 
                     //rotate towards the cone stack
                     drive.ftclibRotate(90, robot.PID_ROTATE_ERROR);
@@ -445,7 +484,7 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
 
                 case PARK:
 
-                    if(position == 3) {
+                    if(position == 1) {
                         // reset the lift
                         drive.liftReset();
                         drive.openClaw();
@@ -454,7 +493,7 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
                         //drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
 
                         // drive to park position 1
-                        drive.ftclibDrive(180,25);
+                        drive.ftclibDrive(180,24,0);
 
                     } else if (position == 2) {
                         // reset the lift
@@ -464,8 +503,8 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
                         // rotate towards the outside wall position
                         //drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
 
-                        // drive to park position 1
-                        drive.ftclibDrive(0,0);
+                        // drive to park position 2
+                        drive.ftclibDrive(0,0,0);
 
                     } else {
                         // reset the lift
@@ -475,12 +514,12 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
                         // rotate towards the outside wall position
                         //drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
 
-                        // drive to park position 1
-                        drive.ftclibDrive(0,12);
+                        // drive to park position 3
+                        drive.ftclibDrive(0,12,0);
 
                         drive.ftclibRotate(95, 1);
 
-                        drive.ftclibDrive(0, 12);
+                        drive.ftclibDrive(0, 12,0);
                     }
 
                     while(opModeIsActive() && robot.motorBase.getCurrentPosition() > 10){

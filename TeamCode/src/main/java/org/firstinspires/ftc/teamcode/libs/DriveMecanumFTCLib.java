@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.libs;
 
 import static com.arcrobotics.ftclib.util.MathUtils.clamp;
 
+import android.os.BadParcelableException;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -119,8 +121,9 @@ public class DriveMecanumFTCLib {
      * @param heading   - Direction robot should drive
      * @param distance  - Distance in Inches to drive
      */
-    public void ftclibDrive(double heading, double distance) {
+    public void ftclibDrive(double heading, double distance, double timeout) {
         dashboard = FtcDashboard.getInstance();
+        ElapsedTime overtime = new ElapsedTime();
         TelemetryPacket dashTelemetry = new TelemetryPacket();
         double initZ = getZAngle();
         double rflrPower = 0;
@@ -146,7 +149,9 @@ public class DriveMecanumFTCLib {
         // make sure distance is positive. Use heading to change direction.
         distance = Math.abs(distance);
 
-        while(opMode.opModeIsActive() && correct) {
+        overtime.reset();
+
+//        while(opMode.opModeIsActive() && correct) {
             while (opMode.opModeIsActive() && active) {
 
                 error = distance - distanceTraveled;
@@ -198,6 +203,11 @@ public class DriveMecanumFTCLib {
                     active = false;
                     correct = false;
                 }
+                if(timeout != 0){
+                    if(overtime.time() > timeout){
+                        active = false;
+                    }
+                }
                 /*
                 opMode.telemetry.addData("Distance Traveled = ", distanceTraveled);
                 opMode.telemetry.addData("Distance = ", distance);
@@ -240,7 +250,7 @@ public class DriveMecanumFTCLib {
 
              */
 
-        }
+  //      }
     }   // close driveDistance method
 
 
