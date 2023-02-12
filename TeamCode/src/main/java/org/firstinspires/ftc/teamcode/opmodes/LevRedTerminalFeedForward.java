@@ -231,7 +231,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
                     drive.liftHighJunction();
 
                     // Drive forward away from wall, pushing signal cone out of position
-                    drive.ftclibDrive(0, 50.5,0 );
+                    drive.ftclibDrive(0, 50,0 );
 
                     //turn to high junction
                     drive.ftclibRotate(45,robot.PID_ROTATE_ERROR);
@@ -300,7 +300,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
 
                 case LOW_JUNCTION_2:    // low junction 1st pass
                     // back away to tile 2
-                    drive.ftclibDrive(180,22,0);
+                    drive.ftclibDrive(180,23,0);
 
                     // lift the rest of the way to low junction
                     drive.liftPosition(robot.LIFT_LOW_JUNCTION);
@@ -330,7 +330,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
                     sleep(200);
 
                     // back away from the junction
-                    drive.ftclibDrive(180, 8,0);
+                    drive.ftclibDrive(180, 7,0);
 
                     // turn towards the starter stack
                     drive.ftclibRotate(-90, robot.PID_ROTATE_ERROR);
@@ -354,7 +354,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
 
                     // close the claw to grab the cone
                     drive.closeClaw();
-                    sleep(400);
+                    sleep(600);
 
                     // lift the cone up to clear the stack
                     drive.liftPosition(robot.LIFT_EXTRACT_CONE);
@@ -365,7 +365,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
 
                 case LOW_JUNCTION_3:
                     // back away to tile 2
-                    drive.ftclibDrive(180,22,0);
+                    drive.ftclibDrive(180,23,0);
 
                     // lift the rest of the way to low junction
                     drive.liftPosition(robot.LIFT_LOW_JUNCTION);
@@ -466,7 +466,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
                         //drive.PIDRotate(-90, robot.PID_ROTATE_ERROR);
 
                         // drive to park position 1
-                        drive.ftclibDrive(0,0,0);
+                        drive.ftclibDrive(180,2,0);
 
                     } else {
                         // reset the lift

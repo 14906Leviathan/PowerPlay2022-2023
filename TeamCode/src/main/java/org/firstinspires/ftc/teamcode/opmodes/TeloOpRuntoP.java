@@ -144,7 +144,7 @@ public class TeloOpRuntoP extends LinearOpMode {
             // limit the max and min value of mBase
             Range.clip(mBase, robot.LIFT_MIN_LOW,robot.LIFT_MAX_HIGH);
             drive.liftPosition(mBase);
-
+/*
             if(gamepad1.dpad_left){
 
                 drive.PIDRotate((drive.getZAngle() + 180),5);
@@ -154,6 +154,8 @@ public class TeloOpRuntoP extends LinearOpMode {
 
                 drive.PIDRotate((drive.getZAngle() - 180),5);
             }
+
+ */
 
             telemetry.addData("motorLF = ", robot.motorLF.getCurrentPosition());
             telemetry.addData("motorLR = ", robot.motorLR.getCurrentPosition());
