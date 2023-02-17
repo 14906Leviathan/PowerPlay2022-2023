@@ -168,11 +168,17 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
         robot.lampRobot.setPower(0);
 
         runtime.reset();
-        runState = State.LEVEL_ADJUST;
+        runState = State.HIGH_JUNCTION_1;
 
         while (opModeIsActive()) {
             switch(runState){
                 case TEST:
+                    drive.ftclibDrive(45, 16, 0);
+                    drive.ftclibDrive(225, 16, 0);
+                    drive.ftclibDrive(-45, 8, 0);
+                    drive.ftclibDrive(135, 8, 0);
+
+                    /*
 
                     drive.ftclibRotate(45, 1);
                     sleep(2000);
@@ -212,9 +218,11 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
 
                     drive.ftclibRotate(0, 1);
                     sleep(2000);
-
+*/
                     runState = State.HALT;
                     break;
+
+
 
                 case LEVEL_ADJUST:
                     robot.lampRobot.setPower(0);
