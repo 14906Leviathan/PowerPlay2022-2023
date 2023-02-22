@@ -134,7 +134,7 @@ public class DriveMecanumFTCLib {
         double integral = 0, drivePower = 0;
         ElapsedTime rotateTime = new ElapsedTime();
         double maxDrivePower = 0.4;
-        double Kp = 0.05;
+        double Kp = 0.2;
         double Ki = 0.001;
         double Kd = 0.01;
         double minSpeed = 0.15;
@@ -151,96 +151,69 @@ public class DriveMecanumFTCLib {
 
         overtime.reset();
 
-//        while(opMode.opModeIsActive() && correct) {
-            while (opMode.opModeIsActive() && active) {
+        while (opMode.opModeIsActive() && active) {
 
-                error = distance - distanceTraveled;
-                derivative = lastError - error;
-                integral = rotateTime.time() * error;
-                drivePower = ((Kp * error) + (Ki * integral) + (Kd * derivative));
-                lastError = error;
+            error = distance - distanceTraveled;
+            derivative = lastError - error;
+            integral = rotateTime.time() * error;
+            drivePower = ((Kp * error) + (Ki * integral) + (Kd * derivative));
+            lastError = error;
 
 
-                if (drivePower > -0.10 && drivePower < 0 ){
-                    drivePower = minSpeed;
-                } else if (drivePower <0.10 && drivePower > 0){
-                    drivePower = minSpeed;
+            if (drivePower > -0.10 && drivePower < 0 ){
+                drivePower = minSpeed;
+            } else if (drivePower <0.10 && drivePower > 0){
+                drivePower = minSpeed;
+            }
+            rflrPower = drivePower * (Math.sin(theta) - Math.cos(theta));
+            lfrrPower = drivePower * (Math.sin(theta) + Math.cos(theta));
+
+            if (initZ > 170 || initZ < -170) {
+                currentZ = gyro360(0);      // always use 0 as the reference angle
+            } else {
+                currentZ = getZAngle();
+            }
+            if (currentZ != initZ) {
+                zCorrection = Math.abs(initZ - currentZ) / 100;
+
+                if (initZ < currentZ) {
+                    rflrPower = rflrPower + zCorrection;
+                    lfrrPower = lfrrPower - zCorrection;
                 }
-                rflrPower = drivePower * (Math.sin(theta) - Math.cos(theta));
-                lfrrPower = drivePower * (Math.sin(theta) + Math.cos(theta));
-
-                if (initZ > 170 || initZ < -170) {
-                    currentZ = gyro360(0);      // always use 0 as the reference angle
-                } else {
-                    currentZ = getZAngle();
+                if (initZ > currentZ) {
+                    rflrPower = rflrPower - zCorrection;
+                    lfrrPower = lfrrPower + zCorrection;
                 }
-                if (currentZ != initZ) {
-                    zCorrection = Math.abs(initZ - currentZ) / 100;
-
-                    if (initZ < currentZ) {
-                        rflrPower = rflrPower + zCorrection;
-                        lfrrPower = lfrrPower - zCorrection;
-                    }
-                    if (initZ > currentZ) {
-                        rflrPower = rflrPower - zCorrection;
-                        lfrrPower = lfrrPower + zCorrection;
-                    }
-                }   // end of if currentZ != initZ
-
-                /*
-                 * Limit that value of the drive motors so that the power does not exceed 100%
-                 */
-                rflrPower = Range.clip(rflrPower, -Math.abs(maxDrivePower), Math.abs(maxDrivePower));
-                lfrrPower = Range.clip(lfrrPower, -Math.abs(maxDrivePower), Math.abs(maxDrivePower));
-
-                /*
-                 * Apply power to the drive wheels
-                 */
-                setDrivePower(rflrPower, lfrrPower, rflrPower, lfrrPower);
-
-                distanceTraveled = calcDistance(heading);
-                if (distanceTraveled >= distance) {
-                    active = false;
-                    correct = false;
-                }
-                if(timeout != 0){
-                    if(overtime.time() > timeout){
-                        active = false;
-                    }
-                }
-                /*
-                opMode.telemetry.addData("Distance Traveled = ", distanceTraveled);
-                opMode.telemetry.addData("Distance = ", distance);
-                opMode.telemetry.update();
-                opMode.idle();
-
-                dashTelemetry.put("p20 - drive Telemetry Data", "");
-                dashTelemetry.put("p25 - Drive Power                  = ", drivePower);
-                dashTelemetry.put("p24 - Target Distance              = ", distance);
-                dashTelemetry.put("p21 - rflrPower                    = ", rflrPower);
-                dashTelemetry.put("p22 - lfrrPower                    = ", lfrrPower);
-                dashTelemetry.put("p26 - Distance Traveled            = ", distanceTraveled);
-                dashTelemetry.put("p23 - PID IMU Angle X              = ", robot.imu.getAngles()[0]);
-                dashboard.sendTelemetryPacket(dashTelemetry);
-
-                 */
-
-            }   // end of while loop
-            motorsHalt();
-            setMotorVelocityZero();
+            }   // end of if currentZ != initZ
 
             /*
+             * Limit that value of the drive motors so that the power does not exceed 100%
+             */
+            rflrPower = Range.clip(rflrPower, -Math.abs(maxDrivePower), Math.abs(maxDrivePower));
+            lfrrPower = Range.clip(lfrrPower, -Math.abs(maxDrivePower), Math.abs(maxDrivePower));
 
-            if (Math.abs(distanceTraveled) > Math.abs(distance)){
-                //correct = true;
-                //active = true;
-                //power = -power;
-            } else if(Math.abs(distanceTraveled) < Math.abs(distance)){
-                //correct = true;
-                //active = true;
+            /*
+             * Apply power to the drive wheels
+             */
+            setDrivePower(rflrPower, lfrrPower, rflrPower, lfrrPower);
+
+            distanceTraveled = calcDistance(heading);
+            if (distanceTraveled >= distance) {
+                active = false;
             }
+            if(timeout != 0){
+                if(overtime.time() > timeout){
+                    active = false;
+                }
+            }
+            /*
+            opMode.telemetry.addData("Distance Traveled = ", distanceTraveled);
+            opMode.telemetry.addData("Distance = ", distance);
+            opMode.telemetry.update();
+            opMode.idle();
 
             dashTelemetry.put("p20 - drive Telemetry Data", "");
+            dashTelemetry.put("p25 - Drive Power                  = ", drivePower);
             dashTelemetry.put("p24 - Target Distance              = ", distance);
             dashTelemetry.put("p21 - rflrPower                    = ", rflrPower);
             dashTelemetry.put("p22 - lfrrPower                    = ", lfrrPower);
@@ -250,16 +223,12 @@ public class DriveMecanumFTCLib {
 
              */
 
+        }   // end of while loop
+        motorsHalt();
+
   //      }
     }   // close driveDistance method
 
-
-    private void setMotorVelocityZero(){
-        robot.motorLF.setVelocity(0);
-        robot.motorRF.setVelocity(0);
-        robot.motorLR.setVelocity(0);
-        robot.motorRR.setVelocity(0);
-    }
     /**
      * Method: PIDRotate
      * Parameters:
@@ -273,11 +242,11 @@ public class DriveMecanumFTCLib {
         double integral = 0;
         ElapsedTime rotateTime = new ElapsedTime();
         double error;
-        double Kp = 0.01;
+        double Kp = 0.85;
         double Ki = 0.0; //0.001;
-        double Kd = 0.0001; //0.02;
-        double minRotateSpeed = 0.08;
-        double maxRotateSpeed = 0.8;
+        double Kd = 0.2; //0.02;
+        double minRotateSpeed = 0.15;
+        double maxRotateSpeed = 1;
         double rotationSpeed;
         double derivative = 0, lastError=0;
         double rightRotate = 0;
@@ -286,12 +255,13 @@ public class DriveMecanumFTCLib {
         // check to see how far the robot is rotating to decide which gyro sensor value to use
 
         targetAngle = Math.toRadians(targetAngle);  // convert targetAngle to radians
-        error = 100 * (getZAngleRadians() - targetAngle);
+        error = getZAngleRadians() - targetAngle;
+        targetError = Math.toRadians(targetError);
 
         // reset the time to track rotation speed
         rotateTime.reset();
 
-        while ((Math.abs(error) >= targetError) && opMode.opModeIsActive()) {
+        while ((Math.abs(error) >= Math.abs(targetError)) && opMode.opModeIsActive()) {
             derivative = (error - lastError) / rotateTime.time();
             integral = integral + (rotateTime.time() * error);
             rotationSpeed = ((Kp * error) + (Ki * integral) + (Kd * derivative));
@@ -312,7 +282,7 @@ public class DriveMecanumFTCLib {
             setDrivePower(rightRotate, leftRotate, leftRotate, rightRotate);
 
             // check to see how far the robot is rotating to decide which gyro sensor value to use
-            error = 100 * (getZAngleRadians() - targetAngle);
+            error = getZAngleRadians() - targetAngle;
 
             dashTelemetry.put("p00 - PIDTurn Telemetry Data", "");
             dashTelemetry.put("p01 - PID IMU Angle X              = ", getZAngle());
@@ -320,11 +290,12 @@ public class DriveMecanumFTCLib {
             dashTelemetry.put("p03 - PID IMU Angle Z              = ", robot.imu.getAngles()[2]);
             dashTelemetry.put("p04 - targetAngle (Radians)        = ", targetAngle);
             dashTelemetry.put("p05 - Current Angle (Radians)      = ", getZAngleRadians());
-            dashTelemetry.put("p06 - Angle Error (Radians)        = ", error/100);
-            dashTelemetry.put("p07 - Angle Error (Degrees)        = ", Math.toDegrees(getZAngleRadians()-targetAngle));
-            dashTelemetry.put("p08 - derivative                   = ", derivative);
-            dashTelemetry.put("p09 - integral                     = ", integral);
-            dashTelemetry.put("p10 - Turn Time                    = ", rotateTime.time());
+            dashTelemetry.put("p06 - Turn Speed                   = ", rotationSpeed);
+            dashTelemetry.put("p07 - Angle Error (Radians)        = ", error);
+            dashTelemetry.put("p08 - Angle Error (Degrees)        = ", Math.toDegrees(getZAngleRadians()-targetAngle));
+            dashTelemetry.put("p09 - derivative                   = ", derivative);
+            dashTelemetry.put("p10 - integral                     = ", integral);
+            dashTelemetry.put("p11 - Turn Time                    = ", rotateTime.time());
             dashboard.sendTelemetryPacket(dashTelemetry);
 
         }   // end of while Math.abs(error)
@@ -479,10 +450,10 @@ public class DriveMecanumFTCLib {
      * Function:    Shut off all drive motors
      ******************************************************************************************/
     public void motorsHalt(){
-        robot.motorRF.set(0);
-        robot.motorLF.set(0);
-        robot.motorLR.set(0);
-        robot.motorRR.set(0);
+        robot.motorRF.stopMotor();
+        robot.motorLF.stopMotor();
+        robot.motorLR.stopMotor();
+        robot.motorRR.stopMotor();
     }   // end of motorsHalt method
 
 
@@ -500,6 +471,14 @@ public class DriveMecanumFTCLib {
     public void openClaw(){
         robot.servoGrabber.setPosition(robot.SERVO_GRAB_OPEN);
     }   // end of openClaw method
+
+    public void alignUp(){
+        robot.servoAlign.setPosition(robot.SERVO_ALIGN_UP);
+    }
+
+    public void alignDown(){
+        robot.servoAlign.setPosition(robot.SERVO_ALIGN_DOWN);
+    }
 
     public void liftReset(){
         robot.motorBase.setPower(robot.LIFT_POWER);

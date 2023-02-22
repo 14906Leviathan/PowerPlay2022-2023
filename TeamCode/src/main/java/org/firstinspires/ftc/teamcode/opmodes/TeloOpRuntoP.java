@@ -18,15 +18,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 
-import org.firstinspires.ftc.teamcode.hardware.HardwareProfile;
-import org.firstinspires.ftc.teamcode.libs.DriveMecanum;
+import org.firstinspires.ftc.teamcode.hardware.HardwareProfileFTClib;
+import org.firstinspires.ftc.teamcode.libs.DriveMecanumFTCLib;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleoOpRuntoP", group = "Comp")
 //@Disabled
 
 public class TeloOpRuntoP extends LinearOpMode {
 
-    private final static HardwareProfile robot = new HardwareProfile();
+    private final static HardwareProfileFTClib robot = new HardwareProfileFTClib();
     private LinearOpMode opMode = this;
     private ElapsedTime elapsedTime = new ElapsedTime();
     public TeloOpRuntoP(){
@@ -55,7 +55,7 @@ public class TeloOpRuntoP extends LinearOpMode {
         /*
          * Initialize the drive class
          */
-        DriveMecanum drive = new DriveMecanum(robot, opMode);
+        DriveMecanumFTCLib drive = new DriveMecanumFTCLib(robot, opMode);
 
         /*
          * Calibrate / initialize the gyro sensor
@@ -87,19 +87,20 @@ public class TeloOpRuntoP extends LinearOpMode {
             v3 = (r * Math.sin(robotAngle - Math.toRadians(theta)) + rightX + rightY);
             v4 = (r * Math.cos(robotAngle - Math.toRadians(theta)) - rightX + rightY);
 
-            robot.motorLF.setPower(v1 * modePower);
-            robot.motorRF.setPower(v2 * modePower);
-            robot.motorLR.setPower(v3 * modePower);
-            robot.motorRR.setPower(v4 * modePower);
+            robot.motorLF.set(v1 * modePower);
+            robot.motorRF.set(v2 * modePower);
+            robot.motorLR.set(v3 * modePower);
+            robot.motorRR.set(v4 * modePower);
 
             /* #################################################################################
                ####         Claw Control
              * #################################################################################*/
 
             if (gamepad1.right_trigger > 0.1) {
-                robot.servoGrabber.setPosition(robot.SERVO_GRAB_OPEN);
+                drive.openClaw();
+                drive.alignDown();
             } else if (gamepad1.left_trigger > 0.1) {
-                robot.servoGrabber.setPosition(robot.SERVO_GRAB_CLOSE);
+                drive.closeClaw();
             }
 
             /* #################################################################################
@@ -108,16 +109,19 @@ public class TeloOpRuntoP extends LinearOpMode {
             if(gamepad1.x){
                 // Set to low junction level
                 mBase = robot.LIFT_LOW_JUNCTION;
+                drive.alignUp();
             }   // end of if(gamepad1.x)
 
             if(gamepad1.b){
                 // set to mid junction level
                 mBase = robot.LIFT_MID_JUNCTION;
+                drive.alignUp();
             }   // end of if(gamepad1.b)
 
             if(gamepad1.y){
                 // set to high junction
                 mBase = robot.LIFT_HIGH_JUNCTION;
+                drive.alignUp();
             }   // end of if(gamepad1.y)
 
             if(gamepad1.a){
@@ -125,8 +129,7 @@ public class TeloOpRuntoP extends LinearOpMode {
                 if (mBase != 0){
                     // reset lift to lowest position
                     mBase = robot.LIFT_RESET;
-
-
+                    drive.alignDown();
                 }
                 else if(robot.motorBase.getCurrentPosition()<10) {
                     // lift to cone f
@@ -144,18 +147,6 @@ public class TeloOpRuntoP extends LinearOpMode {
             // limit the max and min value of mBase
             Range.clip(mBase, robot.LIFT_MIN_LOW,robot.LIFT_MAX_HIGH);
             drive.liftPosition(mBase);
-/*
-            if(gamepad1.dpad_left){
-
-                drive.PIDRotate((drive.getZAngle() + 180),5);
-                                }
-
-            if(gamepad1.dpad_right){
-
-                drive.PIDRotate((drive.getZAngle() - 180),5);
-            }
-
- */
 
             telemetry.addData("motorLF = ", robot.motorLF.getCurrentPosition());
             telemetry.addData("motorLR = ", robot.motorLR.getCurrentPosition());

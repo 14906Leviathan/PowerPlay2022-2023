@@ -21,8 +21,9 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.ejml.interfaces.decomposition.LUDecomposition_F32;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.hardware.HardwareProfile;
+import org.firstinspires.ftc.teamcode.hardware.HardwareProfileFTClib;
 import org.firstinspires.ftc.teamcode.libs.DriveMecanum;
+import org.firstinspires.ftc.teamcode.libs.DriveMecanumFTCLib;
 
 @Config
 @TeleOp(name = "Broken Bot", group = "Test")
@@ -30,7 +31,7 @@ import org.firstinspires.ftc.teamcode.libs.DriveMecanum;
 
 public class BrokenBot extends LinearOpMode {
 
-    private final static HardwareProfile robot = new HardwareProfile();
+    private final static HardwareProfileFTClib robot = new HardwareProfileFTClib();
     private LinearOpMode opMode = this;
 
     FtcDashboard dashboard;
@@ -79,11 +80,12 @@ public class BrokenBot extends LinearOpMode {
         /*
          * Initialize the drive class
          */
-        DriveMecanum drive = new DriveMecanum(robot, opMode);
+        DriveMecanumFTCLib drive = new DriveMecanumFTCLib(robot, opMode);
 
         /*
          * Ready to go
          */
+
 
         // post telemetry to FTC Dashboard as well
         dashTelemetry.put("p01 - PID IMU Angle X                  = ", robot.imu.getAngles()[0]);
@@ -98,7 +100,7 @@ public class BrokenBot extends LinearOpMode {
         dashTelemetry.put("11 - GP2.Button.A = ", "Custom Position - program stack cone levels");
         dashboard.sendTelemetryPacket(dashTelemetry);
 
-        telemetry.addData("Z Value = ", drive.getZAngle());
+//        telemetry.addData("Z Value = ", drive.getZAngle());
         telemetry.addData("Greetings = ", "HOME CHICKEN");
         telemetry.addData("Robot state = ", "INITIALIZED");
         telemetry.update();
@@ -140,10 +142,10 @@ public class BrokenBot extends LinearOpMode {
                 v4 = 1;
             }
 
-            robot.motorLF.setPower(v1 * modePower);
-            robot.motorRF.setPower(v2 * modePower);
-            robot.motorLR.setPower(v3 * modePower);
-            robot.motorRR.setPower(v4 * modePower);
+            robot.motorLF.set(v1 * modePower);
+            robot.motorRF.set(v2 * modePower);
+            robot.motorLR.set(v3 * modePower);
+            robot.motorRR.set(v4 * modePower);
 
             /* #################################################################################
                ####         Lift Control
@@ -203,6 +205,16 @@ public class BrokenBot extends LinearOpMode {
                ####         User Feedback
              * #################################################################################*/
 
+            if(gamepad2.a) {
+                robot.servoAlign.setPosition(robot.SERVO_ALIGN_DOWN);
+                telemetry.addData("Set position for servoAlign" , "to Down");
+            }
+
+            if(gamepad2.b) {
+                robot.servoAlign.setPosition(robot.SERVO_ALIGN_UP);
+                telemetry.addData("Set position for servoAlign" , "to UP");
+            }
+
             telemetry.addData("Gyro Value = ", drive.getZAngle());
             telemetry.addData("sensor Junction", String.format("%.01f in", robot.sensorJunction.getDistance(DistanceUnit.INCH)));
             telemetry.addData("LF Start= ", lfStart);
@@ -210,7 +222,7 @@ public class BrokenBot extends LinearOpMode {
             telemetry.addData("RF Start= ", rfStart);
             telemetry.addData("RR Start= ", rrStart);
             telemetry.addData("    ", "");
-            telemetry.addData("Drive Distance = ", drive.calcDistance(0, rfStart, rrStart, lfStart, lrStart));
+//            telemetry.addData("Drive Distance = ", drive.calcDistance(0, rfStart, rrStart, lfStart, lrStart));
             telemetry.addData("motorLF = ", robot.motorLF.getCurrentPosition());
             telemetry.addData("motorLR = ", robot.motorLR.getCurrentPosition());
             telemetry.addData("motorRF = ", robot.motorRF.getCurrentPosition());

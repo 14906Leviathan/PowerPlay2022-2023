@@ -1,17 +1,26 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.teamcode.libs.DriveMecanum;
 
 import java.util.List;
 
@@ -65,10 +74,11 @@ public class HardwareProfile {
 
     public DistanceSensor sensorWall = null;
 
-    public RevIMU imu =                 null;
+    public RevIMU imu = null;
 
-//    public BNO055IMU imu;       // Internal accelerometer / Gyro sensor
+    //    public BNO055IMU imu;       // Internal accelerometer / Gyro sensor
     public Servo servoGrabber;
+    public Servo servoAlign;
     public RevBlinkinLedDriver LEDPort;
     public DistanceSensor sensorJunction;
     public DistanceSensor sensorJunction2;
@@ -93,35 +103,35 @@ public class HardwareProfile {
          * Initialize Motors
          */
 
-        motorLF = hwMap.get(DcMotorEx.class,"motorLF");
+        motorLF = hwMap.get(DcMotorEx.class, "motorLF");
         motorLF.setDirection(DcMotor.Direction.REVERSE);
         motorLF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorLF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorLF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorLF.setPower(0);
 
-        motorLR = hwMap.get(DcMotorEx.class,"motorLR");
+        motorLR = hwMap.get(DcMotorEx.class, "motorLR");
         motorLR.setDirection(DcMotor.Direction.REVERSE);
         motorLR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorLR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorLR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorLR.setPower(0);
 
-        motorRF = hwMap.get(DcMotorEx.class,"motorRF");
+        motorRF = hwMap.get(DcMotorEx.class, "motorRF");
         motorRF.setDirection(DcMotor.Direction.FORWARD);
         motorRF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorRF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorRF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorRF.setPower(0);
 
-        motorRR = hwMap.get(DcMotorEx.class,"motorRR");
+        motorRR = hwMap.get(DcMotorEx.class, "motorRR");
         motorRR.setDirection(DcMotor.Direction.FORWARD);
         motorRR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorRR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorRR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorRR.setPower(0);
 
-        motorBase = hwMap.get(DcMotorEx.class,"motorBase");
+        motorBase = hwMap.get(DcMotorEx.class, "motorBase");
         motorBase.setDirection(DcMotor.Direction.REVERSE);
         motorBase.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         motorBase.setTargetPosition(0);
@@ -173,5 +183,5 @@ public class HardwareProfile {
         /* Webcam device will go here */
 //        webcam = hwMap.get(WebcamName.class, "Webcam 1");
     }
-
 }
+

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes;
+package org.firstinspires.ftc.teamcode.deprecated;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
@@ -17,10 +16,11 @@ import org.firstinspires.ftc.teamcode.libs.DriveMecanum;
 
 import java.util.List;
 
-@Autonomous(name = "Auto - Red Terminal Side", group = "Leviathan")
+@Autonomous(name = "Auto - Blue Terminal Side", group = "Leviathan")
 @Disabled
-public class LevRedTerminal extends LinearOpMode{
+public class LevBlueTerminal extends LinearOpMode{
 
+     //    Original
     private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
 
@@ -30,7 +30,18 @@ public class LevRedTerminal extends LinearOpMode{
             "3 Panel"
     };
 
-    private static final String VUFORIA_KEY =
+/*
+    private static final String TFOD_MODEL_ASSET = "PP-version1.tflite";
+    // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
+
+    private static final String[] LABELS = {
+            "Qrcode",
+            "Logo",
+            "Peacock"
+    };
+*/
+ private static final String VUFORIA_KEY =
+
         "ARLYRsf/////AAABmWpsWSsfQU1zkK0B5+iOOr0tULkAWVuhNuM3EbMfgb1+zbcOEG8fRRe3G+iLqL1/iAlTYqqoLetWeulG8hkCOOtkMyHwjS/Ir8/2vUVgC36M/wb9a7Ni2zuSrlEanb9jPVsNqq+71/uzTpS3TNvJI8WeICQNPAq3qMwmfqnCphVlC6h2ZSLsAR3wcdzknFmtpApdOp1jHJvITPeD/CMdAXjZDN0XJwJNQJ6qtaYSLGC23vJdQ2b1aeqnJauOvswapsG7BlmR7m891VN92rNEcOX7WmMT4L0JOM0yKKhPfF/aSROwIdNtSOpQW4qEKVjw3aMU1QDZ0jj5SnRV8RPO0hGiHtXy6QJcZsSj/Y6q5nyf";
 
     /**
@@ -66,7 +77,6 @@ public class LevRedTerminal extends LinearOpMode{
     public void runOpMode() {
 
         telemetry.addData("Robot State = ", "NOT READY");
-        telemetry.addData("sensor Junction", String.format("%.01f in", robot.sensorJunction.getDistance(DistanceUnit.INCH)));
         telemetry.update();
 
         boolean running = true;
@@ -103,14 +113,12 @@ public class LevRedTerminal extends LinearOpMode{
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
-        robot.motorBase.setTargetPosition(0);
-        //robot.motorArm.setTargetPosition(0);
+        robot.motorBase.setTargetPosition(robot.LIFT_RESET);
         robot.motorBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //robot.motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.lampRobot.setPower(1);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
-        telemetry.addData("sensor Junction", String.format("%.01f in", robot.sensorJunction.getDistance(DistanceUnit.INCH)));
         telemetry.update();
 
         while(!opModeIsActive()) {
@@ -133,12 +141,21 @@ public class LevRedTerminal extends LinearOpMode{
                         telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
                         telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
                         telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
-                        telemetry.addData("sensor Junction", String.format("%.01f in", robot.sensorJunction.getDistance(DistanceUnit.INCH)));
+
                         if(recognition.getLabel() == "1 Bolt"){
                             position =1;
                         } else if(recognition.getLabel() == "2 Bulb" ){
                             position = 2;
                         } else position = 3;
+
+
+                        /*
+                        if(recognition.getLabel() == "1 Bolt"){
+                            position =1;
+                        } else if(recognition.getLabel() == "2 Bulb" ){
+                            position = 2;
+                        } else position = 3;
+                         */
                     }
                     telemetry.update();
                 }
@@ -149,7 +166,7 @@ public class LevRedTerminal extends LinearOpMode{
         if(!running) requestOpModeStop();   // user requested to abort setup
 
         // Wait for the game to start (driver presses PLAY)
-        waitForStart();
+//        waitForStart();
 
         runtime.reset();
         runState = State.LEVEL_ADJUST;
@@ -158,13 +175,14 @@ public class LevRedTerminal extends LinearOpMode{
             switch(runState){
                 case TEST:
 
-                    drive.driveDistance(0.3, 0, 100);
+                    drive.driveDistance(0.3, 00, 100);
 
                     runState = State.HALT;
                     break;
 
                 case LEVEL_ADJUST:
 
+                    robot.lampRobot.setPower(0);
                     runState = State.HIGH_JUNCTION_1;
                     break;
 
@@ -174,23 +192,22 @@ public class LevRedTerminal extends LinearOpMode{
                     sleep(400);
 
                     // Drive forward away from wall, pushing signal cone out of position
-                    drive.driveDistance(0.7, 0, 61);
+                    drive.driveDistance(0.5, 0, 60);
 
                     // raise the arm to position the cone
                     drive.liftHighJunction();
 
                     //back up to position to score cone
-                    drive.driveDistance(0.4,180,4);
+                    drive.driveDistance(0.4,180,5);
 
                     //turn to high junction
-                    drive.PIDRotate(45,1);
-                    drive.PIDRotate(45,1);
+                    drive.PIDRotate(-35,1);
 
-                    //Wait for the lift to raise
-                    sleep(400);
+                   //Wait for raise
+                    sleep(1000);
 
                     // Drive forward to the high junction
-                    drive.driveDistance(0.3,0,4);
+                    drive.driveDistance(0.3,0,7.5);
 
                     // lower the arm and release the cone
                     drive.liftMidJunction();
@@ -198,14 +215,14 @@ public class LevRedTerminal extends LinearOpMode{
 
                     drive.openClaw();
 
-                    // raise the lift to keep from entangling on junction
+                    // raise the lift to keep from entagling on junction
                     drive.liftHighJunction();
 
                     // back away from the junction
-                    drive.driveDistance(0.3, 180, 7);
+                    drive.driveDistance(0.3, 180, 4);
 
                     //rotate towards the cone stack
-                    drive.PIDRotate(-90, 1);
+                    drive.PIDRotate(90, 1);
 
                     // reset the lift to its starting position
                     drive.liftReset();
@@ -215,7 +232,7 @@ public class LevRedTerminal extends LinearOpMode{
 
                 case CONE_2:
                     //rotate towards the cone stack
-                    drive.PIDRotate(-90, 1);
+                    drive.PIDRotate(85, 1);
 
                     // lower the arm to pick up the top cone
                     drive.liftPosition(robot.LIFT_CONE5);
@@ -224,7 +241,7 @@ public class LevRedTerminal extends LinearOpMode{
                     drive.driveDistance(0.4,0,15);
 
                     // adjust direction - turn towards cone stack
-                    drive.PIDRotate(-90, 1);
+                    drive.PIDRotate(88, 1);
 
                     //drive towards the stack of cones
                     drive.driveDistance(0.4,0,13);
@@ -245,13 +262,13 @@ public class LevRedTerminal extends LinearOpMode{
 
                 case LOW_JUNCTION_2:
                     // back away to tile 2
-                    drive.driveDistance(0.4,180,23);
+                    drive.driveDistance(0.4,180,21);
 
                     // rotate towards the low junction
-                    drive.PIDRotate(-160, 1);
+                    drive.PIDRotate(135, 1);
 
-                    // drive towards the junction reduced from 7 to 6 after TSAS
-                    drive.driveDistance(0.3, 0, 9);
+                    // drive towards the junction
+                    drive.driveDistance(0.3, 0, 6);
 
                     // place the cone
                     drive.liftPosition(robot.LIFT_RESET);
@@ -263,12 +280,12 @@ public class LevRedTerminal extends LinearOpMode{
                     sleep(500);
 
                     // back away from the junction
-                    drive.driveDistance(0.3, 180, 6);
+                    drive.driveDistance(0.3, 180, 7);
 
                     // turn towards the stack
-                    drive.PIDRotate(-90, 1);
+                    drive.PIDRotate(90, 1);
 
-                    runState = State.PARK;
+                    runState = State.CONE_3;
                     break;
 
                 case CONE_3:
@@ -279,29 +296,36 @@ public class LevRedTerminal extends LinearOpMode{
                     drive.driveDistance(0.4,0,15);
 
                     // adjust direction - turn towards cone stack
-                    drive.PIDRotate(-90, 1);
+                    drive.PIDRotate(90, 1);
 
                     //drive towards the stack of cones
-                    drive.driveDistance(0.4,0,15);
+                    drive.driveDistance(0.4,0,12);
 
                     // close the claw to grab the cone
+
                     drive.closeClaw();
+                    sleep(600);
+
+
+                    //back away from the wall slightly
+                    drive.driveDistance(0.2,180,0.5);
 
                     // lift the cone up to clear the stack
                     drive.liftLowJunction();
+                    sleep(600);
 
                     // back away to tile 2
-                    drive.driveDistance(0.4,0,30);
+                    drive.driveDistance(0.4,180,25);
 
-                    runState = State.LOW_JUNCTION_3;
+                    runState = State.MID_JUNCTION_3;
                     break;
 
                 case LOW_JUNCTION_3:
                     // rotate towards the low junction
-                    drive.PIDRotate(-125, 1);
+                    drive.PIDRotate(120, 1);
 
                     // drive towards the junction
-                    drive.driveDistance(0.3, 0, 3);
+                    drive.driveDistance(0.3, 0, 4);
 
                     // place the cone
                     drive.liftReset();
@@ -312,23 +336,102 @@ public class LevRedTerminal extends LinearOpMode{
                     drive.liftLowJunction();
 
                     // turn towards the stack
-                    drive.PIDRotate(-90, 1);
+                    drive.PIDRotate(90, 1);
+
+                    runState = State.PARK;
+                    break;
+
+                case MID_JUNCTION_3:
+                    // rotate towards the low junction
+                    drive.PIDRotate(225, 1);
+
+                    // raise the arm to position the cone
+                    drive.liftMidJunction();
+
+                    //Wait for raise
+                    sleep(600);
+
+                    // Drive forward to the high junction
+                    drive.driveDistance(0.3,0,6);
+
+                    // lower the arm and release the cone
+                    drive.liftLowJunction();
+                    sleep(400);
+
+                    drive.openClaw();
+
+                    // raise the lift to keep from entagling on junction
+                    drive.liftMidJunction();
+
+                    // back away from the junction
+                    drive.driveDistance(0.3, 180, 4);
+
+                    //rotate towards the cone stack
+                    drive.PIDRotate(90, 1);
+
+                    // reset the lift to its starting position
+                    drive.liftReset();
+
+                    // back away to center
+                    //drive.driveDistance(0.4,0,1.5);
+
+                    runState = State.PARK;
+                    break;
+
+                case HIGH_JUNCTION_3:
+
+                    // back away to tile 2
+                    drive.driveDistance(0.4,180,28);
+
+
+                    // rotate towards the low junction
+                    drive.PIDRotate(225, 1);
+
+                    // raise the arm to position the cone
+                    drive.liftHighJunction();
+
+                    //Wait for raise
+                    sleep(500);
+
+                    // Drive forward to the high junction
+                    drive.driveDistance(0.3,0,6);
+
+                    // lower the arm and release the cone
+                    drive.liftMidJunction();
+                    sleep(400);
+
+                    drive.openClaw();
+
+                    // raise the lift to keep from entagling on junction
+                    drive.liftHighJunction();
+
+                    // back away from the junction
+                    drive.driveDistance(0.3, 180, 4);
+
+                    //rotate towards the cone stack
+                    drive.PIDRotate(90, 1);
+
+                    // reset the lift to its starting position
+                    drive.liftReset();
+
+                    // back away to tile 2
+                    drive.driveDistance(0.4,0,30);
 
                     runState = State.PARK;
                     break;
 
                 case PARK:
 
-                    if(position == 1) {
+                    if(position == 3) {
                         // reset the lift
                         drive.liftReset();
                         drive.openClaw();
 
                         // rotate towards the stack to park - ready to grab the first cone in teleop
-                        drive.PIDRotate(-90, 1);
+                        drive.PIDRotate(90, 1);
 
                         // drive to park position 1
-                        drive.driveDistance(0.3, 0,25);
+                        drive.driveDistance(0.3, 0,30);
 
                     } else if (position == 2) {
                         // reset the lift
@@ -336,10 +439,10 @@ public class LevRedTerminal extends LinearOpMode{
                         drive.openClaw();
 
                         // rotate towards the outside wall position
-                        drive.PIDRotate(-90, 1);
+                        drive.PIDRotate(90, 1);
 
                         // drive to park position 1
-                        drive.driveDistance(0.3, 0,-3);
+                        drive.driveDistance(0.3, 0,0);
 
                     } else {
                         // reset the lift
@@ -347,7 +450,7 @@ public class LevRedTerminal extends LinearOpMode{
                         drive.openClaw();
 
                         // rotate towards the outside wall position
-                        drive.PIDRotate(-90, 1);
+                        drive.PIDRotate(90, 1);
 
                         // drive to park position 1
                         drive.driveDistance(0.3, 180,27);
@@ -385,7 +488,7 @@ public class LevRedTerminal extends LinearOpMode{
      * Enumerate the states of the machine
      */
     enum State {
-        TEST, ALLIANCE_SELECT, HIGH_JUNCTION_1, CONE_2, LOW_JUNCTION_2, CONE_3, LOW_JUNCTION_3, LEVEL_ADJUST, PARK, HALT, SET_DISTANCES
+        TEST, ALLIANCE_SELECT, HIGH_JUNCTION_1, HIGH_JUNCTION_3, CONE_2, LOW_JUNCTION_2, CONE_3, LOW_JUNCTION_3, MID_JUNCTION_3, LEVEL_ADJUST, PARK, HALT, SET_DISTANCES
     }   // end of enum State
 
     /**

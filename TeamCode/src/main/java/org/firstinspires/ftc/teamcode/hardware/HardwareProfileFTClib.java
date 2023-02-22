@@ -6,19 +6,13 @@ import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
-import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -45,9 +39,9 @@ public class HardwareProfileFTClib {
     public final int LIFT_RESET = 0;
     public final int LIFT_MIN_LOW = 0;
     public final int LIFT_MAX_HIGH = 4200;
-    public final int LIFT_LOW_JUNCTION = 1800;
+    public final int LIFT_LOW_JUNCTION = 1525;
     public final int LIFT_MID_JUNCTION = 3000;
-    public final int LIFT_HIGH_JUNCTION = 4100;
+    public final int LIFT_HIGH_JUNCTION = 3700;
     public final int LIFT_EXTRACT_CONE = 1200;
     public final int LIFT_CONE5 = 680;
     public final int LIFT_CONE4 = 525;
@@ -56,12 +50,14 @@ public class HardwareProfileFTClib {
     public final double LIFT_POWER = 1;
     public final double SERVO_GRAB_OPEN = 0.3;
     public final double SERVO_GRAB_CLOSE = 0.65;
+    public final double SERVO_ALIGN_UP = 0.8;
+    public final double SERVO_ALIGN_DOWN = 0.2;
 
     public final double PID_Kp = 0.08;
     public final double PID_Ki = 0.01;
     public final double PID_Kd = 0.000001;
     public final double PID_MIN_SPEED = 0.05;
-    public final double PID_ROTATE_ERROR = 1;
+    public final double PID_ROTATE_ERROR = 0.5;
     public final double PID_ROTATE_TELEOP_ERROR = 5;
     public final double DRIVE_Kp = 0.05;
     public final double DRIVE_Ki = 0.01;
@@ -77,6 +73,7 @@ public class HardwareProfileFTClib {
 
     public RevIMU imu = null;
     public Servo servoGrabber;
+    public Servo servoAlign;
     public RevBlinkinLedDriver LEDPort;
     public Rev2mDistanceSensor sensorJunction;
     public Rev2mDistanceSensor sensorJunction2;
@@ -166,6 +163,7 @@ public class HardwareProfileFTClib {
 
 
         servoGrabber = ahwMap.servo.get("servoGrabber");
+        servoAlign = ahwMap.servo.get("servoAlign");
 
         sensorJunction = (Rev2mDistanceSensor) ahwMap.get(DistanceSensor.class, "sensorJunction");
         sensorJunction2 = (Rev2mDistanceSensor) ahwMap.get(DistanceSensor.class, "sensorJunction2");
