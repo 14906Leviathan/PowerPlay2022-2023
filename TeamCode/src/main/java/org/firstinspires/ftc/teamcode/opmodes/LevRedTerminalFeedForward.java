@@ -250,7 +250,6 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
                     // close the claw to grab the cone
                     drive.closeClaw();
                     sleep(400);
-                    drive.alignUp();
 
                     //back away from the wall slightly
 //                    drive.ftclibDrive(180,0.5,0);
@@ -268,6 +267,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
 
                     // lift the rest of the way to low junction
                     drive.liftPosition(robot.LIFT_LOW_JUNCTION);
+                    drive.alignUp();
 
                     // rotate towards the low junction
                     drive.ftclibRotate(-135, robot.PID_ROTATE_ERROR);
@@ -322,7 +322,6 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
                     // close the claw to grab the cone
                     drive.closeClaw();
                     sleep(400);
-                    drive.alignUp();
 
                     // lift the cone up to clear the stack
                     drive.liftPosition(robot.LIFT_EXTRACT_CONE);
@@ -337,6 +336,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
 
                     // lift the rest of the way to low junction
                     drive.liftPosition(robot.LIFT_LOW_JUNCTION);
+                    drive.alignUp();
 
                     // rotate towards the low junction
                     drive.ftclibRotate(-140, robot.PID_ROTATE_ERROR);
@@ -414,6 +414,8 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
                     break;
 
                 case PARK:
+
+                    drive.alignDown();  // confirm that the claw is down for teleop
 
                     if(position == 3) {
                         // reset the lift
