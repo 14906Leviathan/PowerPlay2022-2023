@@ -464,6 +464,11 @@ public class DriveMecanumFTCLib {
        #########################################################################################
      */
 
+    public void releaseCone(){
+        robot.servoAlign.setPosition(robot.SERVO_ALIGN_DOWN);
+        opMode.sleep(200);
+
+    }
     public void closeClaw(){
         robot.servoGrabber.setPosition(robot.SERVO_GRAB_CLOSE);
     }   // end of closeClaw method

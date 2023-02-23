@@ -211,6 +211,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
                     }
 
                     drive.alignDown();
+                    sleep(400);
                     // lower the arm and release the cone
                     drive.liftMidJunction();
                     sleep(300);
@@ -239,7 +240,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
                     drive.liftPosition(robot.LIFT_CONE5);
 
                     //drive towards the stack of cones
-                    drive.ftclibDrive(0,30,0);
+                    drive.ftclibDrive(0,30,3);
 
                     // adjust direction - turn towards cone stack
 //                    drive.ftclibRotate(-90, robot.PID_ROTATE_ERROR);
@@ -263,7 +264,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
 
                 case LOW_JUNCTION_2:    // low junction 1st pass
                     // back away to tile 2
-                    drive.ftclibDrive(180,20,0);
+                    drive.ftclibDrive(180,20,3);
 
                     // lift the rest of the way to low junction
                     drive.liftPosition(robot.LIFT_LOW_JUNCTION);
@@ -286,6 +287,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
 
                     // place the cone
                     drive.alignDown();
+                    sleep(400);
                     drive.liftPosition(robot.LIFT_RESET);
                     sleep(50);
                     drive.openClaw();
@@ -355,6 +357,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
 
                     // place the cone
                     drive.alignDown();
+                    sleep(400);
                     drive.liftReset();
                     drive.openClaw();
                     sleep(200);

@@ -96,6 +96,9 @@ public class TeloOpRuntoP extends LinearOpMode {
                ####         Claw Control
              * #################################################################################*/
 
+            if (gamepad1.right_bumper){
+                drive.alignDown();
+            }
             if (gamepad1.right_trigger > 0.1) {
                 drive.alignDown();
                 drive.openClaw();
