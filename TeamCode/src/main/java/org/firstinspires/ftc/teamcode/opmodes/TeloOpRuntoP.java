@@ -44,6 +44,7 @@ public class TeloOpRuntoP extends LinearOpMode {
         boolean fieldCentric = false;
         double delay = elapsedTime.time();
         ElapsedTime pauseClaw = new ElapsedTime();
+        ElapsedTime wfirst = new ElapsedTime();
 
         telemetry.addData("Robot State = ", "NOT READY");
         telemetry.update();
@@ -106,7 +107,9 @@ public class TeloOpRuntoP extends LinearOpMode {
             }
             if (gamepad1.right_trigger > 0.1) {
                 pauseClaw.reset();
+                wfirst.reset();
                 drive.alignDown();
+
                 drive.openClaw();
             } else if (gamepad1.left_trigger > 0.1) {
                 drive.closeClaw();
@@ -150,9 +153,9 @@ public class TeloOpRuntoP extends LinearOpMode {
 
             // allow manual control of the lift
             if (gamepad1.dpad_up) {
-                mBase+=15;
+                mBase+=100;
             }else if (gamepad1.dpad_down) {
-                mBase-=15;
+                mBase-=80;
             }   // end of if(gamepad1.dpad_up)
 
             // limit the max and min value of mBase
