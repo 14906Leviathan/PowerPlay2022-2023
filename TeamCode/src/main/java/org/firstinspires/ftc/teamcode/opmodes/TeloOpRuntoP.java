@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.hardware.HardwareProfileFTClib;
 import org.firstinspires.ftc.teamcode.libs.DriveMecanumFTCLib;
 
@@ -41,7 +42,8 @@ public class TeloOpRuntoP extends LinearOpMode {
         double r;
         double rightX, rightY;
         boolean fieldCentric = false;
-        double delay=elapsedTime.time();
+        double delay = elapsedTime.time();
+        ElapsedTime pauseClaw = new ElapsedTime();
 
         telemetry.addData("Robot State = ", "NOT READY");
         telemetry.update();
@@ -99,13 +101,19 @@ public class TeloOpRuntoP extends LinearOpMode {
             if (gamepad1.right_bumper){
                 drive.alignDown();
             }
+            if (gamepad1.left_bumper){
+                drive.alignUp();
+            }
             if (gamepad1.right_trigger > 0.1) {
+                pauseClaw.reset();
                 drive.alignDown();
                 drive.openClaw();
             } else if (gamepad1.left_trigger > 0.1) {
                 drive.closeClaw();
             }
-
+            if(robot.sensorJunction2.getDistance(DistanceUnit.INCH) < 2   && pauseClaw.time() > 2){
+                drive.closeClaw();
+            }
             /* #################################################################################
                ####         Lift Control
              * #################################################################################*/
@@ -158,6 +166,7 @@ public class TeloOpRuntoP extends LinearOpMode {
             telemetry.addData("motorBase = ", robot.motorBase.getCurrentPosition());
             telemetry.addData("motorBase power = ",robot.motorBase.getPower());
             telemetry.addData("Base Setpoint = ", mBase);
+            telemetry.addData("Claw Dist = ", (robot.sensorJunction2.getDistance(DistanceUnit.INCH)));
             //telemetry.addData("IMU Value: ", theta);
             telemetry.update();
 

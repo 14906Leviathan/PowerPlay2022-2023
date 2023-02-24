@@ -591,6 +591,7 @@ public class DriveMecanumFTCLib {
         opMode.telemetry.addData("Left Front = ", LF);
         opMode.telemetry.addData("Left Rear = ", LR);
         opMode.telemetry.addData("Right Rear = ", RR);
+        opMode.telemetry.addData("Claw Dist = ", (robot.sensorJunction2.getDistance(DistanceUnit.INCH)));
         opMode.telemetry.update();
     }   // close updateValues method
 
