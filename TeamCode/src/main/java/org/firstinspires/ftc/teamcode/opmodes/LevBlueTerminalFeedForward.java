@@ -111,7 +111,7 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
          * The init() method of the hardware class does all the work here
          */
         robot.motorBase.setTargetPosition(0);
-//        robot.lampRobot.setPower(1);
+        robot.lampRobot.setPower(1);
         robot.motorBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Send telemetry message to signify robot waiting;
@@ -191,7 +191,7 @@ public class LevBlueTerminalFeedForward extends LinearOpMode {
                     drive.alignUp();
 
                     // Drive forward away from wall, pushing signal cone out of position
-                    drive.ftclibDrive(0, 52, 0);
+                    drive.ftclibDrive(0, 50, 0);
 
                     //turn to high junction
                     drive.ftclibRotate(-45,robot.PID_ROTATE_ERROR);

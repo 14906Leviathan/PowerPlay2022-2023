@@ -112,7 +112,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
          * The init() method of the hardware class does all the work here
          */
         robot.motorBase.setTargetPosition(0);
-//        robot.lampRobot.setPower(1);
+        robot.lampRobot.setPower(1);
         robot.motorBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Send telemetry message to signify robot waiting;
@@ -234,7 +234,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
 
                 case CONE_2:        // top cone of the starter stack
                     //rotate towards the cone stack
-                    drive.ftclibRotate(-85, robot.PID_ROTATE_ERROR);
+                    drive.ftclibRotate(-88, robot.PID_ROTATE_ERROR);
 
                     // lower the arm to pick up the top cone
                     drive.liftPosition(robot.LIFT_CONE5);
@@ -271,7 +271,7 @@ public class LevRedTerminalFeedForward extends LinearOpMode {
                     drive.alignUp();
 
                     // rotate towards the low junction
-                    drive.ftclibRotate(-135, robot.PID_ROTATE_ERROR);
+                    drive.ftclibRotate(-140, robot.PID_ROTATE_ERROR);
 
                     // decide if the program should use the distance sensors to find the junction
                     if(distanceSensorFlag) {
